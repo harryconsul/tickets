@@ -2,10 +2,21 @@
   "name": "tickets",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://192.168.0.234/Tickets/R/",
   "dependencies": {
+    "@material-ui/core": "^3.9.3",
+    "axios": "^0.18.0",
+    "custom-columns-table": "^1.0.3",
+    "highcharts": "^7.1.2",
+    "highcharts-react-official": "^2.2.2",
+    "mdi-material-ui": "^5.11.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.0"
+    "react-redux": "^7.0.3",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.0",
+    "redux": "^4.0.1",
+    "typeface-roboto": "0.0.54"
   },
   "scripts": {
     "start": "react-scripts start",
