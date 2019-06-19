@@ -7,7 +7,7 @@ const TicketSummary = props => {
         <div>
             <Paper style={{ marginLeft: "20%", marginRight: "20%", padding: '20px' }}>
                 <EngineerAvatar />
-                <Typography variant={"h6"} style={styleLineSpace} > Ticket Registrado  </Typography>
+                <Typography variant={"h6"} style={styleLineSpace} > Reporte Registrado  </Typography>
                 <Typography variant={"h3"} style={styleLineSpace} color={"primary"} > {props.ticketNumber}   </Typography>
                 <Typography variant={"h5"} style={styleLineSpace}> {props.category}   </Typography>
                 <Typography variant={"subtitle1"} style={styleLineSpace}> {props.problem}   </Typography>

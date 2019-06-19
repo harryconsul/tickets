@@ -29,10 +29,11 @@ class SearchField extends React.Component {
             const data = { UsuarioLogin: this.props.user.username, Busqueda: _searchValue };
             axios.post("obtienesolicitudes", data).then(response => {
 
-                const ticketList = response.data.Solicitudes.map(ticket => {
-                    return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
+                const ticketList =response.data.Solicitudes.map(ticket => {
+                        return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
 
-                });
+                    })
+                   
                this.props.dispatch(actionSearch(ticketList));
                 this.props.history.push("/admin");
             }).catch(reason => {
@@ -62,7 +63,7 @@ class SearchField extends React.Component {
     }
 }
 const mapStateToProps = state => {
-    console.log("search",state);
+    
     return {
         user: state.user,
        

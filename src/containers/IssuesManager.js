@@ -1,18 +1,10 @@
 import React from 'react';
-import { CustomColumnsTable } from 'custom-columns-table/';
+import IssuesList from './IssuesList';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import {Route} from 'react-router-dom';
 import TicketEditor from './TicketEditor';
 import StatusAvatar from '../components/StatusAvatar'
-
-const columnsArray = [{ label: "No. Solicitud", value: "id" },
-{ label: "Estatus", value: "statusAvatar" },
-{ label: "Problema", value: "problem" },
-{ label: "Descripcion", value: "description" }, { label: "Quien lo Atiende", value: "engineer" },
-{ label: "Fecha Alta", value: "date" }, { label: "Hora Alta", value: "time" },
-{ label: "Categoria", value: "category" },
-];
 
 class IssuesManager extends React.Component {
     state = {
@@ -49,15 +41,12 @@ class IssuesManager extends React.Component {
     }
     render() {
         let { ticketList, selectedTicket } = this.state;
-        ticketList = this.props.result.length?this.props.result:ticketList;
+        ticketList = this.props.result!==null?this.props.result:ticketList;
         return (
 
                 <React.Fragment>
                     <Route exact path={"/admin/"}  component={()=>
-                           <CustomColumnsTable columnsArray={columnsArray}
-                        itemsList={ticketList} defaultColumns={["id", "statusAvatar", "problem", "engineer"]}
-                        labelRowsPerPage={"Solicitudes por Pagina"}
-                        numberColumnLabel={"#"} rowClickHandle={this.onTicketClick} />
+                          <IssuesList ticketList={ticketList} onTicketClick={this.onTicketClick} />
                     }/>
                     <Route path={"/admin/solicitud/:id"} component={()=>
                         <TicketEditor {...selectedTicket} />
@@ -70,7 +59,7 @@ class IssuesManager extends React.Component {
 
 }
 const mapStateToProps = state => {
-    console.log(state);
+    
     return {
         user: state.user,
         result:state.result,

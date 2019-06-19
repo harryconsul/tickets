@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 class Admin extends React.Component {
     constructor(props){
         super(props);
-        console.log("props", props);
+        
         if(props.user===null){
             props.history.push("/");
         }
@@ -20,7 +20,7 @@ class Admin extends React.Component {
                 <MenuBar currentOption={this.props.location.pathname} history={this.props.history} />
                 <div style={{ marginTop: "50px" }}>
                     <Route path="/admin/" component={IssuesManager} />
-                    <Route path="/admin/graficas" component={PieChart} />
+                    <Route path="/admin/graficas" component={()=><PieChart hasGradient={true} />} />
                 </div>
             </div>
 

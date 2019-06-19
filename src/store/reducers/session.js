@@ -1,7 +1,7 @@
 import * as actionConstants from '../../actions/action.constants';
 
 
-const sessionReducer = (state={user:null,result:[]},action)=>{
+const sessionReducer = (state={user:null,result:null},action)=>{
     switch(action.type){
         case actionConstants.LOGIN:
             return {

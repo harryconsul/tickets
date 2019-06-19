@@ -3,7 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Downshift from 'downshift';
-import deburr from 'lodash/deburr';
+import deburr from 'lodash.deburr';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
@@ -50,6 +50,7 @@ const styles = theme => ({
         component="div"
         style={{
           fontWeight: isSelected ? 500 : 400,
+          fontSize:"0.8rem"
         }}
       >
         {sugerencia.nombre}
@@ -98,19 +99,19 @@ class Suggest extends Component{
     
 
         this.setState({value: changes.selectedItem})
-        this.props.handleSuggest(this.props.item,changes.selectedItem);
+        this.props.handleSuggest(changes.selectedItem,true);
       
 
     } else if (changes.hasOwnProperty('inputValue')) {
       this.setState({value: changes.inputValue})
-      this.props.handleSuggest(this.props.item,changes.inputValue);
+      this.props.handleSuggest(changes.inputValue,false);
     }
   }
   componentDidMount(){
     let _value=this.props.defaultValue;
     let _multipleValue = [];
 
-    console.log(_value);
+    
     if(this.props.isMultiple){
       if(this.props.defaultValue!==""){
         _value = this.props.listaMedicos.reduce((previous,current)=>{
@@ -126,7 +127,7 @@ class Suggest extends Component{
 
     }
     
-    console.log(_multipleValue);
+  
     
     this.setState({value:_value,multipleValue:_multipleValue});
   }
@@ -273,7 +274,7 @@ class Suggest extends Component{
                     </div>
                     )}
                 </Downshift>:
-                 <Downshift id="downshift-simple" selectedItem={this.state.value} 
+                 <Downshift id="downshift-simple" 
                  onStateChange={this.handleStateChange} >
                      {({
                      getInputProps,

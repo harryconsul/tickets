@@ -105,12 +105,12 @@ class RequestForm extends React.Component {
                     </Grid>
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ControlledInput id={"problem"} name={"problem"} value={this.state.problem}
-                            label={"Mi problema es"} style={{ width: '90%' }} icon={<PencilIcon />}
+                            label={"Mi solicitud es"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
                     </Grid>
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ControlledInput id={"detail"} name={"detail"} value={this.state.detail}
-                            label={"Descripción del Problema / Solicitud"} style={{ width: '90%' }} icon={<PencilIcon />}
+                            label={"Detalle de la Solicitud"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
                     </Grid>
                     {
@@ -137,7 +137,7 @@ class RequestForm extends React.Component {
                         <Grid item xs={3} style={{ float: 'right' }}>
                             <Button variant={'contained'} color={'primary'}
                                 onClick={this.onClickSave}>
-                                Enviar Ticket
+                                Registrar Reporte
                           </Button>
                         </Grid>
 
