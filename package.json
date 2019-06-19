@@ -5,9 +5,11 @@
   "homepage": "http://192.168.0.234/Tickets/R/",
   "dependencies": {
     "@material-ui/core": "^3.9.3",
-    "axios": "^0.18.0",
+    "@microsoft/microsoft-graph-client": "^1.7.0",
+    "axios": "^0.19.0",
     "custom-columns-table": "^1.0.3",
     "downshift": "^3.2.10",
+    "hellojs": "^1.18.1",
     "highcharts": "^7.1.2",
     "highcharts-react-official": "^2.2.2",
     "lodash.deburr": "^4.1.0",

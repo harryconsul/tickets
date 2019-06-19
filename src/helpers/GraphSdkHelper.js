@@ -3,7 +3,7 @@
 *  See LICENSE in the source repository root for complete license information. 
 */
 
-import { Client } from 'msgraph-sdk-javascript';
+import { Client } from "@microsoft/microsoft-graph-client";
 import async from 'async';
 
 export default class GraphSdkHelper {
