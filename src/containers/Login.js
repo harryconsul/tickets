@@ -40,8 +40,8 @@ class Login extends React.Component{
                     </Grid>
                     <Grid item >
                         <Button variant={"contained"} color={"primary"}  
-                            onClick={this.handleLogin}
-                        disabled={disabled} >Entrar</Button>
+                            onClick={this.props.login}
+                         >Entrar</Button>
                     </Grid>
                 </Grid>
             </Paper>

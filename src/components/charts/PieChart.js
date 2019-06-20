@@ -1,11 +1,14 @@
 import React from 'react';
 import Highcharts from 'highcharts';
+import HighchartsMore from 'highcharts/highcharts-more';
+import SolidGauge from 'highcharts/modules/solid-gauge';
+
 import HighChart from 'highcharts-react-official';
 import axios from 'axios';
 const formatSeries = series => {
     return series.map(serie => {
-        return {
-            ...serie, data: serie.data.map(item => {
+        const formatedSerie  = {
+            ...serie, data: typeof(serie.data) ==="object"?serie.data :( serie.data.map(item => {
                 const properItem = { ...item };
                 if (properItem.x) {
                     properItem.x = Number(properItem.x);
@@ -15,13 +18,19 @@ const formatSeries = series => {
                 }
                 return properItem;
 
-            })
+            }))
         }
+        if(formatedSerie.dataLabels){
+            formatedSerie.dataLabels.format= formatedSerie.dataLabels.format.replace("\\","");
+        }
+        return formatedSerie;
     });
 }
 class PieChart extends React.Component {
     constructor(props) {
         super(props);
+        HighchartsMore(Highcharts);
+        SolidGauge(Highcharts)
         if (props.hasGradient) {
             this.state = {
                 data: {
@@ -44,22 +53,27 @@ class PieChart extends React.Component {
 
         } else {
             this.state = {
-                data: {},
+                data: {
+                    
+
+                },
             }
         }
     }
+   
     componentDidMount() {
 
         axios.post("graficagaugetickets", { Anio: 2019, Mes: 6 }).then(response => {
 
             const properData = {
-                ...response.data.SDT_GraficaPie,
-                series: formatSeries(response.data.SDTGraficaGauge.series),
+                ...response.data.SDTGrafica,
+                series: formatSeries(response.data.SDTGrafica.series),
             }
             console.log(properData);
             this.setState({ data: properData });
 
         });
+        
     }
     render() {
         return (

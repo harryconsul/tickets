@@ -20,7 +20,7 @@ class Admin extends React.Component {
                 <MenuBar currentOption={this.props.location.pathname} history={this.props.history} />
                 <div style={{ marginTop: "50px" }}>
                     <Route path="/admin/" component={IssuesManager} />
-                    <Route path="/admin/graficas" component={()=><PieChart hasGradient={true} />} />
+                    <Route path="/admin/graficas" component={()=><PieChart hasGradient={false} />} />
                 </div>
             </div>
 

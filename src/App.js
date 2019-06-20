@@ -5,80 +5,85 @@ import Admin from './containers/Admin'
 import Login from './containers/Login';
 
 import hello from 'hellojs';
+import {UserAgentApplication} from 'msal';
+
+ 
 import GraphSdkHelper from './helpers/GraphSdkHelper';
-import { applicationId, redirectUri } from './helpers/config';
+import { applicationId, redirectUri,graphScopes } from './helpers/config';
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     
     // Initialize the auth network.
-    hello.init({
-      aad: {
-        name: 'Azure Active Directory',	
-        oauth: {
-          version: 2,
-          auth: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
-        },
-        form: false
-      }
-    });
+    const msalConfig = {
+      auth: {
+        clientId: applicationId, // Client Id of the registered application        
+      },
+    };
     
-    // Initialize the Graph SDK helper and save it in the window object.
-    this.sdkHelper = new GraphSdkHelper({ login: this.login.bind(this) });
-    window.sdkHelper = this.sdkHelper;
-
-    // Set the isAuthenticated prop and the (empty) Fabric example selection. 
+    this.userAgentApplication = new UserAgentApplication(msalConfig,null,null);
+    
     this.state = {
-      isAuthenticated: !!hello('aad').getAuthResponse(),
-      example: ''
+      isAuthenticated: false,
+      user:{},
+      access:"",
+      error:{},
     };
   }
 
-  // Get the user's display name.
-  componentWillMount() {
-    if (this.state.isAuthenticated) {
-      this.sdkHelper.getMe((err, me) => {
-        if (!err) {
-          this.setState({
-            displayName: `Hello ${me.displayName}!`
-          });
-        }
-      });
-
-      this.sdkHelper.getMyProfile((err,me) => {
-        if(!err){
+  componentDidMount(){
+    if(this.userAgentApplication.account){
+      
+      this.getUserProfile();
+    }
+  }
+  
+  getUserProfile=async()=> {
+    try {
+      
+      console.log("scopes", graphScopes);
+      var accessToken = await this.userAgentApplication.acquireTokenSilent(graphScopes);
+  
+      if (accessToken) {
+        
+        
+        this.graphClient  = new GraphSdkHelper(accessToken.accessToken);
+        this.graphClient.getMyProfile((err,me)=>{
           console.log(me);
-          console.log("Department: " , me.department);
-          console.log("Mail: " , me.mail);
-          console.log("Phone: " , me.mobilePhone);
-        }
-      })
+        })
+
+        this.setState({
+          isAuthenticated: true,         
+          
+        });
+      }
+    }
+    catch(err) {
+      console.log("error on getting token",err) ;
+  
     }
   }
 
   // Sign the user into Azure AD. HelloJS stores token info in localStorage.hello.
-  login() {
+  login= async  ()=> {
+    try {
+      await this.userAgentApplication.loginPopup(graphScopes);
+      await this.getUserProfile();
 
-    // Initialize the auth request.
-    hello.init( {
-      aad: applicationId
-      }, {
-      redirect_uri: redirectUri,
-      scope: 'user.readbasic.all+mail.send+files.read'
-    });
-
-    hello.login('aad', { 
-      display: 'page',
-      state: 'abcd'
-    });
+      
+    }
+    catch(err) {
+      console.log(err);
+      
+    }
   }
 
   // Sign the user out of the session.
-  logout() { 
+  logout=() =>{ 
     hello('aad').logout();
     this.setState({ 
       isAuthenticated: false,
@@ -101,7 +106,7 @@ export default class App extends React.Component {
             Alta
             </Link>
         </Button>
-        <Route exact path="/" component={Login} />
+        <Route exact path="/" component={()=><Login login={this.login} />} />
         <Route path="/admin/" component={Admin} />
         
         <Route path="/usuario/" component={User} />

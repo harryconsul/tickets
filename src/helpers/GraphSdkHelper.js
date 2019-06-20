@@ -7,18 +7,16 @@ import { Client } from "@microsoft/microsoft-graph-client";
 import async from 'async';
 
 export default class GraphSdkHelper {
-  constructor(props) {
+  constructor(token) {
 
     // Initialize the Graph SDK.
     this.client = Client.init({
       debugLogging: true,
-      authProvider: (done) => {
-        done(null, window.hello('aad').getAuthResponse().access_token);
-      }
+      authProvider: (done)=>done(null,token),
     });
 
     this._handleError = this._handleError.bind(this);
-    this.props = props;
+    
   }
 
   // GET me
@@ -35,14 +33,19 @@ export default class GraphSdkHelper {
   }
 
   getMyProfile(callback){
+   
     this.client
     .api('/me')
-    .select('id','displayName','department','mail','mobilePhone','businessPhones','jobTitle')
+    .select('id','displayName','department','mail','mobilePhone','businessPhones','jobTitle')    
     .get((err,res) =>{
+     console.log("response", res);
       if(!err){
+        
         callback(null,res);
       }
       else this._handleError(err);
+    }).catch(reason=>{
+        console.log(reason);
     });
   }
 
