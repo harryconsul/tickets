@@ -1,0 +1,5 @@
+.outer .chart-container {
+	width: 300px;
+	float: left;
+	height: 250px;
+}

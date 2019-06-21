@@ -7,12 +7,13 @@ import hello from 'hellojs';
 import {UserAgentApplication} from 'msal';
  
 import GraphSdkHelper from './helpers/GraphSdkHelper';
-import { applicationId,graphScopes } from './helpers/config';
+import { applicationId,graphScopes ,redirectUri} from './helpers/config';
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import Button from '@material-ui/core/Button';
 import {actionLogin} from './actions/user.actions';
+import axios from 'axios';
 
 class App extends React.Component {
   constructor(props) {
@@ -21,7 +22,9 @@ class App extends React.Component {
     // Initialize the auth network.
     const msalConfig = {
       auth: {
-        clientId: applicationId, // Client Id of the registered application        
+        redirectUri,
+        clientId: applicationId, // Client Id of the registered application  
+        
       },
     };
     
@@ -32,7 +35,7 @@ class App extends React.Component {
       user:{},
       access:"",
       error:{},
-      fotoUrl:""
+     
     };
   }
 
@@ -50,7 +53,7 @@ class App extends React.Component {
   getUserProfile=async()=> {
     try {
       
-      console.log("scopes", graphScopes);
+      
       var accessToken = await this.userAgentApplication.acquireTokenSilent(graphScopes);
   
       if (accessToken) {
@@ -62,11 +65,37 @@ class App extends React.Component {
           const user ={
             id:me.id,
             department:me.department,
-            mail: me.mail,
+            email: me.mail,
             username:me.mail.replace("@dicipa.com.mx",""),
-            displayName: me.displayName
+            name: me.displayName
           }
-          this.props.dispatch(actionLogin(user));
+          axios.post("registrausuario",{user}).then(response=>{
+            
+          }).catch(error=>{
+            console.log(error);
+          });
+
+          this.graphClient.getMyPicture((err,response) => {
+            if(!err && response){
+              
+              response.blob().then(blob=>{
+                try{
+                  const url = window.URL || window.webkitURL;
+                  const blobUrl = url.createObjectURL(blob);
+                  user.photo = blobUrl;
+                  this.props.dispatch(actionLogin(user));
+                  }catch(e){
+                    console.log("error de blob",e );
+                  }
+  
+              })
+              
+              
+            }else{
+              this.props.dispatch(actionLogin(user));
+            }
+          })
+          
         })
 
         this.setState({
@@ -74,14 +103,7 @@ class App extends React.Component {
           
         });
         
-        this.graphClient.getMyPicture((err,url) => {
-          if(!err){
-            console.log("foto: " , url);
-            /*this.setState({
-              fotoUrl: url
-            });*/
-          }
-        })
+       
         
       }
     }
@@ -118,7 +140,8 @@ class App extends React.Component {
   render(){
    
     return (
-      <Router>
+      <Router >
+        
         <Button>
           <Link to={"/admin"}>
             Administrar
@@ -129,7 +152,7 @@ class App extends React.Component {
             Alta
             </Link>
         </Button>
-        <Route exact path="/" component={()=><Login login={this.login} />} />
+        <Route  exact path="/" component={()=><Login login={this.login} />} />
         <Route path="/admin/" component={Admin} />
         
         <Route path="/usuario/" component={User} />

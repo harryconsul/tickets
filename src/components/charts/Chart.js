@@ -5,6 +5,7 @@ import SolidGauge from 'highcharts/modules/solid-gauge';
 
 import HighChart from 'highcharts-react-official';
 import axios from 'axios';
+import  './Chart.css';
 const formatSeries = series => {
     return series.map(serie => {
         const formatedSerie  = {
@@ -31,10 +32,23 @@ class Chart extends React.Component {
         super(props);
         HighchartsMore(Highcharts);
         SolidGauge(Highcharts)
-        if (props.hasGradient) {
-            this.state = {
+        
+        this.state = {
+            gradientApplied:false,
+            data: {
+                
+
+            },
+        }
+        
+    }
+    componentDidUpdate(){
+        if (this.props.hasGradient && !this.state.gradientApplied) {
+            this.setState( {
+                gradientApplied:true,
                 data: {
-                    colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
+                    ...this.state.data
+                    ,colors: Highcharts.map(this.state.data.colors, function (color) {
                         return {
                             radialGradient: {
                                 cx: 0.5,
@@ -43,24 +57,17 @@ class Chart extends React.Component {
                             },
                             stops: [
                                 [0, color],
-                                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                                [1, Highcharts.Color(color).brighten(-0.15).get('rgb')] // darken
                             ]
                         };
                     })
                 }
 
-            }
+            });
 
-        } else {
-            this.state = {
-                data: {
-                    
-
-                },
-            }
         }
+
     }
-   
     componentDidMount() {
         const data = this.props.feedPayload?this.props.feedPayload:null;
         axios.post(this.props.feed,data).then(response => {

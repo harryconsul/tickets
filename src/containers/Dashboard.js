@@ -15,7 +15,7 @@ const Dashboard = (props)=>{
             <Grid item md={5}>
                 <Paper>
                 <Chart feed = {"graficaareati"} 
-                        hasGradient={false} />
+                        hasGradient={true} />
                 </Paper>
             </Grid>
             <Grid item md={3}>

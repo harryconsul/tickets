@@ -51,13 +51,14 @@ export default class GraphSdkHelper {
   //.api('/me/photo/$value')
   getMyPicture(callback) {
     this.client
-    .api('/me/photo/$value')
+    .api('/me/photos/64X64/$value')
     .header('Cache-Control', 'no-cache')
     .responseType('blob')
     .get((err,res,rawResponse) => {
-      console.log("err",err);
-      console.log("res",res);
-      console.log("rawResponse",rawResponse);
+      //console.log("err",err);
+      //console.log("res",res);
+      //console.log("rawResponse",rawResponse);
+      callback(null,rawResponse);
     });
     /*this.client
       .api('/me/photos/64X64/$value')
@@ -70,7 +71,7 @@ export default class GraphSdkHelper {
         }
         else this._handleError(err);
       });*/
-      callback(null,"Hola");
+      
   } 
   
   // GET me/people
