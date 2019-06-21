@@ -33,7 +33,6 @@ export default class GraphSdkHelper {
   }
 
   getMyProfile(callback){
-   
     this.client
     .api('/me')
     .select('id','displayName','department','mail','mobilePhone','businessPhones','jobTitle')    
@@ -49,8 +48,31 @@ export default class GraphSdkHelper {
     });
   }
 
+  //.api('/me/photo/$value')
+  getMyPicture(callback) {
+    this.client
+    .api('/me/photo/$value')
+    .header('Cache-Control', 'no-cache')
+    .responseType('blob')
+    .get((err,res,rawResponse) => {
+      console.log("err",err);
+      console.log("res",res);
+      console.log("rawResponse",rawResponse);
+    });
+    /*this.client
+      .api('/me/photos/64X64/$value')
+      .header('Cache-Control', 'no-cache')      
+      .responseType('blob')
+      .get((err, res, rawResponse) => {
+        if (!err) {
+          const url = window.URL.createObjectURL(rawResponse.xhr.response);
+          callback(null,url);
+        }
+        else this._handleError(err);
+      });*/
+      callback(null,"Hola");
+  } 
   
-
   // GET me/people
   getPeople(callback) {
     this.client 

@@ -32,6 +32,7 @@ export default class App extends React.Component {
       user:{},
       access:"",
       error:{},
+      fotoUrl:""
     };
   }
 
@@ -60,6 +61,16 @@ export default class App extends React.Component {
           isAuthenticated: true,         
           
         });
+        
+        this.graphClient.getMyPicture((err,url) => {
+          if(!err){
+            console.log("foto: " , url);
+            /*this.setState({
+              fotoUrl: url
+            });*/
+          }
+        })
+        
       }
     }
     catch(err) {
