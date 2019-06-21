@@ -17,12 +17,12 @@ const MenuBar = props => {
         <AppBar>
             <Toolbar>
                 <Grid container spacing={16} style={{margin:0}}>
-                    <Grid md={6} item>
+                    <Grid md={2} item>
                     <Typography variant={"h6"} >
                     {getOptionName(props.currentOption)}
                     </Typography>
                     </Grid>
-                    <Grid md={4} item>
+                    <Grid md={5} item>
                         <SearchField history={props.history} />
                     </Grid>
                     <Grid md={1} item>

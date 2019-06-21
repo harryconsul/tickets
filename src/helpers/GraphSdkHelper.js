@@ -38,7 +38,7 @@ export default class GraphSdkHelper {
     .api('/me')
     .select('id','displayName','department','mail','mobilePhone','businessPhones','jobTitle')    
     .get((err,res) =>{
-     console.log("response", res);
+     
       if(!err){
         
         callback(null,res);

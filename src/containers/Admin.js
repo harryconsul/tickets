@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route ,Redirect} from 'react-router-dom';
 import MenuBar from '../components/MenuBar';
-import PieChart from '../components/charts/PieChart';
+import Dashboard from '../containers/Dashboard';
 import IssuesManager from './IssuesManager';
 import {connect} from 'react-redux';
 class Admin extends React.Component {
@@ -20,7 +20,7 @@ class Admin extends React.Component {
                 <MenuBar currentOption={this.props.location.pathname} history={this.props.history} />
                 <div style={{ marginTop: "50px" }}>
                     <Route path="/admin/" component={IssuesManager} />
-                    <Route path="/admin/graficas" component={()=><PieChart hasGradient={false} />} />
+                    <Route path="/admin/graficas" component={Dashboard} />
                 </div>
             </div>
 

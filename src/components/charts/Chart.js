@@ -26,7 +26,7 @@ const formatSeries = series => {
         return formatedSerie;
     });
 }
-class PieChart extends React.Component {
+class Chart extends React.Component {
     constructor(props) {
         super(props);
         HighchartsMore(Highcharts);
@@ -62,8 +62,8 @@ class PieChart extends React.Component {
     }
    
     componentDidMount() {
-
-        axios.post("graficagaugetickets", { Anio: 2019, Mes: 6 }).then(response => {
+        const data = this.props.feedPayload?this.props.feedPayload:null;
+        axios.post(this.props.feed,data).then(response => {
 
             const properData = {
                 ...response.data.SDTGrafica,
@@ -81,4 +81,4 @@ class PieChart extends React.Component {
         )
     }
 }
-export default PieChart;
+export default Chart;

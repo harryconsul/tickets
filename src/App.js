@@ -3,18 +3,18 @@ import './App.css';
 import User from './containers/User';
 import Admin from './containers/Admin'
 import Login from './containers/Login';
-
 import hello from 'hellojs';
 import {UserAgentApplication} from 'msal';
-
  
 import GraphSdkHelper from './helpers/GraphSdkHelper';
-import { applicationId, redirectUri,graphScopes } from './helpers/config';
+import { applicationId,graphScopes } from './helpers/config';
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import {connect} from 'react-redux';
 import Button from '@material-ui/core/Button';
+import {actionLogin} from './actions/user.actions';
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     
@@ -36,9 +36,13 @@ export default class App extends React.Component {
   }
 
   componentDidMount(){
-    if(this.userAgentApplication.account){
-      
+    if(this.userAgentApplication.getAccount()){
+
       this.getUserProfile();
+    }else{
+      if(this.props.user){
+        this.props.dispatch(actionLogin(null));
+      }
     }
   }
   
@@ -53,7 +57,15 @@ export default class App extends React.Component {
         
         this.graphClient  = new GraphSdkHelper(accessToken.accessToken);
         this.graphClient.getMyProfile((err,me)=>{
-          console.log(me);
+          console.log("length",me.id.length);
+          const user ={
+            id:me.id,
+            department:me.department,
+            mail: me.mail,
+            username:me.mail.replace("@dicipa.com.mx",""),
+            displayName: me.displayName
+          }
+          this.props.dispatch(actionLogin(user));
         })
 
         this.setState({
@@ -116,3 +128,7 @@ export default class App extends React.Component {
     );
   }
 }
+const mapStateToProps=state=>{
+  return {user:state.user};
+}
+export default connect(mapStateToProps)(App)
