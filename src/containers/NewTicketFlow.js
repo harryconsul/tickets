@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stepper, Step, StepLabel, Typography } from '@material-ui/core';
+import { Stepper, Step, StepLabel, Typography, StepButton } from '@material-ui/core';
 import CategorySelection from './CategorySelection';
 import RequestForm from './RequestForm';
 import SummitAck from '../components/SummitAck';
@@ -22,13 +22,21 @@ function getBase64(file) {
     }
     );
 }
+const baseSteps = () => {
+    const initialSteps = [{ id: 0, label: "Mi solicitud es del tipo", semantic: "" },
+    { id: 1, label: "Descripción del solicitud", semantic: "" },
+    { id: 2, label: "Reporte Registrado", semantic: "" }];
+
+    return initialSteps.map(step => ({ ...step, semantic: "" }));
+
+
+}
+
 class NewTicketFlow extends React.Component {
 
     state = {
         activeStep: 0,
-        steps: [{ id: 0, label: "Mi solicitud es del tipo", semantic: "" },
-        { id: 1, label: "Descripción del solicitud", semantic: "" },
-        { id: 2, label: "Reporte Registrado", semantic: "" }],
+        steps: baseSteps(),
         completed: [],
         problemType: {},
         problemDetail: {},
@@ -36,13 +44,14 @@ class NewTicketFlow extends React.Component {
 
     }
     resetFlow = () => {
-        this.setState({ 
-                activeStep: 0,
-                completed: [],
-                problemType: {},
-                problemDetail: {}, 
-                ticketId: null
-             })
+        this.setState({
+            activeStep: 0,
+            completed: [],
+            problemType: {},
+            problemDetail: {},
+            ticketId: null,
+            steps: baseSteps(),
+        });
     }
     nextStep = (semanticObject) => {
         let { completed, activeStep, steps } = this.state;
@@ -62,9 +71,13 @@ class NewTicketFlow extends React.Component {
         for (let i = 0; i < this.state.problemDetail.fields.length; i++) {
             const field = this.state.problemDetail.fields[i];
             if (["file", "image"].indexOf(field.type) >= 0) {
+                try{
                 const base64Value = await getBase64(field.value);
-
+                
                 postReadyFields.push({ ...field, value: base64Value });
+                }catch(e){
+                    postReadyFields.push(field);  
+                }
             }
             else {
                 postReadyFields.push(field);
@@ -121,7 +134,8 @@ class NewTicketFlow extends React.Component {
         return (
 
             <div>
-                <FlowSteps {...this.state} />
+               
+                <FlowSteps {...this.state} resetFlow={this.resetFlow} />
                 {
                     this.getActiveComponent()
                 }
@@ -134,14 +148,23 @@ const FlowSteps = props => {
     return (
         <Stepper activeStep={props.activeStep} >
             {props.steps.map(step => {
-                return <Step key={step.id} completed={props.completed.indexOf(step.id) >= 0} >
-                    <StepLabel>
-                        {step.label}
-                        {
-                            step.semantic === "" ? null :
-                                <Typography variant={'caption'}>{step.semantic}</Typography>
-                        }
-                    </StepLabel>
+                const isCompleted = props.completed.indexOf(step.id) >= 0;
+                const itemContent = (<React.Fragment>
+                    {step.label}
+                    {
+                        step.semantic === "" ? null :
+                            <Typography variant={'caption'}>{step.semantic}</Typography>
+                    }
+                </React.Fragment>);
+                return <Step key={step.id} completed={isCompleted} >
+                    {step.id === 0 ?
+                        <StepButton onClick={props.resetFlow}>
+                            {itemContent}
+                        </StepButton> :
+                        <StepLabel>
+                            {itemContent}
+                        </StepLabel>
+                    }
                 </Step>;
 
             })}
