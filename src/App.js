@@ -22,7 +22,6 @@ class App extends React.Component {
     // Initialize the auth network.
     const msalConfig = {
       auth: {
-        redirectUri,
         clientId: applicationId, // Client Id of the registered application  
 
       },
@@ -63,6 +62,7 @@ class App extends React.Component {
             username: me.mail.replace("@dicipa.com.mx", ""),
             name: me.displayName,
             isManager:me.department==="TI",
+            logout:this.userAgentApplication.logout.bind(this.userAgentApplication),
 
           }
           axios.post("registrausuario", { user }).then(response => {
@@ -133,7 +133,7 @@ class App extends React.Component {
   render() {
 
     return (
-      <Router >
+      <Router basename="/Tickets/R" >
 
        
         {this.props.user ?

@@ -39,7 +39,7 @@ class UserBar extends React.Component {
                     }}
                 >
                     <Grid container direction={"column"} alignItems={"flex-start"} 
-                      spacing={"16"}>
+                      spacing={16}>
                         <Grid item md={2}>
                             <Avatar src={photo} />
                         </Grid>
@@ -51,7 +51,9 @@ class UserBar extends React.Component {
                             <Typography variant={"subtitle1"}>{this.props.user.department}</Typography>
                         </Grid>
                         <Grid>
-                            <Button variant={"contained"} color={"secondary"}>
+                            <Button variant={"contained"} color={"secondary"}
+                             onClick={()=>this.props.user.logout()}
+                             >
                                  Salir
                                  <Logout/>
                             </Button>
