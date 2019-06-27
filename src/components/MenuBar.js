@@ -5,6 +5,7 @@ import ChartBar from 'mdi-material-ui/ChartBar';
 import FormatListNumbered from 'mdi-material-ui/FormatListNumbered';
 import MenuLink from './MenuLink';
 import UserBar from './UserBar';
+
 const getOptionName = path=>{
     switch(path){
         case "/admin/graficas":

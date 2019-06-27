@@ -41,7 +41,6 @@ class App extends React.Component {
 
   componentDidMount(){
     if(this.userAgentApplication.getAccount()){
-
       this.getUserProfile();
     }else{
       if(this.props.user){
@@ -55,13 +54,12 @@ class App extends React.Component {
       
       
       var accessToken = await this.userAgentApplication.acquireTokenSilent(graphScopes);
-  
+      
       if (accessToken) {
-        
         
         this.graphClient  = new GraphSdkHelper(accessToken.accessToken);
         this.graphClient.getMyProfile((err,me)=>{
-          console.log("length",me.id.length);
+          
           const user ={
             id:me.id,
             department:me.department,

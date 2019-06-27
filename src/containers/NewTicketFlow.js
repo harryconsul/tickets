@@ -4,6 +4,7 @@ import CategorySelection from './CategorySelection';
 import RequestForm from './RequestForm';
 import SummitAck from '../components/SummitAck';
 import axios from 'axios';
+import {connect} from 'react-redux';
 function getBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -76,9 +77,10 @@ class NewTicketFlow extends React.Component {
 
     }
     postTicket = (fields) => {
+        console.log(this.props.user.username);
         const data = {
             Solicitud: {
-                user: "miguel.guzman",
+                user: this.props.user.username,
                 description: this.state.problemDetail.detail,
                 problem: this.state.problemDetail.problem,
                 problemId: 0,
@@ -151,4 +153,10 @@ const FlowSteps = props => {
 
 }
 
-export default NewTicketFlow;
+const mapStateToProps = state => {
+    return {
+        user: state.user,
+    }
+}
+
+export default connect(mapStateToProps)(NewTicketFlow);
