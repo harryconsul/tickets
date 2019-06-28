@@ -61,7 +61,7 @@ class App extends React.Component {
             email: me.mail,
             username: me.mail.replace("@dicipa.com.mx", ""),
             name: me.displayName,
-            isManager:me.department==="TI",
+            isManager:true,//me.department==="TI",
             logout:this.userAgentApplication.logout.bind(this.userAgentApplication),
 
           }
