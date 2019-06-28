@@ -11,6 +11,9 @@ import axios from 'axios';
 import ControlledInput from './ControlledInput';
 import StatusAvatar from './StatusAvatar';
 import {actionSearch} from '../actions/user.actions';
+import {IconButton } from '@material-ui/core';
+import DownIcon from 'mdi-material-ui/MenuDown';
+
 
 class BusquedaAvanzada extends Component{
 
@@ -92,7 +95,8 @@ class BusquedaAvanzada extends Component{
         });
     }
 
-    handleBusquedaAvanzada = () => {
+    handleBusquedaAvanzada = (event,popupState) => {
+        
         if (this.props.user){
            
             const data = {
@@ -102,7 +106,8 @@ class BusquedaAvanzada extends Component{
                 Atiende: this.state.atiende,
                 Solicitante: this.state.solicitante,
                 Departamento: this.state.departamento,
-                Rango: this.state.rango
+                Rango: this.state.rango,
+                Resuelto: this.state.check
             }
             
             axios.post("busquedaavanzada", data)
@@ -111,7 +116,8 @@ class BusquedaAvanzada extends Component{
                     return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
 
                 })
-                this.handleClose();
+
+                popupState.close();
                 this.props.dispatch(actionSearch(ticketList));
                 this.props.history.push("/admin");
 
@@ -124,8 +130,6 @@ class BusquedaAvanzada extends Component{
     }
 
     render(){
-        const open = Boolean(this.state.setAnchorEl);
-        const id = open ? 'simple-popover' : null;
         const style = { width: "90%",margin:"5px 0px 5px 0px" };
         const stylefull = {width: "90%"}
 
@@ -133,9 +137,9 @@ class BusquedaAvanzada extends Component{
             <PopupState variant="popover" popupId="demo-popup-popover">
                 {popupState => (
                     <div>
-                    <Button variant="contained" {...bindTrigger(popupState)}>
-                        Open Popover
-                    </Button>
+                    <IconButton style={{ padding: "4px" }} variant="contained" {...bindTrigger(popupState)}>
+                        <DownIcon />
+                    </IconButton>
                     <Popover
                         PaperProps = {{style:{width:"70%"}}}
                         {...bindPopover(popupState)}
@@ -149,102 +153,102 @@ class BusquedaAvanzada extends Component{
                         }}
                     >
                         <form>
-                    <Paper style={{ padding: "15px", margin: "0px" }} >
-                        <Grid container alignItems={"flex-start"}>
-                            <Grid item xs={6}>
-                                <ControlledInput id="fltAsunto" 
-                                    label="Asunto"
-                                    value={this.state.asunto}
-                                    onChange={this.handleChange}
-                                    name={"asunto"}
-                                    style={stylefull}
-                                    //error={this.state.expedienteHelper !== ""}
-                                    //helperText={this.state.expedienteHelper}
-                                    areYouFirst={true}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <ControlledInput id="fltSolicitud" 
-                                    label="No. de Solicitud"
-                                    value={this.state.solicitud}
-                                    onChange={this.handleChange}
-                                    name={"solicitud"}
-                                    style={style}
-                                    type="number"
-                                    //error={this.state.expedienteHelper !== ""}
-                                    //helperText={this.state.expedienteHelper}
-                                />
-                            </Grid> 
-                            <Grid item xs={6}>
-                                <ControlledInput id="ftlSolicitante" 
-                                    label="¿Quién generó la solicitud?"
-                                    value={this.state.solicitante}
-                                    onChange={this.handleChange}
-                                    name={"solicitante"}
-                                    style={style}
-                                    //error={this.state.expedienteHelper !== ""}
-                                    //helperText={this.state.expedienteHelper}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <ControlledInput id="fltAtiende" 
-                                    label="¿Quién atendió la solicitud?"
-                                    value={this.state.atiende}
-                                    onChange={this.handleChange}
-                                    name={"atiende"}
-                                    style={style}
-                                    //error={this.state.expedienteHelper !== ""}
-                                    //helperText={this.state.expedienteHelper}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <ControlledInput id={"fltDepartamento"}
-                                 value= {this.state.departamento}
-                                 onChange={this.handleChange}
-                                 name={"departamento"}
-                                 label={"Departamento solicitante"}
-                                 select
-                                 style={style}>
-                                 {this.state.departamentos}
-                             </ControlledInput>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <ControlledInput id={"fltRango"}
-                                    value= {this.state.rango}
-                                    onChange={this.handleChange}
-                                    name={"rango"}
-                                    label={"Rango de fechas"}
-                                    select
-                                    style={style}>
-                                    {this.state.rangos}
-                                </ControlledInput>
-                            </Grid> 
-                            <Grid item xs={6}>
-                                <FormControlLabel key={1} control={
-                                    <Checkbox
-                                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                        checked={this.state.check}
-                                        onChange={this.handleResuelto}
-                                        //value={this.state.check}
-                                    />
-                                }
-                                    label={"Resuelto por el usuario"} 
-                                />
-                            </Grid>  
-                            <Grid item xs={9} />
-                            <Grid xs={3} item >
-                                <Button color={"primary"} 
-                                    style={{ float: "right" }} 
-                                    onClick={this.handleBusquedaAvanzada} 
-                                    variant="contained">
-                                        Buscar
-                                        <Settings />
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-                </form>
+                            <Paper style={{ padding: "15px", margin: "0px" }} >
+                                <Grid container alignItems={"flex-start"}>
+                                    <Grid item xs={6}>
+                                        <ControlledInput id="fltAsunto" 
+                                            label="Asunto"
+                                            value={this.state.asunto}
+                                            onChange={this.handleChange}
+                                            name={"asunto"}
+                                            style={stylefull}
+                                            //error={this.state.expedienteHelper !== ""}
+                                            //helperText={this.state.expedienteHelper}
+                                            areYouFirst={true}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <ControlledInput id="fltSolicitud" 
+                                            label="No. de Solicitud"
+                                            value={this.state.solicitud}
+                                            onChange={this.handleChange}
+                                            name={"solicitud"}
+                                            style={style}
+                                            type="number"
+                                            //error={this.state.expedienteHelper !== ""}
+                                            //helperText={this.state.expedienteHelper}
+                                        />
+                                    </Grid> 
+                                    <Grid item xs={6}>
+                                        <ControlledInput id="ftlSolicitante" 
+                                            label="¿Quién generó la solicitud?"
+                                            value={this.state.solicitante}
+                                            onChange={this.handleChange}
+                                            name={"solicitante"}
+                                            style={style}
+                                            //error={this.state.expedienteHelper !== ""}
+                                            //helperText={this.state.expedienteHelper}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <ControlledInput id="fltAtiende" 
+                                            label="¿Quién atendió la solicitud?"
+                                            value={this.state.atiende}
+                                            onChange={this.handleChange}
+                                            name={"atiende"}
+                                            style={style}
+                                            //error={this.state.expedienteHelper !== ""}
+                                            //helperText={this.state.expedienteHelper}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <ControlledInput id={"fltDepartamento"}
+                                        value= {this.state.departamento}
+                                        onChange={this.handleChange}
+                                        name={"departamento"}
+                                        label={"Departamento solicitante"}
+                                        select
+                                        style={style}>
+                                        {this.state.departamentos}
+                                    </ControlledInput>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <ControlledInput id={"fltRango"}
+                                            value= {this.state.rango}
+                                            onChange={this.handleChange}
+                                            name={"rango"}
+                                            label={"Rango de fechas"}
+                                            select
+                                            style={style}>
+                                            {this.state.rangos}
+                                        </ControlledInput>
+                                    </Grid> 
+                                    <Grid item xs={6}>
+                                        <FormControlLabel key={1} control={
+                                            <Checkbox
+                                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                                checkedIcon={<CheckBoxIcon fontSize="small" />}
+                                                checked={this.state.check}
+                                                onChange={this.handleResuelto}
+                                                //value={this.state.check}
+                                            />
+                                        }
+                                            label={"Resuelto por el usuario"} 
+                                        />
+                                    </Grid>  
+                                    <Grid item xs={9} />
+                                    <Grid xs={3} item >
+                                        <Button color={"primary"} 
+                                            style={{ float: "right" }} 
+                                            onClick={(event) => this.handleBusquedaAvanzada(event,popupState)} 
+                                            variant="contained">
+                                                Buscar
+                                                <Settings />
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Paper>
+                        </form>
                     </Popover>
                     </div>
                 )}
