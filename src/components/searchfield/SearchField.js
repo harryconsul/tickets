@@ -6,6 +6,8 @@ import './SearchField.css';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import {actionSearch} from '../../actions/user.actions';
+import BusquedaAvanzada from '../../components/BusquedaAvanzada';
+
 class SearchField extends React.Component {
     state = {
         containerClass: "searchfield",
@@ -57,7 +59,7 @@ class SearchField extends React.Component {
                     onBlur={() => this.setState({ containerClass: "searchfield" })}
                     onChange={this.handleChange}
                 />
-
+                <BusquedaAvanzada />
             </div>
         );
     }
