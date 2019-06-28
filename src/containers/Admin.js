@@ -28,7 +28,7 @@ class Admin extends React.Component {
                     isManager={true} barRef={this.state.ref}
                 history={this.props.history} />
                 <div style={{marginTop:this.state.margin}}>
-                    <Route path="/" component={IssuesManager} />
+                    <Route  path="/" component={IssuesManager} />
                     <Route path="/graficas" component={Dashboard} />
                     <Route path="/nueva-solicitud" component={NewTicketFlow} />
                 </div>

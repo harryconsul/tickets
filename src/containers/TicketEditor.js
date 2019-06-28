@@ -22,12 +22,15 @@ const buttonStyle = {
         fields: [],
         isDialogOpen:false,
         thirds:[],
+        currentStatus:null,
     }
-    handleSubmit = (_status) => {
-        const { comments, thirdPart } = this.state;
+    handleSubmit = (_status,_comments) => {
+        const {  thirdPart } = this.state;
         const status = _status===statusCodes.NEW.value?
             statusCodes.IN_PROCESS.value:
             _status
+        const comments=_comments?_comments:this.state.comments;
+
         const data = {
             status,
             comments,
@@ -36,8 +39,14 @@ const buttonStyle = {
             user: this.props.user.username,
         }
         axios.post("grabarseguimiento", data).then(response => {
-          
-            this.setState({comments:"", postList:[response.data.post,...this.state.postList]});
+            const engineer = _comments?this.props.user.username:null;
+            this.props.handleTicketUpdate({id:this.props.id,status,engineer});
+            if(!engineer){
+                this.setState({comments:"",
+                 postList:[response.data.post,...this.state.postList],
+                currentStatus:status,
+                });
+            }
         }).catch(reason => {
             console.log(reason);
         });
@@ -62,8 +71,15 @@ const buttonStyle = {
             }
         }
     }
+    componentWillUnmount(){
+        if(this.props.status===statusCodes.NEW.value){
+            
+            this.handleSubmit(statusCodes.IN_PROCESS.value,"Asignación a ingeniero");
 
+        }
+    }
     componentDidMount() {
+       this.setState({currentStatus:this.props.status})
         axios.post("obtienedetallesolicitud", { id: this.props.id }).then(response => {
             
             this.setState({
@@ -87,7 +103,9 @@ const buttonStyle = {
             <Grid container style={{ marginTop: "10px" }} >
                 <Grid item md={4} >
                     <TicketSummary ticketNumber={this.props.id} category={this.props.category}
-                        detail={this.props.description} problem={this.props.problem} />
+                        detail={this.props.description}
+                        status={this.state.currentStatus}
+                         problem={this.props.problem} />
                 </Grid>
                 <Grid item md={8}  >
                     <Grid container style={{marginBottom:"10px"}}>

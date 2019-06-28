@@ -3,6 +3,7 @@ import { Stepper, Step, StepLabel, Typography, StepButton } from '@material-ui/c
 import CategorySelection from './CategorySelection';
 import RequestForm from './RequestForm';
 import SummitAck from '../components/SummitAck';
+import {statusCodes} from '../constants'
 import axios from 'axios';
 import {connect} from 'react-redux';
 function getBase64(file) {
@@ -118,6 +119,7 @@ class NewTicketFlow extends React.Component {
                 return <SummitAck ticketNumber={this.state.ticketId}
                     category={this.state.problemType.label}
                     detail={this.state.problemDetail.detail}
+                    status={statusCodes.NEW.value}
                     resetFlow={this.resetFlow}
                     problem={this.state.problemDetail.problem} />
 
