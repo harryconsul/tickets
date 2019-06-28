@@ -8,12 +8,15 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import {connect} from 'react-redux';
 import axios from 'axios';
 import ControlledInput from './ControlledInput';
+import StatusAvatar from './StatusAvatar'
+import {actionSearch} from '../actions/user.actions';
 
 class BusquedaAvanzada extends Component{
 
     state = {
         departamentos: [],rangos:[],setAnchorEl: null,asunto:'',
-        departamento:'',rango:'', check: false, atiende:'', solicitante:'',solicitud:''
+        check: false, atiende:'', solicitante:'',
+        solicitud:0,departamento:0,rango:0
     }
 
     getDepartamentos = () =>{
@@ -89,8 +92,8 @@ class BusquedaAvanzada extends Component{
     }
 
     handleBusquedaAvanzada = () => {
-        //departamento:'',rango:'', check: false, atiende:'', solicitante:'',solicitud:''
         if (this.props.user){
+           
             const data = {
                 UsuarioLogin: this.props.user.username,
                 Asunto: this.state.asunto,
@@ -103,15 +106,15 @@ class BusquedaAvanzada extends Component{
             
             axios.post("busquedaavanzada", data)
             .then( response => {
-                console.log("Response solicitudes: " , response.data.Solicitudes);
-                /*const ticketList =response.data.Solicitudes.map(ticket => {
-                        return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
+                const ticketList =response.data.Solicitudes.map(ticket => {
+                    return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
 
-                    })
-                   
-               this.props.dispatch(actionSearch(ticketList));
+                })
+                this.handleClose();
+                this.props.dispatch(actionSearch(ticketList));
                 this.props.history.push("/admin");
-                */
+
+                
             }).catch(reason => {
                 console.log(reason);
             })
@@ -145,7 +148,7 @@ class BusquedaAvanzada extends Component{
                 }}
               >
                 <form>
-                    <Paper style={{ padding: "15px", margin: "15px" }} >
+                    <Paper style={{ padding: "15px", margin: "0px" }} >
                         <Grid container alignItems={"flex-start"}>
                             <Grid item xs={6}>
                                 <ControlledInput id="fltAsunto" 
@@ -166,6 +169,7 @@ class BusquedaAvanzada extends Component{
                                     onChange={this.handleChange}
                                     name={"solicitud"}
                                     style={style}
+                                    type="number"
                                     //error={this.state.expedienteHelper !== ""}
                                     //helperText={this.state.expedienteHelper}
                                 />
@@ -253,3 +257,4 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(BusquedaAvanzada);
+//export default withRouter(connect(mapStateToProps)(BusquedaAvanzada));

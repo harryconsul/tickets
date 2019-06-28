@@ -34,7 +34,7 @@ class IssuesManager extends React.Component {
     onTicketClick = (id) => {
         const ticket = this.state.ticketList.find(item => item.id === id);
         this.setState({ selectedTicket: ticket },()=>{
-            this.props.history.push("/admin/solicitud/"+ id);
+            this.props.history.push("/solicitud/"+ id);
         });
         
 
@@ -45,10 +45,10 @@ class IssuesManager extends React.Component {
         return (
 
                 <React.Fragment>
-                    <Route exact path={"/admin/"}  component={()=>
+                    <Route exact path={"/"}  component={()=>
                           <IssuesList ticketList={ticketList} onTicketClick={this.onTicketClick} />
                     }/>
-                    <Route path={"/admin/solicitud/:id"} component={()=>
+                    <Route path={"/solicitud/:id"} component={()=>
                         <TicketEditor {...selectedTicket} />
                     } /> 
                

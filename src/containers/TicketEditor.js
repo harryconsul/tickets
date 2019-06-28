@@ -80,7 +80,7 @@ const buttonStyle = {
             return <Comment key ={index} author={post.userFullName} date={post.date} comment={post.comments} />;
         });
         const submitDisabled = this.state.comments==="";
-
+        const photo = this.props.user ? this.props.user.photo : "";
 
         return (
             <React.Fragment>
@@ -91,7 +91,7 @@ const buttonStyle = {
                 </Grid>
                 <Grid item md={8}  >
                     <Grid container style={{marginBottom:"10px"}}>
-                        <Grid item md={1}><Avatar>MK</Avatar></Grid>
+                        <Grid item md={1}><Avatar src={photo} /></Grid>
                         <Grid item md={11}>
                             <Paper style={{ padding: "10px" }}>
 

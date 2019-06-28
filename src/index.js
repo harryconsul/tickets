@@ -8,7 +8,8 @@ import axios from 'axios';
 import 'typeface-roboto';
 import { Provider } from 'react-redux';
 import store from './store/store';
-axios.defaults.baseURL = "http://192.168.0.234/Tickets/rest/";
+//axios.defaults.baseURL = "https://192.168.0.234/Tickets/rest/";
+axios.defaults.baseURL = "http://127.0.0.1/Tickets.NetEnvironment/rest/";
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 

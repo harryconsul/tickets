@@ -4,163 +4,153 @@ import User from './containers/User';
 import Admin from './containers/Admin'
 import Login from './containers/Login';
 import hello from 'hellojs';
-import {UserAgentApplication} from 'msal';
- 
-import GraphSdkHelper from './helpers/GraphSdkHelper';
-import { applicationId,graphScopes ,redirectUri} from './helpers/config';
+import { UserAgentApplication } from 'msal';
 
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import {connect} from 'react-redux';
-import Button from '@material-ui/core/Button';
-import {actionLogin} from './actions/user.actions';
+import GraphSdkHelper from './helpers/GraphSdkHelper';
+import { applicationId, graphScopes, redirectUri } from './helpers/config';
+
+import { BrowserRouter as Router,  } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { actionLogin } from './actions/user.actions';
 import axios from 'axios';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    
+
     // Initialize the auth network.
     const msalConfig = {
       auth: {
-        redirectUri,
         clientId: applicationId, // Client Id of the registered application  
-        
+
       },
     };
-    
-    this.userAgentApplication = new UserAgentApplication(msalConfig,null,null);
-    
-    this.state = {
-      isAuthenticated: false,
-      user:{},
-      access:"",
-      error:{},
-     
-    };
+
+    this.userAgentApplication = new UserAgentApplication(msalConfig, null, null);
+
+
   }
 
-  componentDidMount(){
-    if(this.userAgentApplication.getAccount()){
+  componentDidMount() {
+    if (this.userAgentApplication.getAccount()) {
+
       this.getUserProfile();
-    }else{
-      if(this.props.user){
+    } else {
+      if (this.props.user) {
         this.props.dispatch(actionLogin(null));
       }
     }
   }
-  
-  getUserProfile=async()=> {
+
+  getUserProfile = async () => {
     try {
-      
-      
+
+
       var accessToken = await this.userAgentApplication.acquireTokenSilent(graphScopes);
-      
+
       if (accessToken) {
-        
-        this.graphClient  = new GraphSdkHelper(accessToken.accessToken);
-        this.graphClient.getMyProfile((err,me)=>{
+
+
+        this.graphClient = new GraphSdkHelper(accessToken.accessToken);
+        this.graphClient.getMyProfile((err, me) => {
           
-          const user ={
-            id:me.id,
-            department:me.department,
+          const user = {
+            id: me.id,
+            department: me.department,
             email: me.mail,
-            username:me.mail.replace("@dicipa.com.mx",""),
-            name: me.displayName
+            username: me.mail.replace("@dicipa.com.mx", ""),
+            name: me.displayName,
+            isManager:me.department==="TI",
+            logout:this.userAgentApplication.logout.bind(this.userAgentApplication),
+
           }
-          axios.post("registrausuario",{user}).then(response=>{
-            
-          }).catch(error=>{
+          axios.post("registrausuario", { user }).then(response => {
+
+          }).catch(error => {
             console.log(error);
           });
 
-          this.graphClient.getMyPicture((err,response) => {
-            if(!err && response){
-              
-              response.blob().then(blob=>{
-                try{
+          this.graphClient.getMyPicture((err, response) => {
+            if (!err && response) {
+
+              response.blob().then(blob => {
+                try {
                   const url = window.URL || window.webkitURL;
                   const blobUrl = url.createObjectURL(blob);
                   user.photo = blobUrl;
                   this.props.dispatch(actionLogin(user));
-                  }catch(e){
-                    console.log("error de blob",e );
-                  }
-  
+                } catch (e) {
+                  console.log("error de blob", e);
+                }
+
               })
-              
-              
-            }else{
+
+
+            } else {
               this.props.dispatch(actionLogin(user));
             }
           })
-          
+
         })
 
-        this.setState({
-          isAuthenticated: true,         
-          
-        });
-        
-       
-        
+
+
+
+
       }
     }
-    catch(err) {
-      console.log("error on getting token",err) ;
-  
+    catch (err) {
+      console.log("error on getting token", err);
+
     }
   }
 
   // Sign the user into Azure AD. HelloJS stores token info in localStorage.hello.
-  login= async  ()=> {
+  login = async () => {
     try {
       await this.userAgentApplication.loginPopup(graphScopes);
       await this.getUserProfile();
 
-      
+
     }
-    catch(err) {
+    catch (err) {
       console.log(err);
-      
+
     }
   }
 
   // Sign the user out of the session.
-  logout=() =>{ 
+  logout = () => {
     hello('aad').logout();
-    this.setState({ 
+    this.setState({
       isAuthenticated: false,
       example: '',
       displayName: ''
     });
   }
 
-  render(){
-   
+  render() {
+
     return (
-      <Router >
-        
-        <Button>
-          <Link to={"/admin"}>
-            Administrar
-            </Link>
-        </Button>
-        <Button>
-          <Link to={"/usuario"}>
-            Alta
-            </Link>
-        </Button>
-        <Route  exact path="/" component={()=><Login login={this.login} />} />
-        <Route path="/admin/" component={Admin} />
-        
-        <Route path="/usuario/" component={User} />
-        
+      <Router basename="/Tickets/R" >
+
+       
+        {this.props.user ?
+
+          (this.props.user.isManager?<Admin />:<User />)
+          : <Login login={this.login} />
+
+
+
+        }
+
 
       </Router>
     );
   }
 }
-const mapStateToProps=state=>{
-  return {user:state.user};
+const mapStateToProps = state => {
+  return { user: state.user };
 }
 export default connect(mapStateToProps)(App)

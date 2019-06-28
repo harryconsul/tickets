@@ -33,7 +33,7 @@ class CategorySelection extends React.Component {
       const styleBreadcum = {margin:'10px'}
     return( <Grid container >
                 <Grid item xs={12} style={{display:'inline-flex'}} >
-                        <div style={styleBreadcum}> <Link variant={'h6'} onClick={this.onClickLink}>Todas</Link> </div>
+                        <div style={styleBreadcum}> <Link variant={'h6'} style={{cursor:"pointer"}} onClick={this.onClickLink}>Todas</Link> </div>
                         <div style={styleBreadcum}> <Typography variant={'h6'}> > </Typography> </div>
                         <div  style={styleBreadcum}>
                             {this.state.current===""?null:<Typography variant={'h6'}>{this.state.current}</Typography>}

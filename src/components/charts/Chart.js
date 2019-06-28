@@ -2,7 +2,8 @@ import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsMore from 'highcharts/highcharts-more';
 import SolidGauge from 'highcharts/modules/solid-gauge';
-
+import Data from 'highcharts/modules/data';
+import Drilldown from 'highcharts/modules/drilldown';
 import HighChart from 'highcharts-react-official';
 import axios from 'axios';
 import  './Chart.css';
@@ -24,6 +25,7 @@ const formatSeries = series => {
         if(formatedSerie.dataLabels){
             formatedSerie.dataLabels.format= formatedSerie.dataLabels.format.replace("\\","");
         }
+       
         return formatedSerie;
     });
 }
@@ -32,13 +34,31 @@ class Chart extends React.Component {
         super(props);
         HighchartsMore(Highcharts);
         SolidGauge(Highcharts)
+        Drilldown(Highcharts);
+        Data(Highcharts);
         
         this.state = {
             gradientApplied:false,
             data: {
-                
+                plotOptions:{
+                    series:{
+                        point:{
+                            events:{
+                                click:(event)=>{
+                                    if(typeof(event.point.id) === "number" ){
+                                        console.log("id" , event.point.id);
+                                       
+                                        this.fetchGraphData("graficabarrascategorias",{DepartamentoId:event.point.id});
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }  
 
             },
+            
         }
         
     }
@@ -69,18 +89,55 @@ class Chart extends React.Component {
 
     }
     componentDidMount() {
-        const data = this.props.feedPayload?this.props.feedPayload:null;
-        axios.post(this.props.feed,data).then(response => {
+       
+        this.fetchGraphData();
+        
+    }
+    fetchGraphData=(serviceURL=null,data=null)=>{
 
+        const _data = data?data:(
+                 this.props.feedPayload?this.props.feedPayload:null);
+        const _serviceURL = serviceURL?serviceURL:this.props.feed;
+
+        axios.post(_serviceURL,_data).then(response => {
+            
             const properData = {
                 ...response.data.SDTGrafica,
+                plotOptions:{
+                    ...response.data.SDTGrafica.plotOptions,
+                    series:
+                        response.data.SDTGrafica.plotOptions.series?
+                     {...response.data.SDTGrafica.plotOptions.series}
+                        :{...this.state.data.plotOptions.series}
+                    ,
+                },
                 series: formatSeries(response.data.SDTGrafica.series),
             }
-            console.log(properData);
+            if(properData.drilldown){
+                const drilldownSeries =properData.drilldown.series.map(item=>{
+                    const data = item.data.map(dataItem=>{
+                           let dataArray= dataItem.replace('[','').replace(']','').split(',');
+                           dataArray[0]=dataArray[0].replace("'",'');
+                           dataArray[1]=Number(dataArray[1]);
+                           return dataArray;
+                        }
+                            
+                            );
+                    return {...item,data}
+    
+                });
+                console.log("drillDown", drilldownSeries);
+                properData.drilldown.series = drilldownSeries;
+            }
+
+            console.log("conflict data" , properData);
+            
             this.setState({ data: properData });
+            
+               
+            
 
         });
-        
     }
     render() {
         return (
