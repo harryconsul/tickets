@@ -39,13 +39,16 @@ const buttonStyle = {
             user: this.props.user.username,
         }
         axios.post("grabarseguimiento", data).then(response => {
-            const engineer = _comments?this.props.user.username:null;
-            this.props.handleTicketUpdate({id:this.props.id,status,engineer});
-            if(!engineer){
+           
+            
+            if(!_comments){
                 this.setState({comments:"",
                  postList:[response.data.post,...this.state.postList],
                 currentStatus:status,
                 });
+            }else{
+                const engineer = _comments?this.props.user.username:null;
+                this.props.handleTicketUpdate({id:this.props.id,status,engineer});
             }
         }).catch(reason => {
             console.log(reason);
@@ -72,11 +75,18 @@ const buttonStyle = {
         }
     }
     componentWillUnmount(){
-        if(this.props.status===statusCodes.NEW.value){
+        if(this.state.currentStatus===statusCodes.NEW.value){
             
             this.handleSubmit(statusCodes.IN_PROCESS.value,"Asignación a ingeniero");
 
+        }else{
+            if(this.state.currentStatus!==this.props.status){
+                this.props.handleTicketUpdate({id:this.props.id,status:this.state.currentStatus
+                    });
+            }
         }
+        
+
     }
     componentDidMount() {
        this.setState({currentStatus:this.props.status})
