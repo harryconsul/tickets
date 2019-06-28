@@ -13,6 +13,7 @@
     "highcharts": "^7.1.2",
     "highcharts-react-official": "^2.2.2",
     "lodash.deburr": "^4.1.0",
+    "material-ui-popup-state": "^1.4.0",
     "mdi-material-ui": "^5.11.0",
     "msal": "^1.0.1",
     "react": "^16.8.6",

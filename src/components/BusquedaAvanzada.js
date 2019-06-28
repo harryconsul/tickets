@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {Popover,Button,Paper,Grid,MenuItem} from '@material-ui/core';
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import Settings from 'mdi-material-ui/Settings';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -8,7 +9,7 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import {connect} from 'react-redux';
 import axios from 'axios';
 import ControlledInput from './ControlledInput';
-import StatusAvatar from './StatusAvatar'
+import StatusAvatar from './StatusAvatar';
 import {actionSearch} from '../actions/user.actions';
 
 class BusquedaAvanzada extends Component{
@@ -129,25 +130,25 @@ class BusquedaAvanzada extends Component{
         const stylefull = {width: "90%"}
 
         return (
-            <div>
-              <Button aria-describedby={id} variant="contained" onClick={this.handleClick}>
-                Filtro
-              </Button>
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={this.state.anchorEl}
-                onClose={this.handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-              >
-                <form>
+            <PopupState variant="popover" popupId="demo-popup-popover">
+                {popupState => (
+                    <div>
+                    <Button variant="contained" {...bindTrigger(popupState)}>
+                        Open Popover
+                    </Button>
+                    <Popover
+                        PaperProps = {{style:{width:"70%"}}}
+                        {...bindPopover(popupState)}
+                        anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                        }}
+                    >
+                        <form>
                     <Paper style={{ padding: "15px", margin: "0px" }} >
                         <Grid container alignItems={"flex-start"}>
                             <Grid item xs={6}>
@@ -244,8 +245,10 @@ class BusquedaAvanzada extends Component{
                         </Grid>
                     </Paper>
                 </form>
-              </Popover>
-            </div>
+                    </Popover>
+                    </div>
+                )}
+                </PopupState>
           );
     }
 }
