@@ -37,7 +37,7 @@ class SearchField extends React.Component {
                     })
                    
                this.props.dispatch(actionSearch(ticketList));
-                this.props.history.push("/admin");
+                this.props.history.push("/");
             }).catch(reason => {
                 console.log(reason);
             })

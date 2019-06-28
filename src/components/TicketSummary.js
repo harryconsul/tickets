@@ -1,6 +1,7 @@
 import React from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import EngineerAvatar from './EngineerAvatar';
+import StatusAvatar from './StatusAvatar';
 const TicketSummary = props => {
     const styleLineSpace = { marginBottom: "10px" };
     return (
@@ -12,7 +13,7 @@ const TicketSummary = props => {
                 <Typography variant={"h5"} style={styleLineSpace}> {props.category}   </Typography>
                 <Typography variant={"subtitle1"} style={styleLineSpace}> {props.problem}   </Typography>
                 <Typography variant={"body1"} style={styleLineSpace}> {props.detail}   </Typography>
-               
+                <StatusAvatar status={props.status} />
             </Paper>
             
         </div>

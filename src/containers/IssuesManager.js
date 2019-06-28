@@ -5,13 +5,16 @@ import { connect } from 'react-redux';
 import {Route} from 'react-router-dom';
 import TicketEditor from './TicketEditor';
 import StatusAvatar from '../components/StatusAvatar'
+import {actionSearch} from '../actions/user.actions';
 
 class IssuesManager extends React.Component {
     state = {
-        ticketList: [], search: "", selectedTicket: null
+        selectedTicket: null,
     }
     componentDidMount() {
-        this.postSearch();
+        if(!this.props.result.length){
+            this.postSearch();
+        }
 
 
     }
@@ -21,18 +24,37 @@ class IssuesManager extends React.Component {
         if (this.props.user) {
             const data = { UsuarioLogin: this.props.user.username, Busqueda: _searchValue };
             axios.post("obtienesolicitudes", data).then(response => {
-                this.setState({
-                    ticketList: response.data.Solicitudes.map(ticket => {
-                        return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
-                    })
+                const ticketList =  response.data.Solicitudes.map(ticket => {
+                    return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
                 });
+                this.props.dispatch(actionSearch(ticketList));
+              
             }).catch(reason => {
                 console.log(reason);
             })
         }
     }
+    handleTicketUpdate=({id,engineer,status})=>{
+        const updatedTicketList = [...this.props.result];
+        
+        const indexOf = updatedTicketList.findIndex(item=>item.id===id);
+
+        if(indexOf>=0){
+            const _engineer = engineer?
+                engineer:
+                updatedTicketList[indexOf].engineer;
+
+            updatedTicketList[indexOf] ={
+                ...updatedTicketList[indexOf],
+                engineer:_engineer,
+                status
+            ,statusAvatar:<StatusAvatar status={status} />,
+            };
+            this.props.dispatch(actionSearch(updatedTicketList));
+        }
+    }
     onTicketClick = (id) => {
-        const ticket = this.state.ticketList.find(item => item.id === id);
+        const ticket = this.props.result.find(item => item.id === id);
         this.setState({ selectedTicket: ticket },()=>{
             this.props.history.push("/solicitud/"+ id);
         });
@@ -41,7 +63,7 @@ class IssuesManager extends React.Component {
     }
     render() {
         let { ticketList, selectedTicket } = this.state;
-        ticketList = this.props.result!==null?this.props.result:ticketList;
+        ticketList = this.props.result;
         return (
 
                 <React.Fragment>
@@ -49,7 +71,8 @@ class IssuesManager extends React.Component {
                           <IssuesList ticketList={ticketList} onTicketClick={this.onTicketClick} />
                     }/>
                     <Route path={"/solicitud/:id"} component={()=>
-                        <TicketEditor {...selectedTicket} />
+                        <TicketEditor {...selectedTicket} 
+                        handleTicketUpdate={this.handleTicketUpdate}/>
                     } /> 
                
                 </React.Fragment>
