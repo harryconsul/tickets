@@ -2,6 +2,7 @@ import React from 'react';
 import TicketSummary from '../components/TicketSummary';
 import ThirdDialogForm from '../components/ThirdDialogForm'
 import Comment from '../components/Comment';
+import TicketField from '../components/TicketField';
 import { Button, Paper, Grid, TextField, IconButton, Avatar } from '@material-ui/core'
 import SubmitCommentIcon from 'mdi-material-ui/ContentSaveEdit'
 import FileCancel from 'mdi-material-ui/FileCancel';
@@ -14,6 +15,16 @@ const buttonStyle = {
     marginLeft: "5px",
     marginRight: "5px",
 }
+const canBeOn=status=>{
+    if(status!==statusCodes.SOLVED.value
+        && status!==statusCodes.REJECTED.value){
+            return true;
+    }
+    return false;
+
+}
+
+
  class TicketEditor extends React.Component {
     state = {
         comments: "",
@@ -105,17 +116,26 @@ const buttonStyle = {
         const postList = this.state.postList.map((post,index) => {
             return <Comment key ={index} author={post.userFullName} date={post.date} comment={post.comments} />;
         });
-        const submitDisabled = this.state.comments==="";
+        const submitDisabled = !(this.state.comments!=="" && canBeOn(this.state.currentStatus));
         const photo = this.props.user ? this.props.user.photo : "";
 
         return (
             <React.Fragment>
             <Grid container style={{ marginTop: "10px" }} >
-                <Grid item md={4} >
+                <Grid container direction={"column"} style={{padding:"2%"}}
+                    item md={4} spacing={16} >
+                    <Grid item>
                     <TicketSummary ticketNumber={this.props.id} category={this.props.category}
                         detail={this.props.description}
                         status={this.state.currentStatus}
                          problem={this.props.problem} />
+                    </Grid>
+
+                    {this.state.fields.map(field=>{
+                    return <Grid key={field.name} item>
+                    <TicketField  {...field} />
+                    </Grid>;
+                    })}
                 </Grid>
                 <Grid item md={8}  >
                     <Grid container style={{marginBottom:"10px"}}>

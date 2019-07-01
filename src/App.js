@@ -61,7 +61,7 @@ class App extends React.Component {
             email: me.mail,
             username: me.mail.replace("@dicipa.com.mx", ""),
             name: me.displayName,
-            isManager: true,//me.department==="TI",
+            isManager: false,//me.department==="TI",
             logout: this.userAgentApplication.logout.bind(this.userAgentApplication),
 
           }
@@ -143,7 +143,7 @@ class App extends React.Component {
               <User />)
           : (
             <React.Fragment>
-              <Redirect path="/" />
+              
               <Login login={this.login} />
             </React.Fragment>
           )

@@ -6,7 +6,7 @@ const TicketSummary = props => {
     const styleLineSpace = { marginBottom: "10px" };
     return (
         <div>
-            <Paper style={{ marginLeft: "20%", marginRight: "20%", padding: '20px' }}>
+            <Paper style={{  padding: '20px' }}>
                 <EngineerAvatar />
                 <Typography variant={"h6"} style={styleLineSpace} > Reporte Registrado  </Typography>
                 <Typography variant={"h3"} style={styleLineSpace} color={"primary"} > {props.ticketNumber}   </Typography>

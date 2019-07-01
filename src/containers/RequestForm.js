@@ -105,6 +105,7 @@ class RequestForm extends React.Component {
                     </Grid>
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ControlledInput id={"problem"} name={"problem"} value={this.state.problem}
+                            areYouFirst={true}
                             label={"Mi solicitud es"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
                     </Grid>
