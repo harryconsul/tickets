@@ -4,6 +4,7 @@ import ProblemTypeCloud from '../components/ProblemTypeCloud';
 import ControlledInput from '../components/ControlledInput';
 import Grid from '@material-ui/core/Grid';
 import PencilIcon from 'mdi-material-ui/PencilBoxOutline';
+import SaveIcon from 'mdi-material-ui/ContentSave';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -137,8 +138,10 @@ class RequestForm extends React.Component {
                     <Grid item xs={12} alignItems={'flex-end'} container direction={'column'} >
                         <Grid item xs={3} style={{ float: 'right' }}>
                             <Button variant={'contained'} color={'primary'}
+                                disabled={this.state.problem===''}
                                 onClick={this.onClickSave}>
                                 Registrar Reporte
+                                <SaveIcon />
                           </Button>
                         </Grid>
 

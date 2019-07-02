@@ -40,6 +40,11 @@ class Chart extends React.Component {
         this.state = {
             gradientApplied:false,
             data: {
+                chart:{
+                   style:{ 
+                       fontFamily:["Roboto","Helvetica","Arial","san-serif"],
+                    },
+                },
                 plotOptions:{
                     series:{
                         point:{
