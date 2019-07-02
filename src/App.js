@@ -29,6 +29,9 @@ class App extends React.Component {
 
     this.userAgentApplication = new UserAgentApplication(msalConfig, null, null);
 
+    this.state = {
+      isLoading: false
+    }
 
   }
 
@@ -61,7 +64,7 @@ class App extends React.Component {
             email: me.mail,
             username: me.mail.replace("@dicipa.com.mx", ""),
             name: me.displayName,
-            isManager: false,//me.department==="TI",
+            isManager: true,//me.department==="TI",
             logout: this.userAgentApplication.logout.bind(this.userAgentApplication),
 
           }
@@ -109,6 +112,11 @@ class App extends React.Component {
   // Sign the user into Azure AD. HelloJS stores token info in localStorage.hello.
   login = async () => {
     try {
+      //El siguiente state, se usa para mostrar el icono progress en el componente Login.js
+      this.setState({
+        isLoading: true
+      });
+      
       await this.userAgentApplication.loginPopup(graphScopes);
       await this.getUserProfile();
 
@@ -123,11 +131,6 @@ class App extends React.Component {
   // Sign the user out of the session.
   logout = () => {
     hello('aad').logout();
-    this.setState({
-      isAuthenticated: false,
-      example: '',
-      displayName: ''
-    });
   }
 
   render() {
@@ -144,7 +147,7 @@ class App extends React.Component {
           : (
             <React.Fragment>
               
-              <Login login={this.login} />
+              <Login login={this.login} isLoading={this.state.isLoading}/>
             </React.Fragment>
           )
 
