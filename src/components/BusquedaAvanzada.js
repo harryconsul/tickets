@@ -240,6 +240,7 @@ class BusquedaAvanzada extends Component{
                                             onChange={this.handleChange}
                                             name={"solicitud"}
                                             style={style}
+                                            type="number"
                                             //error={this.state.expedienteHelper !== ""}
                                             //helperText={this.state.expedienteHelper}
                                         />
