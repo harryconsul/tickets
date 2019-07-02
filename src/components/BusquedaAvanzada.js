@@ -13,12 +13,12 @@ import StatusAvatar from './StatusAvatar';
 import {actionSearch} from '../actions/user.actions';
 import {IconButton } from '@material-ui/core';
 import DownIcon from 'mdi-material-ui/MenuDown';
-
+import CloseIcon from 'mdi-material-ui/Close';
 
 class BusquedaAvanzada extends Component{
 
     state = {
-        departamentos: [],rangos:[],setAnchorEl: null,asunto:'',
+        departamentos: [],rangos:[],setAnchorEl: null,problema:'',
         check: false, atiende:'', solicitante:'',
         solicitud:0,departamento:0,rango:0
     }
@@ -98,11 +98,14 @@ class BusquedaAvanzada extends Component{
     handleBusquedaAvanzada = (event,popupState) => {
         
         if (this.props.user){
-           
+            let solicitud = 0;
+           if (this.state.solicitud > 0)
+                solicitud = this.state.solicitud;
+
             const data = {
                 UsuarioLogin: this.props.user.username,
-                Asunto: this.state.asunto,
-                SolicitudId: this.state.solicitud,
+                Problema: this.state.problema,
+                Id: solicitud,
                 Atiende: this.state.atiende,
                 Solicitante: this.state.solicitante,
                 Departamento: this.state.departamento,
@@ -116,30 +119,93 @@ class BusquedaAvanzada extends Component{
                     return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
 
                 })
+                if(data.Problema.length !== 0 || data.Id > 0 || data.Atiende.length !==0 
+                    || data.Solicitante.length !== 0 || data.Departamento.length !== 0 || data.Rango.length !== 0 || data.Resuelto){
+                    //Devolvemos en true, porque ya hay datos en los filtros.
+                    this.props.setClean(true);
+                }
 
+                //Close Popover
                 popupState.close();
+                
                 this.props.dispatch(actionSearch(ticketList));
-                this.props.history.push("/admin");
-
+                this.props.history.push("/");
                 
             }).catch(reason => {
                 console.log(reason);
-            })
-
+            });
         }
+    }
+    
+    handlerClean = (event) =>{
+        if(this.props.clean){
+            this.setState({
+                departamentos: [],rangos:[],setAnchorEl: null,problema:'',
+                check: false, atiende:'', solicitante:'',
+                solicitud:0,departamento:0,rango:0
+            },() => {
+                if (this.props.user){
+                    let solicitud = 0;
+                    if (this.state.solicitud > 0)
+                        solicitud = this.state.solicitud;
+        
+                    const data = {
+                        UsuarioLogin: this.props.user.username,
+                        Problema: this.state.problema,
+                        Id: solicitud,
+                        Atiende: this.state.atiende,
+                        Solicitante: this.state.solicitante,
+                        Departamento: this.state.departamento,
+                        Rango: this.state.rango,
+                        Resuelto: this.state.check
+                    }
+                    
+                    axios.post("busquedaavanzada", data)
+                    .then( response => {
+                        const ticketList =response.data.Solicitudes.map(ticket => {
+                            return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
+        
+                        })
+
+                        this.props.dispatch(actionSearch(ticketList));
+                        this.props.history.push("/");
+
+                    })
+                    .catch(reason => {
+                        console.log(reason);
+                    });
+                }
+            });
+
+            this.props.setClean(false);
+        }
+        
     }
 
     render(){
         const style = { width: "90%",margin:"5px 0px 5px 0px" };
         const stylefull = {width: "90%"}
-
+        
         return (
+            <div>
             <PopupState variant="popover" popupId="demo-popup-popover">
                 {popupState => (
                     <div>
-                    <IconButton style={{ padding: "4px" }} variant="contained" {...bindTrigger(popupState)}>
-                        <DownIcon />
-                    </IconButton>
+                        {/*Icono X para limpiar filtros*/}
+                        {this.props.clean?
+                            <IconButton style={{ padding: "4px" }} onClick={this.handlerClean}>
+                                <CloseIcon />
+                            </IconButton>
+                            :
+                            <IconButton style={{ padding: "4px" }}>
+                                
+                            </IconButton>
+                        }
+                        
+                        {/*Icono para mostrar menu de filtros*/}
+                        <IconButton style={{ padding: "4px" }} variant="contained" {...bindTrigger(popupState)}>
+                            <DownIcon />
+                        </IconButton>
                     <Popover
                         PaperProps = {{style:{width:"70%"}}}
                         {...bindPopover(popupState)}
@@ -156,11 +222,11 @@ class BusquedaAvanzada extends Component{
                             <Paper style={{ padding: "15px", margin: "0px" }} >
                                 <Grid container alignItems={"flex-start"}>
                                     <Grid item xs={6}>
-                                        <ControlledInput id="fltAsunto" 
-                                            label="Asunto"
-                                            value={this.state.asunto}
+                                        <ControlledInput id="fltProblema" 
+                                            label="Problema"
+                                            value={this.state.problema}
                                             onChange={this.handleChange}
-                                            name={"asunto"}
+                                            name={"problema"}
                                             style={stylefull}
                                             //error={this.state.expedienteHelper !== ""}
                                             //helperText={this.state.expedienteHelper}
@@ -174,7 +240,6 @@ class BusquedaAvanzada extends Component{
                                             onChange={this.handleChange}
                                             name={"solicitud"}
                                             style={style}
-                                            type="number"
                                             //error={this.state.expedienteHelper !== ""}
                                             //helperText={this.state.expedienteHelper}
                                         />
@@ -253,6 +318,8 @@ class BusquedaAvanzada extends Component{
                     </div>
                 )}
                 </PopupState>
+          
+            </div>
           );
     }
 }
@@ -264,4 +331,3 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(BusquedaAvanzada);
-//export default withRouter(connect(mapStateToProps)(BusquedaAvanzada));
