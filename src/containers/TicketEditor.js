@@ -53,6 +53,7 @@ const canBeOn=status=>{
            
             
             if(!_comments){
+                console.log("post",response.data.post);
                 this.setState({comments:"",
                  postList:[response.data.post,...this.state.postList],
                 currentStatus:status,
@@ -66,25 +67,16 @@ const canBeOn=status=>{
         });
 
     }
-    handleDialogClose=(isOKClicked)=>{
+    handleDialogClose=(isOKClicked,third)=>{
         this.setState({isDialogOpen:false});
         if(isOKClicked){
-            this.handleSubmit(statusCodes.THIRD.value);
+            this.setState({thirdPart:third},this.handleSubmit(statusCodes.THIRD.value));
+
+            
         }
 
     }
-    handleThirdSuggest=(selectedItem,isOnTheList)=>{
-        if(isOnTheList){
-            const _third = this.state.thirds.find(item=>item.nombre===selectedItem);
-            if(_third){
-                this.setState({thirdPart:_third.value});
-            }
-        }else{
-            if(this.state.thirdPart){
-                this.setState({thirdPart:0});
-            }
-        }
-    }
+    
     componentWillUnmount(){
         if(this.state.currentStatus===statusCodes.NEW.value){
             
@@ -116,7 +108,8 @@ const canBeOn=status=>{
         const postList = this.state.postList.map((post,index) => {
             return <Comment key ={index} author={post.userFullName} date={post.date} comment={post.comments} />;
         });
-        const submitDisabled = !(this.state.comments!=="" && canBeOn(this.state.currentStatus));
+        const _canBeOn = canBeOn(this.state.currentStatus);
+        const submitDisabled = !(this.state.comments!=="" && _canBeOn)
         const photo = this.props.user ? this.props.user.photo : "";
 
         return (
@@ -125,10 +118,11 @@ const canBeOn=status=>{
                 <Grid container direction={"column"} style={{padding:"2%"}}
                     item md={4} spacing={16} >
                     <Grid item>
-                    <TicketSummary ticketNumber={this.props.id} category={this.props.category}
+                    <TicketSummary ticketNumber={this.props.id} category={this.props.categoryName}
                         detail={this.props.description}
                         status={this.state.currentStatus}
-                         problem={this.props.problem} />
+                        editing = {_canBeOn}
+                        problem={this.props.problem} />
                     </Grid>
 
                     {this.state.fields.map(field=>{
@@ -183,8 +177,10 @@ const canBeOn=status=>{
                 </Grid>
             </Grid>
             <ThirdDialogForm isDialogOpen={this.state.isDialogOpen} 
+                title = {"Enviar con tercero"}
+                text={"Selecciona el tercero con el que procesaras la solicitud"}
                 handleDialogClose={this.handleDialogClose} thirds={this.state.thirds}
-                handleThirdSuggest={this.handleThirdSuggest} thirdPart={this.state.thirdPart}
+                
             />
             </React.Fragment>
         );

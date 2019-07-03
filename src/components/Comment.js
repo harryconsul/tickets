@@ -2,7 +2,12 @@ import React from 'react';
 import { Paper, Avatar, Typography, Grid } from '@material-ui/core'
 import CalendarClock from 'mdi-material-ui/CalendarClock';
 class Comment extends React.Component {
-    shouldComponentUpdate(){
+    shouldComponentUpdate(nextProps){
+        if(nextProps.comment!==this.props.comment
+            || nextProps.author!==this.props.author
+            || nextProps.date !== this.props.date){
+            return true;
+        }
         return false;
     }
     render() {
