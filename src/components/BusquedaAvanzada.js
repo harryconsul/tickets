@@ -18,7 +18,7 @@ import CloseIcon from 'mdi-material-ui/Close';
 class BusquedaAvanzada extends Component{
 
     state = {
-        departamentos: [],rangos:[],setAnchorEl: null,problema:'',
+        departamentos: [],rangos:[],problema:'',
         check: false, atiende:'', solicitante:'',
         solicitud:0,departamento:0,rango:0
     }
@@ -57,18 +57,6 @@ class BusquedaAvanzada extends Component{
         .catch(error => {
             console.log("Error al buscar rangos",error);
         }) 
-    }
-
-    handleClick = (event) => {
-        this.setState({
-            setAnchorEl: event.currentTarget
-        });
-    }
-
-    handleClose = () =>{
-        this.setState({
-            setAnchorEl: null
-        });
     }
     
     componentDidMount(){
@@ -125,6 +113,11 @@ class BusquedaAvanzada extends Component{
                     this.props.setClean(true);
                 }
 
+                //Pasar filtros al filtro principal
+                const departamento = this.getNombre(data.Departamento,"departamentos");
+                const rango = this.getNombre(data.Rango,"rangos");
+                this.props.setInputClean(data , departamento , rango);
+
                 //Close Popover
                 popupState.close();
                 
@@ -140,7 +133,7 @@ class BusquedaAvanzada extends Component{
     handlerClean = (event) =>{
         if(this.props.clean){
             this.setState({
-                departamentos: [],rangos:[],setAnchorEl: null,problema:'',
+                problema:'',
                 check: false, atiende:'', solicitante:'',
                 solicitud:0,departamento:0,rango:0
             },() => {
@@ -178,8 +171,28 @@ class BusquedaAvanzada extends Component{
             });
 
             this.props.setClean(false);
+            this.props.cleanSearch();
         }
         
+    }
+
+    getNombre = (id,cual) => {
+        let arreglo = [];
+        if(cual === "departamentos"){
+            arreglo = this.state.departamentos;
+        }
+        if(cual === "rangos"){
+            arreglo = this.state.rangos;
+        }   
+
+        let nombre = "";
+        //Navegar hasta que hagan match los id's
+        for(let i = 0; i < arreglo.length; i++){
+            if(arreglo[i].props.value === id && id !== 0){
+                nombre = arreglo[i].props.children;
+            }
+        }
+        return nombre;
     }
 
     render(){
@@ -197,9 +210,7 @@ class BusquedaAvanzada extends Component{
                                 <CloseIcon />
                             </IconButton>
                             :
-                            <IconButton style={{ padding: "4px" }}>
-                                
-                            </IconButton>
+                            null
                         }
                         
                         {/*Icono para mostrar menu de filtros*/}
@@ -228,8 +239,6 @@ class BusquedaAvanzada extends Component{
                                             onChange={this.handleChange}
                                             name={"problema"}
                                             style={stylefull}
-                                            //error={this.state.expedienteHelper !== ""}
-                                            //helperText={this.state.expedienteHelper}
                                             areYouFirst={true}
                                         />
                                     </Grid>
@@ -241,8 +250,6 @@ class BusquedaAvanzada extends Component{
                                             name={"solicitud"}
                                             style={style}
                                             type="number"
-                                            //error={this.state.expedienteHelper !== ""}
-                                            //helperText={this.state.expedienteHelper}
                                         />
                                     </Grid> 
                                     <Grid item xs={6}>
@@ -252,8 +259,6 @@ class BusquedaAvanzada extends Component{
                                             onChange={this.handleChange}
                                             name={"solicitante"}
                                             style={style}
-                                            //error={this.state.expedienteHelper !== ""}
-                                            //helperText={this.state.expedienteHelper}
                                         />
                                     </Grid>
                                     <Grid item xs={6}>
@@ -263,8 +268,6 @@ class BusquedaAvanzada extends Component{
                                             onChange={this.handleChange}
                                             name={"atiende"}
                                             style={style}
-                                            //error={this.state.expedienteHelper !== ""}
-                                            //helperText={this.state.expedienteHelper}
                                         />
                                     </Grid>
                                     <Grid item xs={6}>
