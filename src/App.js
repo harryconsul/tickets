@@ -38,6 +38,11 @@ class App extends React.Component {
   componentDidMount() {
     if (this.userAgentApplication.getAccount()) {
 
+      //El siguiente state, se usa para mostrar el icono progress en el componente Login.js
+      this.setState({
+        isLoading: true
+      });
+      
       this.getUserProfile();
     } else {
       if (this.props.user) {
