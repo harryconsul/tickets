@@ -10,7 +10,7 @@ const columnsArray = [{ label: "No. Solicitud", value: "id" },
 { label: "Problema", value: "problem" },
 { label: "Descripcion", value: "description" }, { label: "Quien lo Atiende", value: "engineer" },
 { label: "Fecha Alta", value: "date" }, 
-{ label: "Categoria", value: "category" },
+{ label: "Categoria", value: "categoryName" },
 ];
 const filterTickets = (ticketList, statusTab) => {
     let status = [];
@@ -45,6 +45,7 @@ class IssuesList extends React.Component {
     state = {
         status: 0,
         ticketList: [],
+        columns:null,
         
     }
     componentDidMount() {
@@ -56,7 +57,8 @@ class IssuesList extends React.Component {
             value:"",
         }
         axios.post("trabajarpreferencias",data).then(response=>{
-            console.log(response.data);
+            const columns =  JSON.parse(response.data.value);
+            this.setState({columns});
         }).catch(reason=>{
             console.log(reason);
         })
@@ -69,14 +71,17 @@ class IssuesList extends React.Component {
         });
 
     
-    }
+    } 
     savePreferenceToServer=(columns)=>{
         const data = {
             UsuarioLogin:this.props.user.username,
             operacion:"U",
             key:"columnas",
             value:JSON.stringify(columns),
-    };
+        };
+        this.setState({columns});
+
+
         axios.post("trabajarpreferencias",data).then(response=>{
             console.log(response.data);
         }).catch(reason=>{
@@ -100,6 +105,7 @@ class IssuesList extends React.Component {
                     itemsList={ticketList} defaultColumns={["id", "statusAvatar", "problem", "engineer"]}
                     labelRowsPerPage={"Solicitudes por Pagina"}
                     savePreferenceToServer={this.savePreferenceToServer}
+                    preferences={{columnsSelected:this.state.columns}}
                     numberColumnLabel={"#"} rowClickHandle={onTicketClick} />
             </div>
         )
