@@ -1,6 +1,7 @@
 import React from 'react';
 import { InputBase, IconButton } from '@material-ui/core';
 import SearchIcon from 'mdi-material-ui/Magnify';
+import CloseIcon from 'mdi-material-ui/Close';
 import StatusAvatar from '../StatusAvatar'
 import './SearchField.css';
 import axios from 'axios';
@@ -12,6 +13,7 @@ class SearchField extends React.Component {
     state = {
         containerClass: "searchfield",
         search:"",
+        clean: false
     }
     handleSearch = () => {
         this.postSearch();
@@ -43,6 +45,14 @@ class SearchField extends React.Component {
             })
         }
     }
+
+    //Dejar en default los filtros de búsqueda.
+    setClean = (clean) => {
+        this.setState({
+            clean: clean
+        });
+    }
+
     render() {
         
         return (
@@ -59,7 +69,12 @@ class SearchField extends React.Component {
                     onBlur={() => this.setState({ containerClass: "searchfield" })}
                     onChange={this.handleChange}
                 />
-                <BusquedaAvanzada />
+                {/*<IconButton style={{ padding: "4px" }} onClick={() => this.postClean()}>
+                    <CloseIcon />
+                </IconButton>
+                */}
+                <BusquedaAvanzada history = {this.props.history}
+                setClean={this.setClean.bind(this)} clean = {this.state.clean} />
             </div>
         );
     }
