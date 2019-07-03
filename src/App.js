@@ -112,12 +112,14 @@ class App extends React.Component {
   // Sign the user into Azure AD. HelloJS stores token info in localStorage.hello.
   login = async () => {
     try {
+     
+      await this.userAgentApplication.loginPopup(graphScopes);
+
       //El siguiente state, se usa para mostrar el icono progress en el componente Login.js
       this.setState({
         isLoading: true
       });
-      
-      await this.userAgentApplication.loginPopup(graphScopes);
+
       await this.getUserProfile();
 
 
@@ -136,8 +138,8 @@ class App extends React.Component {
   render() {
 
     return (
-      <Router basename="/Tickets/R" >
-
+      //<Router basename="/Tickets/R" >
+      <Router basename="/" >
 
         {this.props.user ?
 
