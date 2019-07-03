@@ -4,6 +4,7 @@ import MenuBar from '../components/MenuBar';
 import Dashboard from '../containers/Dashboard';
 import IssuesManager from './IssuesManager';
 import NewTicketFlow from './NewTicketFlow'
+
 import {connect} from 'react-redux';
 
 class Admin extends React.Component {
@@ -25,7 +26,7 @@ class Admin extends React.Component {
             <div>
                 
                 <MenuBar currentOption={this.props.location.pathname} 
-                    isManager={true} barRef={this.state.ref}
+                    isManager={true} barRef={this.state.ref} textColor={"white"}
                 history={this.props.history} />
                 <div style={{marginTop:this.state.margin}}>
                     <Route  path="/" component={IssuesManager} />
