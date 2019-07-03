@@ -2,7 +2,9 @@ import React from 'react';
 import { CustomColumnsTable } from 'custom-columns-table/';
 import { Tabs, Tab } from '@material-ui/core';
 import { statusCodes } from '../constants/';
+import {connect} from 'react-redux';
 import { EmailOutline, EmailOpenOutline, AccountClockOutline, Check, FileCancelOutline } from 'mdi-material-ui'
+import axios from 'axios';
 const columnsArray = [{ label: "No. Solicitud", value: "id" },
 { label: "Estatus", value: "statusAvatar" },
 { label: "Problema", value: "problem" },
@@ -43,9 +45,21 @@ class IssuesList extends React.Component {
     state = {
         status: 0,
         ticketList: [],
+        
     }
     componentDidMount() {
         this.setState({ ticketList: this.props.ticketList });
+        const data = {
+            UsuarioLogin:this.props.user.username,
+            operacion:"B",
+            key:"columnas",
+            value:"",
+        }
+        axios.post("trabajarpreferencias",data).then(response=>{
+            console.log(response.data);
+        }).catch(reason=>{
+            console.log(reason);
+        })
     }
     onChangeTab = (event, newStatus) => {
         const ticketList =  filterTickets(this.props.ticketList,newStatus);
@@ -54,6 +68,20 @@ class IssuesList extends React.Component {
                 status: newStatus 
         });
 
+    
+    }
+    savePreferenceToServer=(columns)=>{
+        const data = {
+            UsuarioLogin:this.props.user.username,
+            operacion:"U",
+            key:"columnas",
+            value:JSON.stringify(columns),
+    };
+        axios.post("trabajarpreferencias",data).then(response=>{
+            console.log(response.data);
+        }).catch(reason=>{
+            console.log(reason);
+        })
     }
     render() {
         const { onTicketClick } = this.props;
@@ -71,9 +99,15 @@ class IssuesList extends React.Component {
                 <CustomColumnsTable columnsArray={columnsArray}
                     itemsList={ticketList} defaultColumns={["id", "statusAvatar", "problem", "engineer"]}
                     labelRowsPerPage={"Solicitudes por Pagina"}
+                    savePreferenceToServer={this.savePreferenceToServer}
                     numberColumnLabel={"#"} rowClickHandle={onTicketClick} />
             </div>
         )
     }
 }
-export default IssuesList;
+const mapStateToProps=state=>{
+    return{
+        user:state.user,
+    }
+}
+export default connect(mapStateToProps)(IssuesList);

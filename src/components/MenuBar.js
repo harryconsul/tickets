@@ -23,7 +23,7 @@ const MenuBar = props => {
                 <Toolbar>
                     <Grid container spacing={16} style={{ margin: 0 }}>
                         <Grid md={2} item>
-                            <Typography variant={"h6"} >
+                            <Typography variant={"h6"} style={{color:"white"}} >
                                 {
                                     props.isManager ?
                                         getOptionName(props.currentOption) :
@@ -41,7 +41,8 @@ const MenuBar = props => {
                                 (
                                     <React.Fragment>
                                         <Grid item>
-                                            <MenuLink link="/nueva-solicitud" icon={EmailPlusOutline} />
+                                            <MenuLink 
+                                            link="/nueva-solicitud" icon={EmailPlusOutline} />
                                         </Grid>
                                         
                                         <Grid item>

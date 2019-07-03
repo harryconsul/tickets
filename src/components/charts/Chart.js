@@ -40,11 +40,7 @@ class Chart extends React.Component {
         this.state = {
             gradientApplied:false,
             data: {
-                chart:{
-                   style:{ 
-                       fontFamily:["Roboto","Helvetica","Arial","san-serif"],
-                    },
-                },
+                
                 plotOptions:{
                     series:{
                         point:{
@@ -108,6 +104,13 @@ class Chart extends React.Component {
             
             const properData = {
                 ...response.data.SDTGrafica,
+                chart:{
+                    ...response.data.SDTGrafica.chart,
+                    style:{ 
+                        fontFamily:["Roboto","Helvetica","Arial","san-serif"],
+                     },
+                     
+                },
                 plotOptions:{
                     ...response.data.SDTGrafica.plotOptions,
                     series:

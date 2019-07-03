@@ -1,16 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { IconButton } from '@material-ui/core'
-import {getOptionName} from './MenuBar'
-const MenuLink = props => {
-    return (
-        <Link to={props.link} title={getOptionName(props.link)} >
-            <IconButton>
+import { IconButton, withTheme } from '@material-ui/core'
+import { getOptionName } from './MenuBar'
+const MenuLink =props=> {
+    
+        return (
+            <Link to={props.link} title={getOptionName(props.link)}  >
+                <IconButton style={{color:props.theme.palette.text.third}}>
 
-                <props.icon />
+                    <props.icon />
 
-            </IconButton>
-        </Link>
-    )
+                </IconButton>
+            </Link>
+        )
+    
 }
-export default MenuLink;
+export default withTheme()(MenuLink);
