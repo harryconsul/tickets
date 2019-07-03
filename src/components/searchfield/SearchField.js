@@ -38,8 +38,10 @@ class SearchField extends React.Component {
 
                     })
                    
-               this.props.dispatch(actionSearch(ticketList));
+                this.props.dispatch(actionSearch(ticketList));
                 this.props.history.push("/");
+
+                this.setClean(true);
             }).catch(reason => {
                 console.log(reason);
             })
@@ -53,6 +55,33 @@ class SearchField extends React.Component {
         });
     }
 
+    cleanSearch = () => {
+        this.setState({
+            search:""
+        });
+    }
+
+    setInputClean = (data , departamento , rango) =>{
+        let search = ""
+        if(data.Problema.length !== 0)
+            search += " problema: " + data.Problema
+        if(data.Id.length !== 0 && data.Id !== 0)
+            search += " solicitud: " + data.Id
+        if(data.Atiende.length !== 0)
+            search += " atiende: " + data.Atiende
+        if(data.Solicitante.length !== 0)
+            search += " solicitó: " + data.Solicitante
+        if(data.departamento !== 0 && departamento.length !== 0)
+            search += " departamento: " + departamento
+        if(data.rango !== 0  && rango.length !== 0)
+            search += " rango: " + rango
+        if(data.Resuelto)
+            search += " resuelto por el usuario"
+
+        this.setState({
+            search: search
+        });
+    }
     render() {
         
         return (
@@ -61,7 +90,7 @@ class SearchField extends React.Component {
                     <SearchIcon />
                 </IconButton>
 
-                <InputBase placeholder="Busca solicitudes"
+                <InputBase placeholder="Buscar solicitudes"
                     style={{ flex: "1" }}
                     value={this.state.search}
                     autoFocus={true} onKeyUp={this.onSearchKeyUp}
@@ -69,12 +98,11 @@ class SearchField extends React.Component {
                     onBlur={() => this.setState({ containerClass: "searchfield" })}
                     onChange={this.handleChange}
                 />
-                {/*<IconButton style={{ padding: "4px" }} onClick={() => this.postClean()}>
-                    <CloseIcon />
-                </IconButton>
-                */}
-                <BusquedaAvanzada history = {this.props.history}
-                setClean={this.setClean.bind(this)} clean = {this.state.clean} />
+                <BusquedaAvanzada 
+                    history = {this.props.history} setClean={this.setClean.bind(this)} 
+                    clean = {this.state.clean} cleanSearch={this.cleanSearch.bind(this)} 
+                    setInputClean = {this.setInputClean.bind(this)}
+                />
             </div>
         );
     }
