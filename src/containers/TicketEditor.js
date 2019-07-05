@@ -9,6 +9,7 @@ import FileCancel from 'mdi-material-ui/FileCancel';
 import Send from 'mdi-material-ui/Send';
 import Check from 'mdi-material-ui/Check';
 import axios from 'axios';
+import Graph from '../helpers/GraphSdkHelper';
 import {connect} from 'react-redux';
 import {statusCodes} from '../constants';
 const buttonStyle = {
@@ -37,6 +38,7 @@ const canBeOn=status=>{
             thirds:[],
             currentStatus:props.status,
             currentCategoryName:props.categoryName,            
+            userPhoto:""
             
         }
 
@@ -120,6 +122,12 @@ const canBeOn=status=>{
             });
 
         });
+        const helper = new Graph(this.props.user.accessToken);
+        helper.getProfilePics([{id:this.props.userID,photo:""}],(photos)=>{
+            if(photos.length){
+                this.setState({userPhoto:photos[0].photo});
+            }
+        })
     }
     render() {
         const postList = this.state.postList.map((post,index) => {
@@ -136,6 +144,8 @@ const canBeOn=status=>{
                     item md={4} spacing={16} >
                     <Grid item>
                     <TicketSummary ticketNumber={this.props.id} 
+                    isManager={true}
+                    photo={this.state.userPhoto}
                     category={this.state.currentCategoryName}
                         detail={this.props.description}
                         status={this.state.currentStatus}

@@ -1,12 +1,20 @@
 import React from 'react';
-
+import {Typography } from '@material-ui/core';
 
 const EngineerAvatar = props =>{
-    const style = {width:'100px',height:'100px',borderRadius:'50px',position:'relative',float:'right'
-    ,right:'10px',bottom:'40px',...props.style};
+    const style = {width:'100px',height:'100px',borderRadius:'50px',...props.style};
     return(
-        
-       <img src={props.photo} alt="Avatar del responsable del servicio" style={style} />
+       <div style={{position:'relative',float:'right'
+       ,right:'10px',bottom:'40px',width:'100px',display:'flex',flexDirection:"column"}}>
+            <img src={props.photo} alt="Avatar del responsable del servicio" style={style} />
+            {props.isManager?null
+                :<Typography variant={"caption"} style={{textAlign:"center"}}>
+                    <i>Nos pondremos pilas para atenderte </i>
+                </Typography>
+                
+            }
+       </div>
+       
     )
 }
 
