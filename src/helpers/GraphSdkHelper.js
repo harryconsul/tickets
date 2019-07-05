@@ -2,10 +2,22 @@
 *  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. 
 *  See LICENSE in the source repository root for complete license information. 
 */
-
 import { Client } from "@microsoft/microsoft-graph-client";
-import async from 'async';
 
+
+const getBlobUrl =async (response) =>{
+   const blob= await response.blob();
+    try {
+      const url = window.URL || window.webkitURL;
+      const blobUrl = url.createObjectURL(blob);
+      return blobUrl;
+      
+    } catch (e) {
+      throw(e);
+    }
+
+  
+}
 export default class GraphSdkHelper {
   constructor(token) {
 
@@ -58,7 +70,12 @@ export default class GraphSdkHelper {
       //console.log("err",err);
       //console.log("res",res);
       //console.log("rawResponse",rawResponse);
-      callback(null,rawResponse);
+      
+      getBlobUrl(rawResponse)
+        .then(url=>callback(null,url))
+        .catch(reason=>callback(reason,null))
+
+      
     });
     /*this.client
       .api('/me/photos/64X64/$value')
@@ -92,25 +109,37 @@ export default class GraphSdkHelper {
 
   // GET user/id/photo/$value for each person
   getProfilePics(personas, callback) {
-    const pic = (p, done) => {
-      this.client
-        .api(`users/${p.props.id}/photo/$value`)
+    const photosPromises = personas.map((persona)=>{
+      
+      const personaPromise=(persona)=>new Promise((resolve,reject)=>{
+        console.log(persona);
+       this.client
+        .api(`/users/${persona.id}/photo/$value`)
         .header('Cache-Control', 'no-cache')      
         .responseType('blob')
         .get((err, res, rawResponse) => {
-          if (err) {
-            done(err);
-          } 
-          else {
-            p.imageUrl = window.URL.createObjectURL(rawResponse.xhr.response);
-            p.initialsColor = null;
-            done();
-          }
+            
+            getBlobUrl(rawResponse)
+            .then(url=>resolve({...persona,photo:url}))
+            .catch(reason=>reject({...persona,photo:""}));
+        }).catch(reason=>{
+           console.log("catch in graph" , reason);
+           reject({...persona,photo:""})
         });
-    };
-    async.each(personas, pic, (err) => {
-      callback(err);
+      });
+      return personaPromise(persona);
     });
+    
+    Promise.all([...photosPromises]).then((photos)=>{
+        callback(photos);
+    }).catch((reason)=>{
+      console.log("hum reason",reason);
+      callback(personas);
+    });
+    
+      
+    
+ 
   }   
 
   // GET users?$filter=displayName startswith('{searchText}')

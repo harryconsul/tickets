@@ -53,12 +53,13 @@ class App extends React.Component {
       var accessToken = await this.userAgentApplication.acquireTokenSilent(graphScopes);
 
       if (accessToken) {
-
+        console.log("access",accessToken);
 
         this.graphClient = new GraphSdkHelper(accessToken.accessToken);
         this.graphClient.getMyProfile((err, me) => {
 
           const user = {
+            accessToken:accessToken.accessToken,
             id: me.id,
             department: me.department,
             email: me.mail,
@@ -66,6 +67,7 @@ class App extends React.Component {
             name: me.displayName,
             isManager: true,//me.department==="TI",
             logout: this.userAgentApplication.logout.bind(this.userAgentApplication),
+            
 
           }
           axios.post("registrausuario", { user }).then(response => {
@@ -76,21 +78,13 @@ class App extends React.Component {
 
           this.graphClient.getMyPicture((err, response) => {
             if (!err && response) {
-
-              response.blob().then(blob => {
-                try {
-                  const url = window.URL || window.webkitURL;
-                  const blobUrl = url.createObjectURL(blob);
-                  user.photo = blobUrl;
-                  this.props.dispatch(actionLogin(user));
-                } catch (e) {
-                  console.log("error de blob", e);
-                }
-
-              })
+              user.photo=response;
+              this.props.dispatch(actionLogin(user));
+              
 
 
             } else {
+              console.log("error",err,"response",response)
               this.props.dispatch(actionLogin(user));
             }
           })
@@ -139,7 +133,7 @@ class App extends React.Component {
 
     return (
       //<Router basename="/Tickets/R" >
-      <Router basename="/" >
+      <Router  >
 
         {this.props.user ?
 

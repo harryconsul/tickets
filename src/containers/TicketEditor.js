@@ -26,15 +26,22 @@ const canBeOn=status=>{
 
 
  class TicketEditor extends React.Component {
-    state = {
-        comments: "",
-        thirdPart: 0,
-        postList: [],
-        fields: [],
-        isDialogOpen:false,
-        thirds:[],
-        currentStatus:null,
+    constructor(props){
+        super(props);
+        this.state = {
+            comments: "",
+            thirdPart: 0,
+            postList: [],
+            fields: [],
+            isDialogOpen:false,
+            thirds:[],
+            currentStatus:props.status,
+            currentCategoryName:props.categoryName,            
+            
+        }
+
     }
+   
     handleSubmit = (_status,_comments) => {
         const {  thirdPart } = this.state;
         const status = _status===statusCodes.NEW.value?
@@ -76,6 +83,16 @@ const canBeOn=status=>{
         }
 
     }
+    changeCategory=(category)=>{
+        axios.post("cambiarcategoria",{
+            SolicitudId:this.props.id,
+            CategoriaId:category,
+            UsuarioLogin:this.props.user.username,
+
+        }).then(response=>{
+                this.setState({currentCategoryName:response.data.categoryName})
+        })
+    }
     
     componentWillUnmount(){
         if(this.state.currentStatus===statusCodes.NEW.value){
@@ -92,7 +109,7 @@ const canBeOn=status=>{
 
     }
     componentDidMount() {
-       this.setState({currentStatus:this.props.status})
+       //this.setState({currentStatus:this.props.status})
         axios.post("obtienedetallesolicitud", { id: this.props.id }).then(response => {
             
             this.setState({
@@ -118,9 +135,11 @@ const canBeOn=status=>{
                 <Grid container direction={"column"} style={{padding:"2%"}}
                     item md={4} spacing={16} >
                     <Grid item>
-                    <TicketSummary ticketNumber={this.props.id} category={this.props.categoryName}
+                    <TicketSummary ticketNumber={this.props.id} 
+                    category={this.state.currentCategoryName}
                         detail={this.props.description}
                         status={this.state.currentStatus}
+                        changeCategory={this.changeCategory}
                         editing = {_canBeOn}
                         problem={this.props.problem} />
                     </Grid>
