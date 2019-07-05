@@ -5,6 +5,7 @@ import RequestForm from './RequestForm';
 import SummitAck from '../components/SummitAck';
 import {statusCodes} from '../constants'
 import axios from 'axios';
+import GraphSDKHelper from '../helpers/GraphSdkHelper';
 import {connect} from 'react-redux';
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -43,6 +44,7 @@ class NewTicketFlow extends React.Component {
         problemType: {},
         problemDetail: {},
         ticketId: null,
+        engineerPhoto:"",
 
     }
     resetFlow = () => {
@@ -53,6 +55,7 @@ class NewTicketFlow extends React.Component {
             problemDetail: {},
             ticketId: null,
             steps: baseSteps(),
+            engineerPhoto:"",
         });
     }
     nextStep = (semanticObject) => {
@@ -105,6 +108,13 @@ class NewTicketFlow extends React.Component {
         };
         axios.post("registrarsolicitud", data).then(response => {
             this.setState({ ticketId: response.data.SolicitudId })
+            const helper = new GraphSDKHelper(this.props.user.accessToken);
+            helper.getProfilePics([{id:response.data.UsuarioID,photo:""}],(photos)=>{
+                if(photos.length){
+                    this.setState({engineerPhoto:photos[0].photo});
+                }
+            })
+            
         }).catch(reason => {
             console.log("Error ", reason);
         })
@@ -121,6 +131,7 @@ class NewTicketFlow extends React.Component {
                     detail={this.state.problemDetail.detail}
                     status={statusCodes.NEW.value}
                     resetFlow={this.resetFlow}
+                    photo={this.state.engineerPhoto}
                     problem={this.state.problemDetail.problem} />
 
         }

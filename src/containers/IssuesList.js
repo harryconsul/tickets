@@ -8,7 +8,8 @@ import axios from 'axios';
 const columnsArray = [{ label: "No. Solicitud", value: "id" },
 { label: "Estatus", value: "statusAvatar" },
 { label: "Problema", value: "problem" },
-{ label: "Descripcion", value: "description" }, { label: "Quien lo Atiende", value: "engineer" },
+//{ label: "Descripcion", value: "description" },
+ { label: "Quien lo Atiende", value: "engineer" },
 { label: "Fecha Alta", value: "date" }, 
 { label: "Categoria", value: "categoryName" },
 ];

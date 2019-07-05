@@ -109,12 +109,13 @@ class RequestForm extends React.Component {
                             areYouFirst={true}
                             label={"Mi solicitud es"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
-                    </Grid>
+                    </Grid>{/*
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ControlledInput id={"detail"} name={"detail"} value={this.state.detail}
                             label={"Detalle de la Solicitud"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
                     </Grid>
+                    */}
                     {
                         this.state.fields.map(field =>
                             <Grid item xs={12} key={field.id} style={{ marginBottom: '20px' }}>

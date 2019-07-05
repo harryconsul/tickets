@@ -11,9 +11,9 @@ const TicketSummary = props => {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const handleDialogClose = (isOk,categoryId) => {
         setDialogOpen(false);
-        if(isOk){
-           console.log(categoryId);
-        }
+        if(isOk && categoryId){
+           props.changeCategory(categoryId);
+        } 
 
     }
 
@@ -21,7 +21,17 @@ const TicketSummary = props => {
         setDialogOpen(true);
         if (!categories.length) {
             axios.post("obtienecategorias").then(response => {
-                setCategories(response.data.Categorias.map(item=>({nombre:item.label,value:item.id})));
+                const categoriesList = response.data.Categorias
+                                .reduce((list,category)=>{
+                                    if(category.subcategories.length){
+                                        list = [...list,...category.subcategories];
+                                    }else{
+                                        list.push(category);
+                                    }
+                                    return list;
+                                },[]);
+               
+                setCategories(categoriesList.map(item=>({nombre:item.label,value:item.id})));
             });
         }
     }
@@ -29,12 +39,12 @@ const TicketSummary = props => {
     return (
         <div>
             <Paper style={{ padding: '20px' }}>
-                <EngineerAvatar />
+                <EngineerAvatar photo={props.photo} />
                 <Typography variant={"h6"} style={styleLineSpace} > Reporte Registrado  </Typography>
                 <Typography variant={"h3"} style={styleLineSpace} color={"primary"} > {props.ticketNumber}   </Typography>
                 <Typography variant={"h5"} style={styleLineSpace}> {props.category}   </Typography>
                 <Typography variant={"subtitle1"} style={styleLineSpace}> {props.problem}   </Typography>
-                <Typography variant={"body1"} style={styleLineSpace}> {props.detail}   </Typography>
+               
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <StatusAvatar status={props.status} />
                     {props.editing ?

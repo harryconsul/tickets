@@ -69,7 +69,8 @@ class Chart extends React.Component {
                 gradientApplied:true,
                 data: {
                     ...this.state.data
-                    ,colors: Highcharts.map(this.state.data.colors, function (color) {
+                    ,colors:this.state.data.colors?
+                         Highcharts.map(this.state.data.colors, function (color) {
                         return {
                             radialGradient: {
                                 cx: 0.5,
@@ -81,7 +82,7 @@ class Chart extends React.Component {
                                 [1, Highcharts.Color(color).brighten(-0.15).get('rgb')] // darken
                             ]
                         };
-                    })
+                    }):[],
                 }
 
             });
@@ -128,17 +129,27 @@ class Chart extends React.Component {
                            dataArray[0]=dataArray[0].replace("'",'');
                            dataArray[1]=Number(dataArray[1]);
                            return dataArray;
-                        }
-                            
-                            );
+                        });
                     return {...item,data}
     
                 });
                 console.log("drillDown", drilldownSeries);
                 properData.drilldown.series = drilldownSeries;
             }
+            if(properData.yAxis){
+                if(properData.yAxis.stops){
+                    //set correct form of this array
+                   
+                    properData.yAxis.stops= properData.yAxis.stops.map(dataItem=>{
+                        let dataArray= dataItem.replace('[','').replace(']','').split(',');
+                        dataArray[0]=Number(dataArray[0]);
+                        dataArray[1]=dataArray[1].replace("'",'').replace("'",'');
+                        return dataArray;
+                     });
 
-            console.log("conflict data" , properData);
+                }
+            }
+            console.log("proper data",properData);
             
             this.setState({ data: properData });
             
