@@ -9,6 +9,7 @@ import FileCancel from 'mdi-material-ui/FileCancel';
 import Send from 'mdi-material-ui/Send';
 import Check from 'mdi-material-ui/Check';
 import axios from 'axios';
+import Graph from '../helpers/GraphSdkHelper';
 import {connect} from 'react-redux';
 import {statusCodes} from '../constants';
 const buttonStyle = {
@@ -37,6 +38,7 @@ const canBeOn=status=>{
             thirds:[],
             currentStatus:props.status,
             currentCategoryName:props.categoryName,            
+            userPhoto:""
             
         }
 
@@ -54,7 +56,7 @@ const canBeOn=status=>{
             comments,
             thirdPart,
             id: this.props.id,
-            user: this.props.user.username,
+            user: this.props.loggedUser.username,
         }
         axios.post("grabarseguimiento", data).then(response => {
            
@@ -87,7 +89,7 @@ const canBeOn=status=>{
         axios.post("cambiarcategoria",{
             SolicitudId:this.props.id,
             CategoriaId:category,
-            UsuarioLogin:this.props.user.username,
+            UsuarioLogin:this.props.loggedUser.username,
 
         }).then(response=>{
                 this.setState({currentCategoryName:response.data.categoryName})
@@ -101,7 +103,9 @@ const canBeOn=status=>{
 
         }else{
             if(this.state.currentStatus!==this.props.status){
+                console.log("engineer",this.props.engineer);
                 this.props.handleTicketUpdate({id:this.props.id,status:this.state.currentStatus
+                    ,engineer:this.props.engineer.trim()!==""?this.props.engineer:this.props.loggedUser.username
                     });
             }
         }
@@ -120,6 +124,12 @@ const canBeOn=status=>{
             });
 
         });
+        const helper = new Graph(this.props.loggedUser.accessToken);
+        helper.getProfilePics([{id:this.props.userID,photo:""}],(photos)=>{
+            if(photos.length){
+                this.setState({userPhoto:photos[0].photo});
+            }
+        })
     }
     render() {
         const postList = this.state.postList.map((post,index) => {
@@ -127,7 +137,7 @@ const canBeOn=status=>{
         });
         const _canBeOn = canBeOn(this.state.currentStatus);
         const submitDisabled = !(this.state.comments!=="" && _canBeOn)
-        const photo = this.props.user ? this.props.user.photo : "";
+        const photo = this.props.loggedUser ? this.props.loggedUser.photo : "";
 
         return (
             <React.Fragment>
@@ -136,6 +146,10 @@ const canBeOn=status=>{
                     item md={4} spacing={16} >
                     <Grid item>
                     <TicketSummary ticketNumber={this.props.id} 
+                    isManager={true}
+                    photo={this.state.userPhoto}
+                    department={this.props.department}
+                    userFullName={this.props.user}
                     category={this.state.currentCategoryName}
                         detail={this.props.description}
                         status={this.state.currentStatus}
@@ -210,7 +224,7 @@ const canBeOn=status=>{
 const mapStateToProps = state => {
     
     return {
-        user: state.user,
+        loggedUser: state.user,
        
     }
 }
