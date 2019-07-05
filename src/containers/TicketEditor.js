@@ -12,6 +12,7 @@ import axios from 'axios';
 import Graph from '../helpers/GraphSdkHelper';
 import {connect} from 'react-redux';
 import {statusCodes} from '../constants';
+import { get } from 'http';
 const buttonStyle = {
     marginLeft: "5px",
     marginRight: "5px",
@@ -36,11 +37,13 @@ const canBeOn=status=>{
             fields: [],
             isDialogOpen:false,
             thirds:[],
+            usersIDs:[],
             currentStatus:props.status,
             currentCategoryName:props.categoryName,            
-            userPhoto:""
+            userPhoto:"",
             
         }
+        this.helper = new Graph(this.props.loggedUser.accessToken);
 
     }
    
@@ -112,28 +115,56 @@ const canBeOn=status=>{
         
 
     }
+
+    getPhoto = (users,posts) => {
+               
+        this.helper.getProfilePics(users,(photos) => {
+           this.setState({
+                usersIDs:photos,
+                postList: posts.map(post =>{
+                    for(let i = 0; i < photos.length; i++){
+                        if(photos[i].id === post.userID){
+                            post.photo = photos[i].photo;
+                        }
+                    }
+                    return post;
+                })
+            });
+        })
+
+    }
+
     componentDidMount() {
        //this.setState({currentStatus:this.props.status})
+       
         axios.post("obtienedetallesolicitud", { id: this.props.id }).then(response => {
-            
+            const userIDs = response.data.userIDs.map(item =>{
+               return  {
+                    id:item ,
+                    photo:""
+                }
+            });
+            this.getPhoto(userIDs,response.data.posts);
+
             this.setState({
                 fields: response.data.fields
-                , postList: response.data.posts
                 ,thirds:response.data.thirds.map(item=>({nombre:item.name,value:item.id}))
-                ,
+                
+                
             });
-
         });
-        const helper = new Graph(this.props.loggedUser.accessToken);
-        helper.getProfilePics([{id:this.props.userID,photo:""}],(photos)=>{
+
+        
+        this.helper.getProfilePics([{id:this.props.userID,photo:""}],(photos)=>{
             if(photos.length){
                 this.setState({userPhoto:photos[0].photo});
             }
-        })
+        });
     }
     render() {
         const postList = this.state.postList.map((post,index) => {
-            return <Comment key ={index} author={post.userFullName} date={post.date} comment={post.comments} />;
+            return <Comment key ={index} author={post.userFullName} date={post.date} 
+                comment={post.comments} photo={post.photo}/>;
         });
         const _canBeOn = canBeOn(this.state.currentStatus);
         const submitDisabled = !(this.state.comments!=="" && _canBeOn)

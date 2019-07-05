@@ -14,7 +14,7 @@ class Comment extends React.Component {
         return (
             <Grid container style={{ marginBottom: "10px" }} >
                 <Grid item md={1}>
-                    <Avatar>{this.props.avatar}</Avatar>
+                    <Avatar src={this.props.photo} />
                 </Grid>
                 <Grid item md={11}>
                     <Paper style={{ padding: "10px" }}>
