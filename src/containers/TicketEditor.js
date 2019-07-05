@@ -131,7 +131,6 @@ const canBeOn=status=>{
                 })
             });
         })
-
     }
 
     componentDidMount() {
