@@ -7,12 +7,16 @@ const EngineerAvatar = props =>{
        <div style={{position:'relative',float:'right'
        ,right:'10px',bottom:'40px',width:'100px',display:'flex',flexDirection:"column"}}>
             <img src={props.photo} alt="Avatar del responsable del servicio" style={style} />
-            {props.isManager?null
-                :<Typography variant={"caption"} style={{textAlign:"center"}}>
-                    <i>Nos pondremos pilas para atenderte </i>
+           
+                <Typography variant={"caption"} style={{textAlign:"center"}}>
+                    <i>
+                    {props.isManager?props.userFullName + " - " + props.department
+                     : "Nos pondremos pilas para atenderte"
+                    }
+                    </i>
                 </Typography>
                 
-            }
+            
        </div>
        
     )

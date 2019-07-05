@@ -39,7 +39,10 @@ const TicketSummary = props => {
     return (
         <div>
             <Paper style={{ padding: '20px' }}>
-                <EngineerAvatar photo={props.photo} isManager={props.isManager}/>                
+                <EngineerAvatar photo={props.photo} 
+                    userFullName={props.userFullName}
+                    department={props.department}
+                isManager={props.isManager}/>                
                 <Typography variant={"h6"} style={styleLineSpace} > 
                     {props.isManager ? "Necesito tu ayuda!":"Hola! , Recibimos tu reporte " } 
                 </Typography>
