@@ -4,6 +4,7 @@ import SearchField from './searchfield/SearchField';
 import ChartBar from 'mdi-material-ui/ChartBar';
 import FormatListNumbered from 'mdi-material-ui/FormatListNumbered';
 import EmailPlusOutline from 'mdi-material-ui/EmailPlusOutline'
+import GridIcon from 'mdi-material-ui/Grid'
 import MenuLink from './MenuLink';
 import UserBar from './UserBar';
 export const getOptionName = path => {
@@ -47,6 +48,9 @@ const MenuBar = props => {
                                         
                                         <Grid item>
                                             <MenuLink link="/graficas" icon={ChartBar} />
+                                        </Grid>
+                                        <Grid item>
+                                            <MenuLink link="/reportes" icon={GridIcon} />
                                         </Grid>
                                         <Grid item>
                                             <MenuLink link="/" icon={FormatListNumbered} />

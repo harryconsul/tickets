@@ -215,7 +215,7 @@ const canBeOn=status=>{
                                 </div>
 
                                 <div style={{ textAlign: "right", margin: "10px" }}>
-                                    <Button variant="contained" style={buttonStyle}
+                                    <Button variant="outlined" style={buttonStyle}
                                         onClick={() => this.handleSubmit(statusCodes.REJECTED.value)}
                                         color={"secondary"} disabled={submitDisabled}>
                                         Rechazar <FileCancel />

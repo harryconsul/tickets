@@ -4,9 +4,8 @@ import MenuBar from '../components/MenuBar';
 import Dashboard from '../containers/Dashboard';
 import IssuesManager from './IssuesManager';
 import NewTicketFlow from './NewTicketFlow'
-
 import {connect} from 'react-redux';
-
+import PivotTable from '../components/PivotTable';
 class Admin extends React.Component {
     state={
         ref:React.createRef(),
@@ -21,7 +20,7 @@ class Admin extends React.Component {
 
     }
     render() {
-        
+         
         return (
             <div>
                 
@@ -31,6 +30,7 @@ class Admin extends React.Component {
                 <div style={{marginTop:this.state.margin}}>
                     <Route  path="/" component={IssuesManager} />
                     <Route path="/graficas" component={Dashboard} />
+                    <Route path="/reportes"  component={PivotTable} />
                     <Route path="/nueva-solicitud" component={NewTicketFlow} />
                 </div>
             </div>
