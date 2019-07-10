@@ -4,10 +4,10 @@ import DateIcon from 'mdi-material-ui/CalendarRange'
 import axios from 'axios';
 
 const PromiseDate = (props) => {
-    const [date, updateDate] = React.useState("");
+    const [date, updateDate] = React.useState(props.promiseDate);
     const [isEditing, setIsEditing] = React.useState(props.promiseDate === "0000-00-00" ? true : false);
     const submitPromiseDate = () => {
-        axios.post("registrafechacompromiso", { date,id:props.id }).then((response) => {
+        axios.post("registrafechacompromiso", { date,SolicitudId:props.id }).then((response) => {
                 setIsEditing(false);
         });
     }
@@ -26,6 +26,7 @@ const PromiseDate = (props) => {
                         </Grid>
                         <Grid item>
                             <Button color="primary" onClick={submitPromiseDate}
+                                 disabled={date==="0000-00-00"}
                                 variant={"outlined"} >
                                 <DateIcon />
                             </Button>
@@ -33,7 +34,7 @@ const PromiseDate = (props) => {
                     </React.Fragment>
                         : <Grid>
                             <Typography>
-                                {props.promiseDate}
+                                {date}
                             </Typography>
                         </Grid>
                     }

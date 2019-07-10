@@ -5,7 +5,7 @@ import { Label } from 'office-ui-fabric-react/lib/Label';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 
 import GraphSDKHelper from '../../helpers/GraphSdkHelper';
-import {connect} from 'react-redux';
+import {connect} from 'react-redux'; 
 import './PeoplePicker.css';
 
 //Mostraba warning en el campo de suggest de usuarios.

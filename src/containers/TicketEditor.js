@@ -13,7 +13,7 @@ import axios from 'axios';
 import Graph from '../helpers/GraphSdkHelper';
 import { connect } from 'react-redux';
 import { statusCodes } from '../constants';
-import { get } from 'http';
+import { actionUpdateList } from '../actions/user.actions';
 const buttonStyle = {
     marginLeft: "5px",
     marginRight: "5px",
@@ -73,8 +73,14 @@ class TicketEditor extends React.Component {
                     currentStatus: status,
                 });
             } else {
-                const engineer = _comments ? this.props.user.username : null;
-                this.props.handleTicketUpdate({ id: this.props.id, status, engineer });
+                const engineer = this.props.user.username;
+                //this.props.handleTicketUpdate({ id: this.props.id, status, engineer });
+                this.props.dispatch(actionUpdateList(
+                    {
+                        id: this.props.id,
+                        status, engineer,
+                    }
+                ));
             }
         }).catch(reason => {
             console.log(reason);
@@ -108,11 +114,12 @@ class TicketEditor extends React.Component {
 
         } else {
             if (this.state.currentStatus !== this.props.status) {
-                console.log("engineer", this.props.engineer);
-                this.props.handleTicketUpdate({
-                    id: this.props.id, status: this.state.currentStatus
-                    , engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username
-                });
+
+                this.props.dispatch(actionUpdateList({
+                    id: this.props.id,
+                    status: this.state.currentStatus,
+                    engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,                    
+                }));
             }
         }
 
@@ -217,7 +224,7 @@ class TicketEditor extends React.Component {
                                             <SubmitCommentIcon />
                                         </IconButton>
                                     </div>
- 
+
                                     <div style={{ textAlign: "right", margin: "10px" }}>
                                         <Button variant="outlined" style={buttonStyle}
                                             onClick={() => this.handleSubmit(statusCodes.REJECTED.value)}

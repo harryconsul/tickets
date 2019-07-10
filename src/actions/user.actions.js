@@ -12,3 +12,10 @@ export const actionSearch = result =>{
         result,
     }
 }
+
+export const actionUpdateList = ticket =>{
+    return {
+        type:actionConstants.UPDATELIST,
+        ticket,
+    }
+}
