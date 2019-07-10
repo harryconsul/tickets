@@ -3,20 +3,20 @@
 *  See LICENSE in the source repository root for complete license information. 
 */
 import { Client } from "@microsoft/microsoft-graph-client";
+import async from 'async';
+
+const getBlobUrl = async (response) => {
+  const blob = await response.blob();
+  try {
+    const url = window.URL || window.webkitURL;
+    const blobUrl = url.createObjectURL(blob);
+    return blobUrl;
+
+  } catch (e) {
+    throw (e);
+  }
 
 
-const getBlobUrl = async (response) =>{
-   const blob= await response.blob();
-    try {
-      const url = window.URL || window.webkitURL;
-      const blobUrl = url.createObjectURL(blob);
-      return blobUrl;
-      
-    } catch (e) {
-      throw(e);
-    }
-
-  
 }
 export default class GraphSdkHelper {
   constructor(token) {
@@ -24,16 +24,16 @@ export default class GraphSdkHelper {
     // Initialize the Graph SDK.
     this.client = Client.init({
       debugLogging: true,
-      authProvider: (done)=>done(null,token),
+      authProvider: (done) => done(null, token),
     });
 
     this._handleError = this._handleError.bind(this);
-    
+
   }
 
   // GET me
   getMe(callback) {
-    this.client 
+    this.client
       .api('/me')
       .select('displayName')
       .get((err, res) => {
@@ -44,44 +44,44 @@ export default class GraphSdkHelper {
       });
   }
 
-  getMyProfile(callback){
+  getMyProfile(callback) {
     this.client
-    .api('/me')
-    .select('id','displayName','department','mail','mobilePhone','businessPhones','jobTitle')    
-    .get((err,res) =>{
-     
-      if(!err){
-        
-        callback(null,res);
-      }
-      else this._handleError(err);
-    }).catch(reason=>{
+      .api('/me')
+      .select('id', 'displayName', 'department', 'mail', 'mobilePhone', 'businessPhones', 'jobTitle')
+      .get((err, res) => {
+
+        if (!err) {
+
+          callback(null, res);
+        }
+        else this._handleError(err);
+      }).catch(reason => {
         console.log(reason);
-    });
+      });
   }
 
   //.api('/me/photo/$value')
   getMyPicture(callback) {
     this.client
-    .api('/me/photos/64X64/$value')
-    .header('Cache-Control', 'no-cache')
-    .responseType('blob')
-    .get((err,res,rawResponse) => {      
-      getBlobUrl(rawResponse)
-        .then(url=>callback(null,url))
-        .catch(reason=>callback(reason,null))      
-    });
-      
-  } 
-  
+      .api('/me/photos/64X64/$value')
+      .header('Cache-Control', 'no-cache')
+      .responseType('blob')
+      .get((err, res, rawResponse) => {
+        getBlobUrl(rawResponse)
+          .then(url => callback(null, url))
+          .catch(reason => callback(reason, null))
+      });
+
+  }
+
   // GET me/people
   getPeople(callback) {
-    this.client 
+    this.client
       .api('/me/people')
       .version('beta')
       .filter(`personType eq 'Person'`)
       .select('displayName,givenName,surname,emailAddresses,userPrincipalName')
-      .top(5)
+      .top(1)
       .get((err, res) => {
         if (err) {
           this._handleError(err);
@@ -90,44 +90,53 @@ export default class GraphSdkHelper {
       });
   }
 
-  // GET user/id/photo/$value for each person
+  // GET user/id/photo/$value for each person 
   getProfilePics(personas, callback) {
-    const photosPromises = personas.map((persona)=>{
+
+    const photosPromises = personas.map((persona) => {
       
       const personaPromise = (persona) => new Promise(
-        (resolve,reject) => {
-        this.client
-        .api(`/users/${persona.id}/photo/$value`)
-        .header('Cache-Control', 'no-cache')      
-        .responseType('blob')
-        .get((err, res, rawResponse) => {
-            if(rawResponse){
-              getBlobUrl(rawResponse)
-              .then(url=>resolve({...persona,photo:url}))
-              .catch( reason => {
-                console.log("Razón de la falla " , reason);
-                reject({...persona,photo:""});
+        (resolve, reject) => {
+          
+          if (persona.id) {
+            this.client
+              .api(`/users/${persona.id}/photo/$value`)
+              .header('Cache-Control', 'no-cache')
+              .responseType('blob')
+              .get((err, res, rawResponse) => {
+                console.log("entre al get");
+                if (rawResponse) {
+                  
+                  getBlobUrl(rawResponse)
+                    .then(url => resolve({ ...persona, photo: url, imageUrl: "blob:" + url, initialsColor: null }))
+                    .catch(reason => {
+                      console.log("No fue posible la url de la foto", reason);
+                      reject({ ...persona, photo: "", imageUrl: "" });
+                    });
+                }
+                
+              }).catch(reason => {
+                console.log("Fallo get user photo ", reason);
+                reject({ ...persona, photo: "", imageUrl: "" })
               });
-            }
-        }).catch(reason=>{
-           console.log("error get users photos" , reason);
-           reject({...persona,photo:""})
+          }else{
+            reject(persona);
+          }
         });
-      });
       return personaPromise(persona);
     });
-    
-    Promise.all([...photosPromises]).then((photos)=>{
-        callback(photos);
-    }).catch((reason)=>{
-      console.log("promise error",reason);
+
+    Promise.all([...photosPromises]).then((photos) => {
+      callback(photos);
+    }).catch((reason) => {
+      console.log("promise error", reason);
       callback(personas);
     });
-  }   
+  }
 
   // GET users?$filter=displayName startswith('{searchText}')
   searchForPeople(searchText, callback) {
-    this.client 
+    this.client
       .api('/users')
       .filter(`startswith(displayName,'${searchText}')`)
       .select('displayName,givenName,surname,mail,userPrincipalName,id')
@@ -171,7 +180,7 @@ export default class GraphSdkHelper {
     }
     else {
       request = this.client
-        .api('/me/drive/root/children') 
+        .api('/me/drive/root/children')
         .select('name,createdBy,createdDateTime,lastModifiedBy,lastModifiedDateTime,webUrl,file')
         .top(100) // default result set is 200
     }
@@ -182,7 +191,7 @@ export default class GraphSdkHelper {
       callback(err, res);
     });
   }
-  
+
   _handleError(err) {
     console.log(err.code + ' - ' + err.message);
 
