@@ -87,7 +87,7 @@ export default class GraphSdkHelper {
           this._handleError(err);
         }
         callback(err, (res) ? res.value : []);
-      });
+      }).catch(reason=>console.log(reason));
   }
 
   // GET user/id/photo/$value for each person 
