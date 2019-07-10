@@ -3,7 +3,6 @@
 *  See LICENSE in the source repository root for complete license information. 
 */
 import { Client } from "@microsoft/microsoft-graph-client";
-import async from 'async';
 
 const getBlobUrl = async (response) => {
   const blob = await response.blob();
@@ -81,7 +80,7 @@ export default class GraphSdkHelper {
       .version('beta')
       .filter(`personType eq 'Person'`)
       .select('displayName,givenName,surname,emailAddresses,userPrincipalName')
-      .top(1)
+      .top(5)
       .get((err, res) => {
         if (err) {
           this._handleError(err);
