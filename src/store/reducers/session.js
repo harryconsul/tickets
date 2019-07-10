@@ -17,7 +17,7 @@ const sessionReducer = (state = { user: null, result: [] }, action) => {
 
             return {
                 ...state,
-                result: updateResults(state.results,action.ticket),
+                result: updateResults(state.result,action.ticket),
             }
 
 
