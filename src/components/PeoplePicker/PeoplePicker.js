@@ -51,6 +51,7 @@ class PeoplePicker extends Component {
       persona.initialsColor = Math.floor(Math.random() * 15) + 0;
       persona.props = { id: p.id };
       persona.id = p.id;
+      persona.department = p.department;
 
       return persona;
     });
@@ -105,26 +106,28 @@ class PeoplePicker extends Component {
   // Handler for when text is entered into the picker control.
   // Populate the people list.
   _onFilterChanged = (filterText, items) => {
-    if (this._peopleList) {
-      return filterText ? this._peopleList.concat(this._searchResults)
-        .filter(item => item.primaryText.toLowerCase().indexOf(filterText.toLowerCase()) === 0)
-        .filter(item => !this._listContainsPersona(item, items)) : [];
-    }
-    else {
-      return new Promise((resolve, reject) => this.sdkHelper.getPeople((err, people) => {
-        if (!err) {
-          this._peopleList = this._mapUsersToPersonas(people, false);
-          this._getPics(this._peopleList);
-          resolve(this._peopleList);
-        }
-        else { this._showError(err); }
-      }))
-        .then(value => value.concat(this._searchResults)
+    if (this.state.selectedPeople.length === 0) {
+      if (this._peopleList) {
+        return filterText ? this._peopleList.concat(this._searchResults)
           .filter(item => item.primaryText.toLowerCase().indexOf(filterText.toLowerCase()) === 0)
-          .filter(item => !this._listContainsPersona(item, items)))
-        .catch(error => {
-          console.log("que fallo ", error);
-        });
+          .filter(item => !this._listContainsPersona(item, items)) : [];
+      }
+      else {
+        return new Promise((resolve, reject) => this.sdkHelper.getPeople((err, people) => {
+          if (!err) {
+            this._peopleList = this._mapUsersToPersonas(people, false);
+            this._getPics(this._peopleList);
+            resolve(this._peopleList);
+          }
+          else { this._showError(err); }
+        }))
+          .then(value => value.concat(this._searchResults)
+            .filter(item => item.primaryText.toLowerCase().indexOf(filterText.toLowerCase()) === 0)
+            .filter(item => !this._listContainsPersona(item, items)))
+          .catch(error => {
+            console.log("que fallo ", error);
+          });
+      }
     }
   }
 
@@ -139,22 +142,24 @@ class PeoplePicker extends Component {
   // Handler for when the Search button is clicked.
   // This sample returns the first 20 matches as suggestions.
   _onGetMoreResults = (searchText) => {
-    this.setState({
-      isLoadingPeople: true,
-      isLoadingPics: true
-    });
-    return new Promise((resolve) => {
-      this.sdkHelper.searchForPeople(searchText.toLowerCase(), (err, people) => {
-        if (!err) {
-          this._searchResults = this._mapUsersToPersonas(people, true);
-          this.setState({
-            isLoadingPeople: false
-          });
-          this._getPics(this._searchResults);
-          resolve(this._searchResults);
-        }
+    if (this.state.selectedPeople.length === 0) {
+      this.setState({
+        isLoadingPeople: true,
+        isLoadingPics: true
       });
-    });
+      return new Promise((resolve) => {
+        this.sdkHelper.searchForPeople(searchText.toLowerCase(), (err, people) => {
+          if (!err) {
+            this._searchResults = this._mapUsersToPersonas(people, true);
+            this.setState({
+              isLoadingPeople: false
+            });
+            this._getPics(this._searchResults);
+            resolve(this._searchResults);
+          }
+        });
+      });
+    }
   }
 
   // Handler for when the selection changes in the picker control.
@@ -164,6 +169,11 @@ class PeoplePicker extends Component {
       result: null,
       selectedPeople: items
     });
+
+    if (items) {
+      //es un callback hacía RequestForm.js
+      this.props.setPersona(items);
+    }
   }
 
   // Renders the people picker using the NormalPeoplePicker template.
