@@ -26,9 +26,7 @@ const Login = (props)=>{
                         </Button>
                         }
                     </Grid>
-                    <Grid item style={{marginBottom:"10px"}} >
-                        <Typography variant={"h4"}> Iniciar Sesión</Typography>
-                    </Grid>
+                   
                     
                 </Grid>
             </Paper>
