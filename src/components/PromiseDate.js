@@ -9,6 +9,7 @@ const PromiseDate = (props) => {
     const submitPromiseDate = () => {
         axios.post("registrafechacompromiso", { date,SolicitudId:props.id }).then((response) => {
                 setIsEditing(false);
+                props.changePromiseDate(date);
         });
     }
     return (

@@ -40,10 +40,12 @@ class TicketEditor extends React.Component {
             thirds: [],
             usersIDs: [],
             currentStatus: props.status,
-            currentCategoryName: props.categoryName,
+            currentCategoryName: props.categoryName,            
             userPhoto: "",
+            
 
         }
+        this.promiseDate = props.promiseDate;
         this.helper = new Graph(this.props.loggedUser.accessToken);
 
     }
@@ -106,6 +108,9 @@ class TicketEditor extends React.Component {
             this.setState({ currentCategoryName: response.data.categoryName })
         })
     }
+    changePromiseDate=(promiseDate)=>{
+        this.promiseDate=promiseDate;
+    }
 
     componentWillUnmount() {
         if (this.state.currentStatus === statusCodes.NEW.value) {
@@ -113,11 +118,14 @@ class TicketEditor extends React.Component {
             this.handleSubmit(statusCodes.IN_PROCESS.value, "Asignación a ingeniero");
 
         } else {
-            if (this.state.currentStatus !== this.props.status) {
+            if (this.state.currentStatus !== this.props.status
+                || this.props.promiseDate !==this.promiseDate
+                ) {
 
                 this.props.dispatch(actionUpdateList({
                     id: this.props.id,
                     status: this.state.currentStatus,
+                    promiseDate:this.promiseDate,
                     engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,                    
                 }));
             }
@@ -198,7 +206,9 @@ class TicketEditor extends React.Component {
                                 problem={this.props.problem} />
                         </Grid>
                         <Grid item>
-                            <PromiseDate promiseDate={this.props.promiseDate} id={this.props.id} />
+                            <PromiseDate promiseDate={this.props.promiseDate} 
+                                changePromiseDate={this.changePromiseDate}
+                            id={this.props.id} />
                         </Grid>
                         {this.state.fields.map(field => {
                             return <Grid key={field.name} item>
