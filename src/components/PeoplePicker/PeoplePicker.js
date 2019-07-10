@@ -5,11 +5,7 @@ import { Label } from 'office-ui-fabric-react/lib/Label';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 
 import GraphSDKHelper from '../../helpers/GraphSdkHelper';
-<<<<<<< HEAD
-import {connect} from 'react-redux'; 
-=======
 import { connect } from 'react-redux';
->>>>>>> 9ea49261fc8966579c809b1b16e305ee0b0591cf
 import './PeoplePicker.css';
 
 //Mostraba warning en el campo de suggest de usuarios.
@@ -72,15 +68,16 @@ class PeoplePicker extends Component {
       isLoadingPics: false
     });
     //por ahora no recuperaremos la foto del usuario.
+    /*
     this.sdkHelper.getProfilePics(personas, (photos) => {
       //photos ya regresa con la Url del blob
-      this._peopleList =  photos;
+      this._peopleList = photos;
 
       this.setState({
         isLoadingPics: false
       });
     });
-
+    */
   }
 
   // Build and send the email to the selected people. NO se usa por el momento
@@ -118,7 +115,6 @@ class PeoplePicker extends Component {
         if (!err) {
           this._peopleList = this._mapUsersToPersonas(people, false);
           this._getPics(this._peopleList);
-          console("my people ", this._peopleList);
           resolve(this._peopleList);
         }
         else { this._showError(err); }

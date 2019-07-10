@@ -1,7 +1,6 @@
 import React from 'react';
 import { InputBase, IconButton } from '@material-ui/core';
 import SearchIcon from 'mdi-material-ui/Magnify';
-import CloseIcon from 'mdi-material-ui/Close';
 import StatusAvatar from '../StatusAvatar'
 import './SearchField.css';
 import axios from 'axios';

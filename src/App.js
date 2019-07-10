@@ -58,8 +58,6 @@ class App extends React.Component {
       var accessToken = await this.userAgentApplication.acquireTokenSilent(graphScopes);
 
       if (accessToken) {
-        console.log("access",accessToken);
-
         this.graphClient = new GraphSdkHelper(accessToken.accessToken);
         this.graphClient.getMyProfile((err, me) => {
 
