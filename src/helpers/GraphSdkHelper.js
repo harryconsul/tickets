@@ -5,7 +5,7 @@
 import { Client } from "@microsoft/microsoft-graph-client";
 
 
-const getBlobUrl =async (response) =>{
+const getBlobUrl = async (response) =>{
    const blob= await response.blob();
     try {
       const url = window.URL || window.webkitURL;
@@ -66,28 +66,11 @@ export default class GraphSdkHelper {
     .api('/me/photos/64X64/$value')
     .header('Cache-Control', 'no-cache')
     .responseType('blob')
-    .get((err,res,rawResponse) => {
-      //console.log("err",err);
-      //console.log("res",res);
-      //console.log("rawResponse",rawResponse);
-      
+    .get((err,res,rawResponse) => {      
       getBlobUrl(rawResponse)
         .then(url=>callback(null,url))
-        .catch(reason=>callback(reason,null))
-
-      
+        .catch(reason=>callback(reason,null))      
     });
-    /*this.client
-      .api('/me/photos/64X64/$value')
-      .header('Cache-Control', 'no-cache')      
-      .responseType('blob')
-      .get((err, res, rawResponse) => {
-        if (!err) {
-          const url = window.URL.createObjectURL(rawResponse.xhr.response);
-          callback(null,url);
-        }
-        else this._handleError(err);
-      });*/
       
   } 
   
@@ -98,7 +81,7 @@ export default class GraphSdkHelper {
       .version('beta')
       .filter(`personType eq 'Person'`)
       .select('displayName,givenName,surname,emailAddresses,userPrincipalName')
-      .top(20)
+      .top(5)
       .get((err, res) => {
         if (err) {
           this._handleError(err);
@@ -111,19 +94,23 @@ export default class GraphSdkHelper {
   getProfilePics(personas, callback) {
     const photosPromises = personas.map((persona)=>{
       
-      const personaPromise=(persona)=>new Promise((resolve,reject)=>{
-        console.log(persona);
-       this.client
+      const personaPromise = (persona) => new Promise(
+        (resolve,reject) => {
+        this.client
         .api(`/users/${persona.id}/photo/$value`)
         .header('Cache-Control', 'no-cache')      
         .responseType('blob')
         .get((err, res, rawResponse) => {
-            
-            getBlobUrl(rawResponse)
-            .then(url=>resolve({...persona,photo:url}))
-            .catch(reason=>reject({...persona,photo:""}));
+            if(rawResponse){
+              getBlobUrl(rawResponse)
+              .then(url=>resolve({...persona,photo:url}))
+              .catch( reason => {
+                console.log("Razón de la falla " , reason);
+                reject({...persona,photo:""});
+              });
+            }
         }).catch(reason=>{
-           console.log("catch in graph" , reason);
+           console.log("error get users photos" , reason);
            reject({...persona,photo:""})
         });
       });
@@ -133,13 +120,9 @@ export default class GraphSdkHelper {
     Promise.all([...photosPromises]).then((photos)=>{
         callback(photos);
     }).catch((reason)=>{
-      console.log("hum reason",reason);
+      console.log("promise error",reason);
       callback(personas);
     });
-    
-      
-    
- 
   }   
 
   // GET users?$filter=displayName startswith('{searchText}')
@@ -148,7 +131,7 @@ export default class GraphSdkHelper {
       .api('/users')
       .filter(`startswith(displayName,'${searchText}')`)
       .select('displayName,givenName,surname,mail,userPrincipalName,id')
-      .top(20)
+      .top(5)
       .get((err, res) => {
         if (err) {
           this._handleError(err);

@@ -61,7 +61,7 @@ class SearchField extends React.Component {
         });
     }
 
-    setInputClean = (data , departamento , rango) =>{
+    setInputClean = (data , departamento , rango , categoria) =>{
         let search = ""
         if(data.Problema.length !== 0)
             search += " problema: " + data.Problema
@@ -73,6 +73,8 @@ class SearchField extends React.Component {
             search += " solicitó: " + data.Solicitante
         if(data.departamento !== 0 && departamento.length !== 0)
             search += " departamento: " + departamento
+        if(data.categoria !== 0 && categoria.length !== 0)
+            search += " categoría: " + categoria
         if(data.rango !== 0  && rango.length !== 0)
             search += " rango: " + rango
         if(data.Resuelto)

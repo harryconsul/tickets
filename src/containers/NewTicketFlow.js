@@ -27,8 +27,8 @@ function getBase64(file) {
 }
 const baseSteps = () => {
     const initialSteps = [{ id: 0, label: "Mi solicitud es del tipo", semantic: "" },
-    { id: 1, label: "Descripción del solicitud", semantic: "" },
-    { id: 2, label: "Reporte Registrado", semantic: "" }];
+    { id: 1, label: "Descripción de la solicitud", semantic: "" },
+    { id: 2, label: "Solicitud registrada", semantic: "" }];
 
     return initialSteps.map(step => ({ ...step, semantic: "" }));
 
@@ -124,7 +124,8 @@ class NewTicketFlow extends React.Component {
             case 0:
                 return <CategorySelection onComplete={this.nextStep} />;
             case 1:
-                return <RequestForm onComplete={this.nextStep} categoryId={this.state.problemType.id} />
+                return <RequestForm onComplete={this.nextStep} categoryId={this.state.problemType.id} 
+                isAdmin={this.props.user.isManager} />
             default:
                 return <SummitAck ticketNumber={this.state.ticketId}
                     category={this.state.problemType.label}
@@ -137,6 +138,7 @@ class NewTicketFlow extends React.Component {
         }
 
     }
+    
     componentDidUpdate() {
         if (this.state.activeStep === 2 && this.state.ticketId === null) {
             this.completeFileFields().then((postReadyFields) => { this.postTicket(postReadyFields) });

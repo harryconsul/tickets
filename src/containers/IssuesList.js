@@ -9,9 +9,9 @@ const columnsArray = [{ label: "No. Solicitud", value: "id" },
 { label: "Estatus", value: "statusAvatar" },
 { label: "Problema", value: "problem" },
 //{ label: "Descripcion", value: "description" },
- { label: "Quien lo Atiende", value: "engineer" },
+ { label: "¿Quién lo atiende?", value: "engineer" },
 { label: "Fecha Alta", value: "date" }, 
-{ label: "Categoria", value: "categoryName" },
+{ label: "Categoría", value: "categoryName" },
 ];
 const filterTickets = (ticketList, statusTab) => {
     let status = [];

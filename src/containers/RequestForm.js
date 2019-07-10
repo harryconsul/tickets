@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
+import PeoplePicker from '../components/PeoplePicker/PeoplePicker';
 
 function loadCanvas(blobImg, canvasId) {
     if (blobImg) {
@@ -32,6 +33,9 @@ function loadCanvas(blobImg, canvasId) {
 }
 
 class RequestForm extends React.Component {
+    constructor(props){
+        super(props);
+    }
     state = {
         problem: "", problems: [], problemSet: [], detail: "", fields: [],
     }
@@ -104,18 +108,29 @@ class RequestForm extends React.Component {
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ProblemTypeCloud problems={this.state.problems} onClick={this.onClickProblem} />
                     </Grid>
+                    {
+                            this.props.isAdmin?
+                            <Grid item xs={12} style={{ marginBottom: '20px' }}>
+                                <PeoplePicker />
+                            </Grid>
+                            :
+                            null
+                        }
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ControlledInput id={"problem"} name={"problem"} value={this.state.problem}
                             areYouFirst={true}
-                            label={"Mi solicitud es"} style={{ width: '90%' }} icon={<PencilIcon />}
+                            label={"Descripción del problema"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
-                    </Grid>{/*
+                    </Grid>
+                    {
+                    /*
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ControlledInput id={"detail"} name={"detail"} value={this.state.detail}
                             label={"Detalle de la Solicitud"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
                     </Grid>
                     */}
+
                     {
                         this.state.fields.map(field =>
                             <Grid item xs={12} key={field.id} style={{ marginBottom: '20px' }}>

@@ -70,20 +70,26 @@ class App extends React.Component {
             email: me.mail,
             username: me.mail.replace("@dicipa.com.mx", ""),
             name: me.displayName,
-            isManager: true,//me.department==="TI",
             logout: this.userAgentApplication.logout.bind(this.userAgentApplication),
             
 
           }
-          axios.post("registrausuario", { user }).then(response => {
-
-          }).catch(error => {
+          axios.post("registrausuario", { user })
+          .then( response => {
+            const perfil = response.data.Perfil;
+              if(perfil === 'A' || perfil === 'S'){
+                user.isManager = true
+              }else{
+                user.isManager = false
+              }
+          })
+          .catch(error => {
             console.log(error);
           });
 
           this.graphClient.getMyPicture((err, response) => {
             if (!err && response) {
-              user.photo=response;
+              user.photo = response;
               this.props.dispatch(actionLogin(user));
               
 

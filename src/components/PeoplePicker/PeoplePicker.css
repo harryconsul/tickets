@@ -1,0 +1,13 @@
+.People{
+    width: 90%;
+}
+div {
+    font:inherit;
+    border-top:0px !important;
+    border-right:0px !important;
+    border-left:0px !important;
+}
+
+div:focus{
+    outline:0;
+}

@@ -18,27 +18,62 @@ import CloseIcon from 'mdi-material-ui/Close';
 class BusquedaAvanzada extends Component{
 
     state = {
-        departamentos: [],rangos:[],problema:'',
+        departamentos:[],categorias:[],rangos:[],problema:'',
         check: false, atiende:'', solicitante:'',
-        solicitud:0,departamento:0,rango:0
+        solicitud:0,departamento:0,rango:0,categoria:0
     }
 
     getDepartamentos = () =>{
-        axios.post('obtienedepartamentos')
-        .then(response => {
-            this.setState({
-                departamentos: response.data.Departamentos.map(departamento =>{
-                    return (
-                        <MenuItem key={departamento.Id} value={departamento.Id}>
-                            {departamento.Nombre}
-                        </MenuItem>
-                    );
-                })
-            });
-        })
-        .catch(error => {
-            console.log("Error al buscar departamentos",error);
-        })
+        if (this.props.user){
+
+            const data = {
+                UsuarioLogin: this.props.user.username,
+                Tipo: 'DEPARTAMENTOS'
+            }
+
+            axios.post('obtienefiltros',data)
+            .then(response => {
+                this.setState({
+                    departamentos: response.data.Datos.map(departamento =>{
+                        return (
+                            <MenuItem key={departamento.Id} value={departamento.Id}>
+                                {departamento.Nombre}
+                            </MenuItem>
+                        );
+                    })
+                });
+            })
+            .catch(error => {
+                console.log("Error al buscar departamentos",error);
+            })
+        }        
+    }
+
+    getCategorias = () =>{
+        if (this.props.user){
+
+            const data = {
+                UsuarioLogin: this.props.user.username,
+                Tipo: 'CATEGORIAS'
+            }
+            
+            axios.post('obtienefiltros',data)
+            .then(response => {
+                console.log(response.data.Datos);
+                this.setState({
+                    categorias: response.data.Datos.map(categoria =>{
+                        return (
+                            <MenuItem key={categoria.Id} value={categoria.Id}>
+                                {categoria.Nombre}
+                            </MenuItem>
+                        );
+                    })
+                });
+            })
+            .catch(error => {
+                console.log("Error al buscar categorías",error);
+            })
+        }        
     }
 
     getRangos = () =>{
@@ -62,6 +97,10 @@ class BusquedaAvanzada extends Component{
     componentDidMount(){
         if(this.state.departamentos.length === 0){
             this.getDepartamentos();
+        }
+
+        if(this.state.categorias.length === 0){
+            this.getCategorias();
         }
 
         if(this.state.rangos.length === 0){
@@ -97,6 +136,7 @@ class BusquedaAvanzada extends Component{
                 Atiende: this.state.atiende,
                 Solicitante: this.state.solicitante,
                 Departamento: this.state.departamento,
+                Categoria: this.state.categoria,
                 Rango: this.state.rango,
                 Resuelto: this.state.check
             }
@@ -115,8 +155,9 @@ class BusquedaAvanzada extends Component{
 
                 //Pasar filtros al filtro principal
                 const departamento = this.getNombre(data.Departamento,"departamentos");
-                const rango = this.getNombre(data.Rango,"rangos");
-                this.props.setInputClean(data , departamento , rango);
+                const rango        = this.getNombre(data.Rango,"rangos");
+                const categoria    = this.getNombre(data.Categoria,"categorias"); 
+                this.props.setInputClean(data , departamento , rango , categoria);
 
                 //Close Popover
                 popupState.close();
@@ -135,7 +176,7 @@ class BusquedaAvanzada extends Component{
             this.setState({
                 problema:'',
                 check: false, atiende:'', solicitante:'',
-                solicitud:0,departamento:0,rango:0
+                solicitud:0,departamento:0,rango:0,categoria:0
             },() => {
                 if (this.props.user){
                     let solicitud = 0;
@@ -149,6 +190,7 @@ class BusquedaAvanzada extends Component{
                         Atiende: this.state.atiende,
                         Solicitante: this.state.solicitante,
                         Departamento: this.state.departamento,
+                        Categoria: this.state.categoria,
                         Rango: this.state.rango,
                         Resuelto: this.state.check
                     }
@@ -184,6 +226,10 @@ class BusquedaAvanzada extends Component{
         if(cual === "rangos"){
             arreglo = this.state.rangos;
         }   
+
+        if(cual === "categorias"){
+            arreglo = this.state.categorias;
+        }
 
         let nombre = "";
         //Navegar hasta que hagan match los id's
@@ -292,6 +338,17 @@ class BusquedaAvanzada extends Component{
                                             {this.state.rangos}
                                         </ControlledInput>
                                     </Grid> 
+                                    <Grid item xs={6}>
+                                        <ControlledInput id={"fltCategoria"}
+                                            value= {this.state.categoria}
+                                            onChange={this.handleChange}
+                                            name={"categoria"}
+                                            label={"Categoría solicitada"}
+                                            select
+                                            style={style}>
+                                            {this.state.categorias}
+                                        </ControlledInput>
+                                    </Grid>
                                     <Grid item xs={6}>
                                         <FormControlLabel key={1} control={
                                             <Checkbox
