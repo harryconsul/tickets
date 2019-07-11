@@ -94,7 +94,6 @@ class NewTicketFlow extends React.Component {
 
     }
     postTicket = (fields) => {
-        //        console.log(this.props.user.username);
         let username = "";
         if (this.props.user.isManager) {
             const user = this.state.problemDetail.user
@@ -120,6 +119,7 @@ class NewTicketFlow extends React.Component {
                 problemId: 0,
                 categoryId: this.state.problemType.id,
                 fields: fields,
+                registro: this.props.user.username
 
             }
         };
