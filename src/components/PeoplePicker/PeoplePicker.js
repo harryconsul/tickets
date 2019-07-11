@@ -147,6 +147,7 @@ class PeoplePicker extends Component {
         isLoadingPeople: true,
         isLoadingPics: true
       });
+
       return new Promise((resolve) => {
         this.sdkHelper.searchForPeople(searchText.toLowerCase(), (err, people) => {
           if (!err) {
@@ -196,7 +197,7 @@ class PeoplePicker extends Component {
           inputProps={{ placeholder: '¿Quién solicita? Inicie escribiendo el nombre del usuario' }}
           getTextFromItem={(persona) => persona.primaryText}
           onChange={this._onSelectionChanged}
-          onGetMoreResults={this._onGetMoreResults}
+          onGetMoreResults={this.state.selectedPeople.length === 0?this._onGetMoreResults:null}
           className='ms-PeoplePicker People'
           key='normal-people-picker'
         />
