@@ -59,7 +59,6 @@ class BusquedaAvanzada extends Component{
             
             axios.post('obtienefiltros',data)
             .then(response => {
-                console.log(response.data.Datos);
                 this.setState({
                     categorias: response.data.Datos.map(categoria =>{
                         return (

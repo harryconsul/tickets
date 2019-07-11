@@ -3,10 +3,10 @@ import { Stepper, Step, StepLabel, Typography, StepButton } from '@material-ui/c
 import CategorySelection from './CategorySelection';
 import RequestForm from './RequestForm';
 import SummitAck from '../components/SummitAck';
-import {statusCodes} from '../constants'
+import { statusCodes } from '../constants'
 import axios from 'axios';
 import GraphSDKHelper from '../helpers/GraphSdkHelper';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 function getBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -44,7 +44,7 @@ class NewTicketFlow extends React.Component {
         problemType: {},
         problemDetail: {},
         ticketId: null,
-        engineerPhoto:"",
+        engineerPhoto: "",
 
     }
     resetFlow = () => {
@@ -55,7 +55,7 @@ class NewTicketFlow extends React.Component {
             problemDetail: {},
             ticketId: null,
             steps: baseSteps(),
-            engineerPhoto:"",
+            engineerPhoto: "",
         });
     }
     nextStep = (semanticObject) => {
@@ -76,12 +76,12 @@ class NewTicketFlow extends React.Component {
         for (let i = 0; i < this.state.problemDetail.fields.length; i++) {
             const field = this.state.problemDetail.fields[i];
             if (["file", "image"].indexOf(field.type) >= 0) {
-                try{
-                const base64Value = await getBase64(field.value);
-                
-                postReadyFields.push({ ...field, value: base64Value });
-                }catch(e){
-                    postReadyFields.push(field);  
+                try {
+                    const base64Value = await getBase64(field.value);
+
+                    postReadyFields.push({ ...field, value: base64Value });
+                } catch (e) {
+                    postReadyFields.push(field);
                 }
             }
             else {
@@ -94,27 +94,44 @@ class NewTicketFlow extends React.Component {
 
     }
     postTicket = (fields) => {
-        console.log(this.props.user.username);
+        if (this.props.user.isManager) {
+            const user = this.state.problemDetail.user
+
+            axios.post("registrausuario", { user })
+                .then(response => {
+                    this.postRegistrarSolicitud(user.username,fields);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        } else {
+            this.postRegistrarSolicitud(this.props.user.username,fields);
+        }
+    }
+
+    postRegistrarSolicitud = (username,fields) => {
         const data = {
             Solicitud: {
-                user: this.props.user.username,
+                user: username,
                 description: this.state.problemDetail.detail,
                 problem: this.state.problemDetail.problem,
                 problemId: 0,
                 categoryId: this.state.problemType.id,
                 fields: fields,
+                registro: this.props.user.username
 
             }
         };
+
         axios.post("registrarsolicitud", data).then(response => {
             this.setState({ ticketId: response.data.SolicitudId })
             const helper = new GraphSDKHelper(this.props.user.accessToken);
-            helper.getProfilePics([{id:response.data.UsuarioID,photo:""}],(photos)=>{
-                if(photos.length){
-                    this.setState({engineerPhoto:photos[0].photo});
+            helper.getProfilePics([{ id: response.data.UsuarioID, photo: "" }], (photos) => {
+                if (photos.length) {
+                    this.setState({ engineerPhoto: photos[0].photo });
                 }
             })
-            
+
         }).catch(reason => {
             console.log("Error ", reason);
         })
@@ -124,8 +141,8 @@ class NewTicketFlow extends React.Component {
             case 0:
                 return <CategorySelection onComplete={this.nextStep} />;
             case 1:
-                return <RequestForm onComplete={this.nextStep} categoryId={this.state.problemType.id} 
-                isAdmin={this.props.user.isManager} />
+                return <RequestForm onComplete={this.nextStep} categoryId={this.state.problemType.id}
+                    isAdmin={this.props.user.isManager} />
             default:
                 return <SummitAck ticketNumber={this.state.ticketId}
                     category={this.state.problemType.label}
@@ -138,7 +155,7 @@ class NewTicketFlow extends React.Component {
         }
 
     }
-    
+
     componentDidUpdate() {
         if (this.state.activeStep === 2 && this.state.ticketId === null) {
             this.completeFileFields().then((postReadyFields) => { this.postTicket(postReadyFields) });
@@ -151,7 +168,7 @@ class NewTicketFlow extends React.Component {
         return (
 
             <div>
-               
+
                 <FlowSteps {...this.state} resetFlow={this.resetFlow} />
                 {
                     this.getActiveComponent()

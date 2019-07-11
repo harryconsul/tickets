@@ -33,11 +33,12 @@ function loadCanvas(blobImg, canvasId) {
 }
 
 class RequestForm extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
     }
     state = {
-        problem: "", problems: [], problemSet: [], detail: "", fields: [],
+        problem: "", problems: [], problemSet: [], detail: "",
+        fields: [], persona: null, disabled: true
     }
     onClickProblem = (id) => {
         let _problems = [...this.state.problemSet];
@@ -49,10 +50,14 @@ class RequestForm extends React.Component {
             this.setState({ problem: _problem.label, problems: _problems, fields: _problem.fields });
         }
     }
-    onChange = event => {
 
-        this.setState({ [event.target.name]: event.target.value });
+    onChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value }
+            , () => {
+                this.setDisabled();
+            });
     }
+
     onChangeField = event => {
         let newFields = [...this.state.fields];
 
@@ -64,11 +69,53 @@ class RequestForm extends React.Component {
         this.setState({ fields: newFields });
     }
     onClickSave = event => {
-        
-
-
-        this.props.onComplete({ element: "problemDetail", object: { label: this.state.problem, ...this.state } })
+        this.props.onComplete({
+            element: "problemDetail",
+            object: {
+                label: this.state.problem,
+                user: this.state.persona,
+                ...this.state
+            }
+        })
     }
+
+    setPersona = (persona) => {
+        //Hasta que haya almenos una persona.
+        if (persona.length > 0) {
+            console.log(persona);
+            this.setState({
+                persona: {
+                    id: persona[0].id,
+                    department: persona[0].department,
+                    email: persona[0].secondaryText,
+                    username: persona[0].secondaryText.replace("@dicipa.com.mx", ""),
+                    name: persona[0].primaryText
+                }
+            }, () => {
+                this.setDisabled();
+            });
+        }
+    }
+
+    //Habilitar o no el botón guardar. 
+    setDisabled = () => {
+        let disabled = true
+        if (this.props.isAdmin) {
+            if (this.state.problem !== "" && Boolean(this.state.persona)) {
+                disabled = false
+            }
+
+        } else {
+            if (this.state.problem !== "") {
+                disabled = false
+            }
+        }
+        //setState
+        this.setState({
+            disabled: disabled
+        })
+    }
+
     componentDidUpdate() {
         const imageField = this.state.fields.find(item => item.type === "image");
         if (imageField)
@@ -109,13 +156,13 @@ class RequestForm extends React.Component {
                         <ProblemTypeCloud problems={this.state.problems} onClick={this.onClickProblem} />
                     </Grid>
                     {
-                            this.props.isAdmin?
+                        this.props.isAdmin ?
                             <Grid item xs={12} style={{ marginBottom: '20px' }}>
-                                <PeoplePicker />
+                                <PeoplePicker setPersona={this.setPersona} />
                             </Grid>
                             :
                             null
-                        }
+                    }
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ControlledInput id={"problem"} name={"problem"} value={this.state.problem}
                             areYouFirst={true}
@@ -154,11 +201,11 @@ class RequestForm extends React.Component {
                     <Grid item xs={12} alignItems={'flex-end'} container direction={'column'} >
                         <Grid item xs={3} style={{ float: 'right' }}>
                             <Button variant={'contained'} color={'primary'}
-                                disabled={this.state.problem===''}
+                                disabled={this.state.disabled}
                                 onClick={this.onClickSave}>
                                 Registrar Reporte
                                 <SaveIcon />
-                          </Button>
+                            </Button>
                         </Grid>
 
                     </Grid>

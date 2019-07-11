@@ -74,12 +74,29 @@ export default class GraphSdkHelper {
   }
 
   // GET me/people
+  //'id', 'displayName', 'department', 'mail', 'mobilePhone', 'businessPhones', 'jobTitle'
+  //'id,displayName,givenName,surname,emailAddresses,userPrincipalName,department,'
+  /*getPeople(callback) {
+    this.client
+      .api('/me/people')
+      .version('beta')
+      .filter(`personType eq 'Person'`)
+      .select('id,displayName,givenName,surname,emailAddresses,userPrincipalName,department')
+      .top(5)
+      .get((err, res) => {
+        if (err) {
+          this._handleError(err);
+        }
+        callback(err, (res) ? res.value : []);
+      });
+  }
+  */
   getPeople(callback) {
     this.client
       .api('/me/people')
       .version('beta')
       .filter(`personType eq 'Person'`)
-      .select('displayName,givenName,surname,emailAddresses,userPrincipalName')
+      .select('id,displayName,givenName,surname,emailAddresses,userPrincipalName,department')
       .top(5)
       .get((err, res) => {
         if (err) {
@@ -88,15 +105,14 @@ export default class GraphSdkHelper {
         callback(err, (res) ? res.value : []);
       }).catch(reason=>console.log(reason));
   }
-
   // GET user/id/photo/$value for each person 
   getProfilePics(personas, callback) {
 
     const photosPromises = personas.map((persona) => {
-      
+
       const personaPromise = (persona) => new Promise(
         (resolve, reject) => {
-          
+
           if (persona.id) {
             this.client
               .api(`/users/${persona.id}/photo/$value`)
@@ -105,7 +121,7 @@ export default class GraphSdkHelper {
               .get((err, res, rawResponse) => {
                
                 if (rawResponse) {
-                  
+
                   getBlobUrl(rawResponse)
                     .then(url => resolve({ ...persona, photo: url, imageUrl: "blob:" + url, initialsColor: null }))
                     .catch(reason => {
@@ -113,12 +129,12 @@ export default class GraphSdkHelper {
                       reject({ ...persona, photo: "", imageUrl: "" });
                     });
                 }
-                
+
               }).catch(reason => {
                 console.log("Fallo get user photo ", reason);
                 reject({ ...persona, photo: "", imageUrl: "" })
               });
-          }else{
+          } else {
             reject(persona);
           }
         });
