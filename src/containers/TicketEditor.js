@@ -2,6 +2,7 @@ import React from 'react';
 import TicketSummary from '../components/TicketSummary';
 import ThirdDialogForm from '../components/ThirdDialogForm'
 import PromiseDate from '../components/PromiseDate';
+import AssistanceType from '../components/AssistanceType';
 import Comment from '../components/Comment';
 import TicketField from '../components/TicketField';
 import { Button, Paper, Grid, TextField, IconButton, Avatar } from '@material-ui/core'
@@ -40,9 +41,9 @@ class TicketEditor extends React.Component {
             thirds: [],
             usersIDs: [],
             currentStatus: props.status,
-            currentCategoryName: props.categoryName,            
+            currentCategoryName: props.categoryName,
             userPhoto: "",
-            
+
 
         }
         this.promiseDate = props.promiseDate;
@@ -108,8 +109,8 @@ class TicketEditor extends React.Component {
             this.setState({ currentCategoryName: response.data.categoryName })
         })
     }
-    changePromiseDate=(promiseDate)=>{
-        this.promiseDate=promiseDate;
+    changePromiseDate = (promiseDate) => {
+        this.promiseDate = promiseDate;
     }
 
     componentWillUnmount() {
@@ -119,14 +120,14 @@ class TicketEditor extends React.Component {
 
         } else {
             if (this.state.currentStatus !== this.props.status
-                || this.props.promiseDate !==this.promiseDate
-                ) {
+                || this.props.promiseDate !== this.promiseDate
+            ) {
 
                 this.props.dispatch(actionUpdateList({
                     id: this.props.id,
                     status: this.state.currentStatus,
-                    promiseDate:this.promiseDate,
-                    engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,                    
+                    promiseDate: this.promiseDate,
+                    engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,
                 }));
             }
         }
@@ -206,9 +207,13 @@ class TicketEditor extends React.Component {
                                 problem={this.props.problem} />
                         </Grid>
                         <Grid item>
-                            <PromiseDate promiseDate={this.props.promiseDate} 
-                                changePromiseDate={this.changePromiseDate}
-                            id={this.props.id} />
+                            <Paper style={{padding:"10px"}}>
+                                <PromiseDate promiseDate={this.props.promiseDate}
+                                    changePromiseDate={this.changePromiseDate}
+                                    id={this.props.id} />
+                                <AssistanceType />
+                            </Paper>
+
                         </Grid>
                         {this.state.fields.map(field => {
                             return <Grid key={field.name} item>

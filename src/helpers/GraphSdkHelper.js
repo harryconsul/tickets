@@ -103,7 +103,7 @@ export default class GraphSdkHelper {
               .header('Cache-Control', 'no-cache')
               .responseType('blob')
               .get((err, res, rawResponse) => {
-                console.log("entre al get");
+               
                 if (rawResponse) {
                   
                   getBlobUrl(rawResponse)

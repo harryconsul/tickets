@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, TextField, Grid, Paper, Button } from '@material-ui/core';
+import { Typography, TextField, Grid,  Button } from '@material-ui/core';
 import DateIcon from 'mdi-material-ui/CalendarRange'
 import axios from 'axios';
 
@@ -13,7 +13,7 @@ const PromiseDate = (props) => {
         });
     }
     return (
-        <Paper style={{ padding: "10px" }} >
+       
             <Grid container direction={"column"} >
                 <Grid>
                     <Typography variant={"subtitle2"}> Fecha Compromiso</Typography>
@@ -46,7 +46,7 @@ const PromiseDate = (props) => {
 
 
             </Grid>
-        </Paper>
+        
 
 
     )

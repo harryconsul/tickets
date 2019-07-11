@@ -12,7 +12,7 @@ import { applicationId, graphScopes, redirectUri } from './helpers/config';
 import { BrowserRouter as Router, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { actionLogin } from './actions/user.actions';
+import { actionLogin,actionGetCatalogs } from './actions/user.actions';
 import axios from 'axios';
 
 class App extends React.Component {
@@ -72,6 +72,7 @@ class App extends React.Component {
             
 
           }
+          this.props.dispatch(actionGetCatalogs(user.username));
           axios.post("registrausuario", { user })
           .then( response => {
             const perfil = response.data.Perfil;

@@ -49,21 +49,7 @@ class IssuesList extends React.Component {
         columns:null,
         
     }
-    componentDidMount() {
-        this.setState({ ticketList: this.props.ticketList });
-        const data = {
-            UsuarioLogin:this.props.user.username,
-            operacion:"B",
-            key:"columnas",
-            value:"",
-        }
-        axios.post("trabajarpreferencias",data).then(response=>{
-            const columns =  JSON.parse(response.data.value);
-            this.setState({columns});
-        }).catch(reason=>{
-            console.log(reason);
-        })
-    }
+   
     onChangeTab = (event, newStatus) => {
         const ticketList =  filterTickets(this.props.ticketList,newStatus);
         this.setState({
@@ -106,7 +92,7 @@ class IssuesList extends React.Component {
                     itemsList={ticketList} defaultColumns={["id", "statusAvatar", "problem", "engineer"]}
                     labelRowsPerPage={"Solicitudes por Pagina"}
                     savePreferenceToServer={this.savePreferenceToServer}
-                    preferences={{columnsSelected:this.state.columns}}
+                    preferences={{columnsSelected:this.props.columnas}}
                     numberColumnLabel={"#"} rowClickHandle={onTicketClick} />
             </div>
         )
@@ -115,6 +101,7 @@ class IssuesList extends React.Component {
 const mapStateToProps=state=>{
     return{
         user:state.user,
+        columnas:state.preferences.columnas,
     }
 }
 export default connect(mapStateToProps)(IssuesList);
