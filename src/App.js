@@ -7,9 +7,9 @@ import hello from 'hellojs';
 import { UserAgentApplication } from 'msal';
 
 import GraphSdkHelper from './helpers/GraphSdkHelper';
-import { applicationId, graphScopes, redirectUri } from './helpers/config';
+import { applicationId, graphScopes } from './helpers/config';
 
-import { BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { actionLogin } from './actions/user.actions';

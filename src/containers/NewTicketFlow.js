@@ -94,7 +94,6 @@ class NewTicketFlow extends React.Component {
 
     }
     postTicket = (fields) => {
-        let username = "";
         if (this.props.user.isManager) {
             const user = this.state.problemDetail.user
 
