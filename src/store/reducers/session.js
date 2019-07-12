@@ -23,8 +23,16 @@ const sessionReducer = (state = { user: null, result: [], preferences: {}, assis
 
             return {
                 ...state,
-                preferences:action.preferences,
-                assistanceTypes:action.assistanceTypes,
+                preferences: action.preferences,
+                assistanceTypes: action.assistanceTypes,
+            }
+        case actionConstants.UPDATE_PREFERENCE:
+
+            return {
+                ...state,
+                preferences: {...state.preferences,[action.preferenceType]:action.value,},
+
+                
             }
 
 

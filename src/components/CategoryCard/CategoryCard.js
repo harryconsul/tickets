@@ -107,7 +107,7 @@ const iconSelection = (semantic, type = 'main', style) => {
     if (lower.indexOf("pagar") >= 0)
         return <CreditCard style={_style} />;
 
-    if (lower.indexOf("resultados") >= 0)
+    if (lower.indexOf("resultado") >= 0)
         return <Note style={_style} />;
 
     if (lower.indexOf("interfaz") >= 0)
@@ -152,13 +152,13 @@ const iconSelection = (semantic, type = 'main', style) => {
     if (lower.indexOf("excel") >= 0)
         return <FileExcel style={_style} />;
 
-    if (lower.indexOf("altas") >= 0 && lower.indexOf("bajas") >= 0)
+    if (lower==="oracle fusion")
         return <ClipboardAccount style={_style} />;
 
-    if (lower.indexOf("indicadores") >= 0 )
+    if (lower==="taleo")
         return <AccountCheck style={_style} />;
 
-    if (lower.indexOf("humano") >= 0) 
+    if (lower=== "hcm") 
         return <AccountGroup style={_style} />;
 
 

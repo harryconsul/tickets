@@ -5,6 +5,7 @@ import PromiseDate from '../components/PromiseDate';
 import AssistanceType from '../components/AssistanceType';
 import Comment from '../components/Comment';
 import TicketField from '../components/TicketField';
+import StatusAvatar from '../components/StatusAvatar';
 import { Button, Paper, Grid, TextField, IconButton, Avatar } from '@material-ui/core'
 import SubmitCommentIcon from 'mdi-material-ui/ContentSaveEdit'
 import FileCancel from 'mdi-material-ui/FileCancel';
@@ -47,6 +48,8 @@ class TicketEditor extends React.Component {
 
         }
         this.promiseDate = props.promiseDate;
+        this.assistance = props.assistance;
+        this.finishDate=props.finishDate;
         this.helper = new Graph(this.props.loggedUser.accessToken);
 
     }
@@ -66,10 +69,13 @@ class TicketEditor extends React.Component {
             user: this.props.loggedUser.username,
         }
         axios.post("grabarseguimiento", data).then(response => {
-
+            if(status === statusCodes.SOLVED.value
+                 || status === statusCodes.REJECTED.value){
+                    this.finishDate=response.data.post.date;
+            }
 
             if (!_comments) {
-                console.log("post", response.data.post);
+                
                 this.setState({
                     comments: "",
                     postList: [response.data.post, ...this.state.postList],
@@ -81,7 +87,7 @@ class TicketEditor extends React.Component {
                 this.props.dispatch(actionUpdateList(
                     {
                         id: this.props.id,
-                        status, engineer,
+                        status, engineer,statusAvatar:<StatusAvatar status={status} />
                     }
                 ));
             }
@@ -112,6 +118,9 @@ class TicketEditor extends React.Component {
     changePromiseDate = (promiseDate) => {
         this.promiseDate = promiseDate;
     }
+    changeAssistance = (assistance) => {
+        this.assistance = assistance;
+    }
 
     componentWillUnmount() {
         if (this.state.currentStatus === statusCodes.NEW.value) {
@@ -121,13 +130,18 @@ class TicketEditor extends React.Component {
         } else {
             if (this.state.currentStatus !== this.props.status
                 || this.props.promiseDate !== this.promiseDate
+                || this.props.assistance !== this.assistance
+                || this.props.finishDate !== this.finishDate
             ) {
 
                 this.props.dispatch(actionUpdateList({
                     id: this.props.id,
                     status: this.state.currentStatus,
                     promiseDate: this.promiseDate,
+                    finishDate:this.finishDate,
+                    assistance:this.assistance,
                     engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,
+                    statusAvatar:<StatusAvatar status={this.state.currentStatus} />,
                 }));
             }
         }
@@ -211,7 +225,10 @@ class TicketEditor extends React.Component {
                                 <PromiseDate promiseDate={this.props.promiseDate}
                                     changePromiseDate={this.changePromiseDate}
                                     id={this.props.id} />
-                                <AssistanceType />
+                                <AssistanceType  id={this.props.id}
+                                assistance={this.props.assistance}
+                                changeAssistance={this.changeAssistance}
+                                assistanceOptions={this.props.assistanceTypes} />
                             </Paper>
 
                         </Grid>
@@ -282,6 +299,7 @@ const mapStateToProps = state => {
 
     return {
         loggedUser: state.user,
+        assistanceTypes : state.assistanceTypes,
 
     }
 }

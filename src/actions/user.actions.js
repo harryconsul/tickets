@@ -27,6 +27,14 @@ const getCatalogs = (preferences,assistanceTypes) =>{
         assistanceTypes,
     }
 }
+export const actionUpdatePreferences = (preferenceType,value) =>{
+    
+    return {
+        type:actionConstants.UPDATE_PREFERENCE,
+        preferenceType,
+        value,
+    }
+}
 export const actionGetCatalogs = (username) =>{
    
     return (dispatch)=>{

@@ -15,7 +15,7 @@ describe("Menu Bar- <MenuBar />",()=>{
         wrapper.setProps({isManager:false});
         expect(wrapper.find(SearchField)).toHaveLength(0);
  
-    })
+    });
     
 
 

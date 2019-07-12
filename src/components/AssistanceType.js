@@ -8,8 +8,8 @@ const AssistanceType = (props) => {
     const submitAssistance = () => {
         axios.post("registratipoasistencia", { assistance, SolicitudId: props.id })
             .then((response) => {
-
-            })
+                props.changeAssistance(assistance)
+            }).catch(reason=>console.log("reason",reason));
     }
     return (
         <Grid container direction={"column"} >
@@ -21,10 +21,10 @@ const AssistanceType = (props) => {
                 <Grid item>
                     <Select name="promisedate" type="date" native
                         value={assistance}
-                        onChange={(event) => setAssistance(event.target.value)} >
+                        onChange={(event) => setAssistance(Number(event.target.value))} >
                         {
                             props.assistanceOptions.map((item)=>{
-                                return (<option value={item.id}>
+                                return (<option key={item.id} value={item.id}>
                                         {item.label}
                                 </option>);
                             })

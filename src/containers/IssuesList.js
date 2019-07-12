@@ -2,6 +2,7 @@ import React from 'react';
 import { CustomColumnsTable } from 'custom-columns-table/';
 import { Tabs, Tab } from '@material-ui/core';
 import { statusCodes } from '../constants/';
+import {actionUpdatePreferences} from '../actions/user.actions';
 import {connect} from 'react-redux';
 import { EmailOutline, EmailOpenOutline, AccountClockOutline, Check, FileCancelOutline } from 'mdi-material-ui'
 import axios from 'axios';
@@ -12,6 +13,9 @@ const columnsArray = [{ label: "No. Solicitud", value: "id" },
  { label: "¿Quién lo atiende?", value: "engineer" },
 { label: "Fecha Alta", value: "date" }, 
 { label: "Categoría", value: "categoryName" },
+{label:"Fecha Compromiso",value:"promiseDate"},
+{label:"Fecha Cierre",value:"finishDate"},
+{label:"Tipo de Atencion",value:"assistance"},
 ];
 const filterTickets = (ticketList, statusTab) => {
     let status = [];
@@ -43,12 +47,17 @@ const filterTickets = (ticketList, statusTab) => {
 
 }
 class IssuesList extends React.Component {
-    state = {
-        status: 0,
-        ticketList: [],
-        columns:null,
+    constructor(props){
+        super(props);
+        this.state = {
+            status: 0,
+            ticketList: props.ticketList,
+            columns:null,
+            
+        }
         
     }
+    
    
     onChangeTab = (event, newStatus) => {
         const ticketList =  filterTickets(this.props.ticketList,newStatus);
@@ -66,7 +75,7 @@ class IssuesList extends React.Component {
             key:"columnas",
             value:JSON.stringify(columns),
         };
-        this.setState({columns});
+        this.props.dispatch(actionUpdatePreferences("columnas",columns));
 
 
         axios.post("trabajarpreferencias",data).then(response=>{
