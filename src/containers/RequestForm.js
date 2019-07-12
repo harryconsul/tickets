@@ -31,6 +31,23 @@ function loadCanvas(blobImg, canvasId) {
 
     }
 }
+const defaultFields = [
+    {
+        id: "img",
+        label: "Imagen Adjunta (Ctrl - V )",
+        name: "Imagen",
+        type: "image",
+        values: [],
+    },
+    {
+        id: "file",
+        label: "Archivo Adjunto",
+        name: "Archivo",
+        type: "file",
+        values: [],
+    },
+
+]
 
 class RequestForm extends React.Component {
     constructor(props) {
@@ -38,7 +55,7 @@ class RequestForm extends React.Component {
     }
     state = {
         problem: "", problems: [], problemSet: [], detail: "",
-        fields: [], persona: null, disabled: true
+        fields: [...defaultFields], persona: null, disabled: true
     }
     onClickProblem = (id) => {
         let _problems = [...this.state.problemSet];
