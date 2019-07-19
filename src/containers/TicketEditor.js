@@ -16,6 +16,8 @@ import Graph from '../helpers/GraphSdkHelper';
 import { connect } from 'react-redux';
 import { statusCodes } from '../constants';
 import { actionUpdateList } from '../actions/user.actions';
+import ProgressButton from './ProgressButton';
+
 const buttonStyle = {
     marginLeft: "5px",
     marginRight: "5px",
@@ -49,9 +51,54 @@ class TicketEditor extends React.Component {
         }
         this.promiseDate = props.promiseDate;
         this.assistance = props.assistance;
-        this.finishDate=props.finishDate;
+        this.finishDate = props.finishDate;
         this.helper = new Graph(this.props.loggedUser.accessToken);
 
+    }
+
+    getPhoto = (users, posts) => {
+
+        this.helper.getProfilePics(users, (photos) => {
+            this.setState({
+                usersIDs: photos,
+                postList: posts.map(post => {
+                    for (let i = 0; i < photos.length; i++) {
+                        if (photos[i].id === post.userID) {
+                            post.photo = photos[i].photo;
+                        }
+                    }
+                    return post;
+                })
+            });
+        })
+    }
+
+    getNotificacion = (status, comments) => {
+        const data = {
+            Id: this.props.id,
+            Estatus: status,
+            Comentario: comments
+        }
+
+        axios.post("buscarnotificacion", data).then(response => {
+            const correo = response.data.Notificacion.Para;
+            console.log(correo);
+            if (correo !== '') {
+                const recipient = [{
+                    EmailAddress: {
+                        Address: correo
+                    }
+                }];
+
+                this.helper.sendMail(recipient , response.data.Notificacion.Asunto,
+                    response.data.Notificacion.Correo , (err) =>{
+                        if (!err) {
+                            console.log("La notificación fue enviada");
+                        }
+                    });
+            }
+
+        });
     }
 
     handleSubmit = (_status, _comments) => {
@@ -69,13 +116,13 @@ class TicketEditor extends React.Component {
             user: this.props.loggedUser.username,
         }
         axios.post("grabarseguimiento", data).then(response => {
-            if(status === statusCodes.SOLVED.value
-                 || status === statusCodes.REJECTED.value){
-                    this.finishDate=response.data.post.date;
+            if (status === statusCodes.SOLVED.value
+                || status === statusCodes.REJECTED.value) {
+                this.finishDate = response.data.post.date;
             }
 
             if (!_comments) {
-                
+
                 this.setState({
                     comments: "",
                     postList: [response.data.post, ...this.state.postList],
@@ -87,10 +134,13 @@ class TicketEditor extends React.Component {
                 this.props.dispatch(actionUpdateList(
                     {
                         id: this.props.id,
-                        status, engineer,statusAvatar:<StatusAvatar status={status} />
+                        status, engineer, statusAvatar: <StatusAvatar status={status} />
                     }
                 ));
             }
+
+            //Buscar si hay algo que notificar.
+            this.getNotificacion(status, comments);
         }).catch(reason => {
             console.log(reason);
         });
@@ -138,32 +188,15 @@ class TicketEditor extends React.Component {
                     id: this.props.id,
                     status: this.state.currentStatus,
                     promiseDate: this.promiseDate,
-                    finishDate:this.finishDate,
-                    assistance:this.assistance,
+                    finishDate: this.finishDate,
+                    assistance: this.assistance,
                     engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,
-                    statusAvatar:<StatusAvatar status={this.state.currentStatus} />,
+                    statusAvatar: <StatusAvatar status={this.state.currentStatus} />,
                 }));
             }
         }
 
 
-    }
-
-    getPhoto = (users, posts) => {
-
-        this.helper.getProfilePics(users, (photos) => {
-            this.setState({
-                usersIDs: photos,
-                postList: posts.map(post => {
-                    for (let i = 0; i < photos.length; i++) {
-                        if (photos[i].id === post.userID) {
-                            post.photo = photos[i].photo;
-                        }
-                    }
-                    return post;
-                })
-            });
-        })
     }
 
     componentDidMount() {
@@ -221,14 +254,14 @@ class TicketEditor extends React.Component {
                                 problem={this.props.problem} />
                         </Grid>
                         <Grid item>
-                            <Paper style={{padding:"10px"}}>
+                            <Paper style={{ padding: "10px" }}>
                                 <PromiseDate promiseDate={this.props.promiseDate}
                                     changePromiseDate={this.changePromiseDate}
                                     id={this.props.id} />
-                                <AssistanceType  id={this.props.id}
-                                assistance={this.props.assistance}
-                                changeAssistance={this.changeAssistance}
-                                assistanceOptions={this.props.assistanceTypes} />
+                                <AssistanceType id={this.props.id}
+                                    assistance={this.props.assistance}
+                                    changeAssistance={this.changeAssistance}
+                                    assistanceOptions={this.props.assistanceTypes} />
                             </Paper>
 
                         </Grid>
@@ -255,6 +288,7 @@ class TicketEditor extends React.Component {
                                             onClick={() => this.handleSubmit(this.props.status)}>
                                             <SubmitCommentIcon />
                                         </IconButton>
+                                        {/*<ProgressButton />*/}
                                     </div>
 
                                     <div style={{ textAlign: "right", margin: "10px" }}>
@@ -299,7 +333,7 @@ const mapStateToProps = state => {
 
     return {
         loggedUser: state.user,
-        assistanceTypes : state.assistanceTypes,
+        assistanceTypes: state.assistanceTypes,
 
     }
 }
