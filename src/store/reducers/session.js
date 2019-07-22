@@ -1,7 +1,14 @@
 import * as actionConstants from '../../actions/action.constants';
+const initialState =  { 
+    user: null, 
+    result: [], 
+    preferences: {},
+    assistanceTypes: [],
+    timeRanges:[],
 
+}
 
-const sessionReducer = (state = { user: null, result: [], preferences: {}, assistanceTypes: [] }, action) => {
+const sessionReducer = (state =initialState, action) => {
     switch (action.type) {
         case actionConstants.LOGIN:
             return {
@@ -25,6 +32,7 @@ const sessionReducer = (state = { user: null, result: [], preferences: {}, assis
                 ...state,
                 preferences: action.preferences,
                 assistanceTypes: action.assistanceTypes,
+                timeRanges: action.timeRanges,
             }
         case actionConstants.UPDATE_PREFERENCE:
 

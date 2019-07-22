@@ -1,2 +1,5 @@
 import  * as statusCodes  from './status' ;
-export {statusCodes};
+import * as pivotTableDataSource from './pivottable.datasource';
+
+export {statusCodes,pivotTableDataSource};
+

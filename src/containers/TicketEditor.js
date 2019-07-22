@@ -6,8 +6,8 @@ import AssistanceType from '../components/AssistanceType';
 import Comment from '../components/Comment';
 import TicketField from '../components/TicketField';
 import StatusAvatar from '../components/StatusAvatar';
-import { Button, Paper, Grid, TextField, IconButton, Avatar } from '@material-ui/core'
-import SubmitCommentIcon from 'mdi-material-ui/ContentSaveEdit'
+import { Button, Paper, Grid, TextField, Avatar } from '@material-ui/core'
+import { FabProgress, ButtonProgress } from '../components/ButtonsProgress/ButtonsProgress';
 import FileCancel from 'mdi-material-ui/FileCancel';
 import Send from 'mdi-material-ui/Send';
 import Check from 'mdi-material-ui/Check';
@@ -16,10 +16,7 @@ import Graph from '../helpers/GraphSdkHelper';
 import { connect } from 'react-redux';
 import { statusCodes } from '../constants';
 import { actionUpdateList } from '../actions/user.actions';
-const buttonStyle = {
-    marginLeft: "5px",
-    marginRight: "5px",
-}
+
 const canBeOn = status => {
     if (status !== statusCodes.SOLVED.value
         && status !== statusCodes.REJECTED.value) {
@@ -46,15 +43,16 @@ class TicketEditor extends React.Component {
             userPhoto: "",
 
 
+
         }
         this.promiseDate = props.promiseDate;
         this.assistance = props.assistance;
-        this.finishDate=props.finishDate;
+        this.finishDate = props.finishDate;
         this.helper = new Graph(this.props.loggedUser.accessToken);
 
     }
 
-    handleSubmit = (_status, _comments) => {
+    handleSubmit = (_status, _comments,finishCallBack) => {
         const { thirdPart } = this.state;
         const status = _status === statusCodes.NEW.value ?
             statusCodes.IN_PROCESS.value :
@@ -69,13 +67,16 @@ class TicketEditor extends React.Component {
             user: this.props.loggedUser.username,
         }
         axios.post("grabarseguimiento", data).then(response => {
-            if(status === statusCodes.SOLVED.value
-                 || status === statusCodes.REJECTED.value){
-                    this.finishDate=response.data.post.date;
+            if (status === statusCodes.SOLVED.value
+                || status === statusCodes.REJECTED.value) {
+                this.finishDate = response.data.post.date;
+            }
+            if(finishCallBack){
+                finishCallBack();
             }
 
             if (!_comments) {
-                
+
                 this.setState({
                     comments: "",
                     postList: [response.data.post, ...this.state.postList],
@@ -87,7 +88,7 @@ class TicketEditor extends React.Component {
                 this.props.dispatch(actionUpdateList(
                     {
                         id: this.props.id,
-                        status, engineer,statusAvatar:<StatusAvatar status={status} />
+                        status, engineer, statusAvatar: <StatusAvatar status={status} />
                     }
                 ));
             }
@@ -99,10 +100,18 @@ class TicketEditor extends React.Component {
     handleDialogClose = (isOKClicked, third) => {
         this.setState({ isDialogOpen: false });
         if (isOKClicked) {
-            this.setState({ thirdPart: third }, this.handleSubmit(statusCodes.THIRD.value));
+            this.setState({ thirdPart: third }, this.handleSubmit(statusCodes.THIRD.value,null, this.finishCallBack));
 
+
+        }else{
+
+            if(this.finishCallBack){
+                this.finishCallBack();
+                this.finishCallBack=null;
+            }
 
         }
+       
 
     }
     changeCategory = (category) => {
@@ -138,10 +147,10 @@ class TicketEditor extends React.Component {
                     id: this.props.id,
                     status: this.state.currentStatus,
                     promiseDate: this.promiseDate,
-                    finishDate:this.finishDate,
-                    assistance:this.assistance,
+                    finishDate: this.finishDate,
+                    assistance: this.assistance,
                     engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,
-                    statusAvatar:<StatusAvatar status={this.state.currentStatus} />,
+                    statusAvatar: <StatusAvatar status={this.state.currentStatus} />,
                 }));
             }
         }
@@ -221,14 +230,14 @@ class TicketEditor extends React.Component {
                                 problem={this.props.problem} />
                         </Grid>
                         <Grid item>
-                            <Paper style={{padding:"10px"}}>
+                            <Paper style={{ padding: "10px" }}>
                                 <PromiseDate promiseDate={this.props.promiseDate}
                                     changePromiseDate={this.changePromiseDate}
                                     id={this.props.id} />
-                                <AssistanceType  id={this.props.id}
-                                assistance={this.props.assistance}
-                                changeAssistance={this.changeAssistance}
-                                assistanceOptions={this.props.assistanceTypes} />
+                                <AssistanceType id={this.props.id}
+                                    assistance={this.props.assistance}
+                                    changeAssistance={this.changeAssistance}
+                                    assistanceOptions={this.props.assistanceTypes} />
                             </Paper>
 
                         </Grid>
@@ -250,29 +259,42 @@ class TicketEditor extends React.Component {
                                             value={this.state.comments}
                                             onChange={(event) => this.setState({ comments: event.target.value })}
                                         />
-                                        <IconButton style={{ padding: "10" }}
-                                            disabled={submitDisabled}
-                                            onClick={() => this.handleSubmit(this.props.status)}>
-                                            <SubmitCommentIcon />
-                                        </IconButton>
+                                        <FabProgress submitDisabled={submitDisabled}
+                                            handleSubmit={this.handleSubmit}
+                                            status={this.state.currentStatus} />
+
                                     </div>
 
-                                    <div style={{ textAlign: "right", margin: "10px" }}>
-                                        <Button variant="outlined" style={buttonStyle}
-                                            onClick={() => this.handleSubmit(statusCodes.REJECTED.value)}
-                                            color={"secondary"} disabled={submitDisabled}>
-                                            Rechazar <FileCancel />
-                                        </Button>
-                                        <Button variant="contained" style={buttonStyle}
-                                            onClick={() => this.setState({ isDialogOpen: true })}
-                                            color={"primary"} disabled={submitDisabled}>
-                                            Enviar con Tercero <Send />
-                                        </Button>
-                                        <Button variant="contained" style={buttonStyle}
-                                            onClick={() => this.handleSubmit(statusCodes.SOLVED.value)}
-                                            color={"primary"} disabled={submitDisabled}>
-                                            Finalizar <Check />
-                                        </Button>
+                                    <div style={{ textAlign: "right", 
+                                        margin: "10px",display:"flex",justifyContent:"flex-end" }}>
+
+
+                                        <ButtonProgress
+                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.REJECTED.value,null,finishCallBack)}
+                                            color={"secondary"} submitDisabled={submitDisabled}
+                                            text={"Rechazar"}
+                                            variant={"outlined"}
+                                            icon={<FileCancel />} />
+
+                                        <ButtonProgress
+                                            onClick={(finishCallBack) =>{ 
+                                                    this.finishCallBack = finishCallBack;
+                                                    this.setState({ isDialogOpen: true });
+
+                                                }                                            
+                                            }
+                                            color={"primary"} submitDisabled={submitDisabled}
+                                            variant={"contained"}
+                                            text={"Enviar con Tercero"}
+                                            icon={<Send />} />
+
+                                        <ButtonProgress
+                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.SOLVED.value,null,finishCallBack)}
+                                            submitDisabled={submitDisabled}
+                                            color={"primary"}
+                                            variant={"contained"}
+                                            text={"Finalizar"}
+                                            icon={<Check />} />
 
                                     </div>
                                 </Paper>
@@ -299,7 +321,7 @@ const mapStateToProps = state => {
 
     return {
         loggedUser: state.user,
-        assistanceTypes : state.assistanceTypes,
+        assistanceTypes: state.assistanceTypes,
 
     }
 }

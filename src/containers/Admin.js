@@ -5,7 +5,8 @@ import Dashboard from '../containers/Dashboard';
 import IssuesManager from './IssuesManager';
 import NewTicketFlow from './NewTicketFlow'
 import {connect} from 'react-redux';
-import PivotTable from '../components/PivotTable';
+import PivotLayout from '../components/PivotLayout';
+
 class Admin extends React.Component {
     state={
         ref:React.createRef(),
@@ -30,7 +31,7 @@ class Admin extends React.Component {
                 <div style={{marginTop:this.state.margin}}>
                     <Route  path="/" component={IssuesManager} />
                     <Route path="/graficas" component={Dashboard} />
-                    <Route path="/reportes"  component={PivotTable} />
+                    <Route path="/reportes"  component={()=><PivotLayout user={this.props.user.username} timeRanges={this.props.timeRanges}  />} />
                     <Route path="/nueva-solicitud" component={NewTicketFlow} />
                 </div>
             </div>
@@ -40,6 +41,10 @@ class Admin extends React.Component {
 }
 
 const mapStateToProps=state=>{
-    return {user:state.user};
+    return {
+        user:state.user,
+        timeRanges:state.timeRanges,
+    
+    };
 }
 export default withRouter(connect(mapStateToProps)(Admin));

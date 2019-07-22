@@ -19,12 +19,13 @@ export const actionUpdateList = ticket =>{
         ticket,
     }
 }
-const getCatalogs = (preferences,assistanceTypes) =>{
+const getCatalogs = (preferences,assistanceTypes,timeRanges) =>{
     
     return {
         type:actionConstants.GET_CATALOGS,
         preferences,
         assistanceTypes,
+        timeRanges,
     }
 }
 export const actionUpdatePreferences = (preferenceType,value) =>{
@@ -51,7 +52,8 @@ export const actionGetCatalogs = (username) =>{
                 return previous;
             },{});
             const assistanceTypes =response.data.assistanceTypes;
-            dispatch(getCatalogs(preferences,assistanceTypes));
+            const timeRanges = response.data.Rangos;
+            dispatch(getCatalogs(preferences,assistanceTypes,timeRanges));
             
         }).catch(reason=>{
             console.log(reason);
