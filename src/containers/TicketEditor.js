@@ -16,7 +16,6 @@ import Graph from '../helpers/GraphSdkHelper';
 import { connect } from 'react-redux';
 import { statusCodes } from '../constants';
 import { actionUpdateList } from '../actions/user.actions';
-
 const canBeOn = status => {
     if (status !== statusCodes.SOLVED.value
         && status !== statusCodes.REJECTED.value) {
@@ -92,6 +91,9 @@ class TicketEditor extends React.Component {
                     }
                 ));
             }
+
+            //Buscar si hay algo que notificar.
+            this.getNotificacion(status, comments);
         }).catch(reason => {
             console.log(reason);
         });
@@ -156,23 +158,6 @@ class TicketEditor extends React.Component {
         }
 
 
-    }
-
-    getPhoto = (users, posts) => {
-
-        this.helper.getProfilePics(users, (photos) => {
-            this.setState({
-                usersIDs: photos,
-                postList: posts.map(post => {
-                    for (let i = 0; i < photos.length; i++) {
-                        if (photos[i].id === post.userID) {
-                            post.photo = photos[i].photo;
-                        }
-                    }
-                    return post;
-                })
-            });
-        })
     }
 
     componentDidMount() {

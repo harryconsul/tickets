@@ -165,14 +165,13 @@ export default class GraphSdkHelper {
   }
 
   // POST me/sendMail
-  sendMail(recipients, callback) {
+  sendMail(recipients , subject , mail , callback) {
+    //`<p></p>`
     const email = {
-      Subject: 'Email from the Microsoft Graph Sample with Office UI Fabric',
+      Subject: subject ,
       Body: {
         ContentType: 'HTML',
-        Content: `<p>Thanks for trying out Office UI Fabric!</p>
-          <p>See what else you can do with <a href="http://dev.office.com/fabric#/components">
-          Fabric React components</a>.</p>`
+        Content: mail
       },
       ToRecipients: recipients
     };
@@ -182,7 +181,8 @@ export default class GraphSdkHelper {
         if (err) {
           this._handleError(err);
         }
-        callback(err, rawResponse.req._data.message.ToRecipients);
+        //callback(err, rawResponse.req._data.message.ToRecipients);
+        callback(err);
       });
   }
 
