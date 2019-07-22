@@ -159,7 +159,23 @@ class TicketEditor extends React.Component {
 
 
     }
+    getPhoto = (users,posts) => {
+               
+        this.helper.getProfilePics(users,(photos) => {
+           this.setState({
+                usersIDs:photos,
+                postList: posts.map(post =>{
+                    for(let i = 0; i < photos.length; i++){
+                        if(photos[i].id === post.userID){
+                            post.photo = photos[i].photo;
+                        }
+                    }
+                    return post;
+                })
+            });
+        })
 
+    }
     componentDidMount() {
         //this.setState({currentStatus:this.props.status})
 
@@ -193,6 +209,7 @@ class TicketEditor extends React.Component {
                 comment={post.comments} photo={post.photo} />;
         });
         const _canBeOn = canBeOn(this.state.currentStatus);
+        const isManager = this.props.loggedUser.isManager;
         const submitDisabled = !(this.state.comments !== "" && _canBeOn)
         const photo = this.props.loggedUser ? this.props.loggedUser.photo : "";
 
@@ -203,7 +220,7 @@ class TicketEditor extends React.Component {
                         item md={4} spacing={8}>
                         <Grid item>
                             <TicketSummary ticketNumber={this.props.id}
-                                isManager={true}
+                                isManager={isManager}
                                 photo={this.state.userPhoto}
                                 department={this.props.department}
                                 userFullName={this.props.user}
