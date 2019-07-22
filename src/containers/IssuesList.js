@@ -89,14 +89,20 @@ class IssuesList extends React.Component {
         const { ticketList, status } = this.state;
         return (
             <div>
-                <Tabs value={status} onChange={this.onChangeTab}>
-                    <Tab label={"Todos"} />
-                    <Tab label={"Nuevos"} icon={<EmailOutline />} />
-                    <Tab label={"En proceso"} icon={<EmailOpenOutline />} />
-                    <Tab label={"Con tercero"} icon={<AccountClockOutline />} />
-                    <Tab label={"Resueltos"} icon={<Check />} />
-                    <Tab label={"Rechazados"} icon={<FileCancelOutline />} />
-                </Tabs>
+                {
+                    this.props.user.isManager?
+                    <Tabs value={status} onChange={this.onChangeTab}>
+                        <Tab label={"Todos"} />
+                        <Tab label={"Nuevos"} icon={<EmailOutline />} />
+                        <Tab label={"En proceso"} icon={<EmailOpenOutline />} />
+                        <Tab label={"Con tercero"} icon={<AccountClockOutline />} />
+                        <Tab label={"Resueltos"} icon={<Check />} />
+                        <Tab label={"Rechazados"} icon={<FileCancelOutline />} />
+                    </Tabs>
+                    :
+                    null
+                }
+                
                 <CustomColumnsTable columnsArray={columnsArray}
                     itemsList={ticketList} defaultColumns={["id", "statusAvatar", "problem", "engineer"]}
                     labelRowsPerPage={"Solicitudes por Pagina"}

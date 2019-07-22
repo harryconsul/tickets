@@ -24,7 +24,7 @@ const MenuBar = props => {
                 <Toolbar>
                     <Grid container spacing={16} style={{ margin: 0 }}>
                         <Grid md={2} item>
-                            <Typography variant={"h6"} style={{color:"white"}} >
+                            <Typography variant={"h6"} style={{ color: "white" }} >
                                 {
                                     props.isManager ?
                                         getOptionName(props.currentOption) :
@@ -32,20 +32,15 @@ const MenuBar = props => {
                             </Typography>
                         </Grid>
                         <Grid md={5} item>
-                            {props.isManager ?
-                                <SearchField history={props.history} /> :
-                                null
-                            }
+                            <SearchField history={props.history} isManager={props.isManager} />
                         </Grid>
                         <Grid md={5} item container spacing={8} justify={"flex-end"}>
                             {props.isManager ?
                                 (
                                     <React.Fragment>
                                         <Grid item>
-                                            <MenuLink 
-                                            link="/nueva-solicitud" icon={EmailPlusOutline} />
+                                            <MenuLink link="/nueva-solicitud" icon={EmailPlusOutline} />
                                         </Grid>
-                                        
                                         <Grid item>
                                             <MenuLink link="/graficas" icon={ChartBar} />
                                         </Grid>
@@ -58,7 +53,17 @@ const MenuBar = props => {
                                     </React.Fragment>
                                 )
                                 :
-                                null
+                                (
+                                    <React.Fragment>
+                                        <Grid item>
+                                            <MenuLink
+                                                link="/nueva-solicitud" icon={EmailPlusOutline} />
+                                        </Grid>
+                                        <Grid item>
+                                            <MenuLink link="/" icon={FormatListNumbered} />
+                                        </Grid>
+                                    </React.Fragment>
+                                )
                             }
 
 

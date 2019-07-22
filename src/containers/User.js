@@ -1,35 +1,49 @@
 import React from 'react';
+import { Route, withRouter } from 'react-router-dom';
+import IssuesManager from './IssuesManager';
 import NewTicketFlow from './NewTicketFlow';
+import {connect} from 'react-redux';
 import MenuBar from '../components/MenuBar';
 
 
-const User = props => {
+class User extends React.Component {
 
-    const [marginCal, updateMargin] = React.useState({ ref: React.createRef(), margin: null });
-    React.useEffect(() => {
-        if (!marginCal.margin) {
-            const style = window.getComputedStyle(marginCal.ref.current.children[0]);
+    state={
+        ref:React.createRef(),
+        margin:"0",
+    }
+    componentDidMount(){
+        
+        const style = window.getComputedStyle(this.state.ref.current.children[0]);
             
-            const margin = Number(style.height.replace("px",""));
-            updateMargin({ref:marginCal.ref,margin:margin+"px"})
-        }
-    },[marginCal.ref,marginCal.margin])
+        const margin = Number(style.height.replace("px",""));
+        this.setState({margin})
 
-    return (
-        <div>
-
-            <MenuBar barRef={marginCal.ref} isManager={false}/>
-            <div style={{ marginTop: marginCal.margin?marginCal.margin:"0px" }}>
-                <NewTicketFlow />
+    }
+    render(){
+        return (
+            <div>
+                
+                <MenuBar currentOption={this.props.location.pathname} 
+                    isManager={false} barRef={this.state.ref} textColor={"white"}
+                history={this.props.history} />
+                <div style={{marginTop:this.state.margin}}>
+                    <Route  path="/" component={IssuesManager} />
+                    <Route path="/nueva-solicitud" component={NewTicketFlow} />
+                </div>
             </div>
 
-
-
-        </div>
-
-    )
+        )
+    }
 
 };
 
 
-export default User;
+const mapStateToProps=state=>{
+    return {
+        user:state.user,
+        timeRanges:state.timeRanges,
+    
+    };
+}
+export default withRouter(connect(mapStateToProps)(User));

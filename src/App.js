@@ -12,7 +12,7 @@ import { applicationId, graphScopes } from './helpers/config';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { actionLogin,actionGetCatalogs } from './actions/user.actions';
+import { actionLogin, actionGetCatalogs } from './actions/user.actions';
 import axios from 'axios';
 
 class App extends React.Component {
@@ -42,7 +42,7 @@ class App extends React.Component {
       this.setState({
         isLoading: true
       });
-      
+
       this.getUserProfile();
     } else {
       if (this.props.user) {
@@ -62,49 +62,46 @@ class App extends React.Component {
         this.graphClient.getMyProfile((err, me) => {
 
           const user = {
-            accessToken:accessToken.accessToken,
+            accessToken: accessToken.accessToken,
             id: me.id,
             department: me.department,
             email: me.mail,
             username: me.mail.replace("@dicipa.com.mx", ""),
             name: me.displayName,
             logout: this.userAgentApplication.logout.bind(this.userAgentApplication),
-            
+
 
           }
           this.props.dispatch(actionGetCatalogs(user.username));
           axios.post("registrausuario", { user })
-          .then( response => {
-            const perfil = response.data.Perfil;
-              if(perfil === 'A' || perfil === 'S'){
+            .then(response => {
+              const perfil = response.data.Perfil;
+              user.profile = perfil;
+              
+              if (perfil === 'A' || perfil === 'S') {
                 user.isManager = true
-              }else{
+              } else {
                 user.isManager = false
               }
-          })
-          .catch(error => {
-            console.log(error);
-          });
+            })
+            .catch(error => {
+              console.log(error);
+            });
 
           this.graphClient.getMyPicture((err, response) => {
             if (!err && response) {
               user.photo = response;
               this.props.dispatch(actionLogin(user));
-              
+
 
 
             } else {
-              console.log("error",err,"response",response)
+              console.log("error", err, "response", response)
               this.props.dispatch(actionLogin(user));
             }
           })
 
         })
-
-
-
-
-
       }
     }
     catch (err) {
@@ -116,7 +113,7 @@ class App extends React.Component {
   // Sign the user into Azure AD. HelloJS stores token info in localStorage.hello.
   login = async () => {
     try {
-     
+
       await this.userAgentApplication.loginPopup(graphScopes);
 
       //El siguiente state, se usa para mostrar el icono progress en el componente Login.js
@@ -148,12 +145,12 @@ class App extends React.Component {
         {this.props.user ?
 
           (this.props.user.isManager ?
-             <Admin /> :
-              <User />)
+            <Admin /> :
+            <User />)
           : (
             <React.Fragment>
-              
-              <Login login={this.login} isLoading={this.state.isLoading}/>
+
+              <Login login={this.login} isLoading={this.state.isLoading} />
             </React.Fragment>
           )
 
