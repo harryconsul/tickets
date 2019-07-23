@@ -19,7 +19,7 @@ const PromiseDate = (props) => {
                     <Typography variant={"subtitle2"}> Fecha Compromiso</Typography>
                 </Grid>
                 <Grid container direction="row" justify={"space-between"} >
-                    {isEditing ? <React.Fragment>
+                    {isEditing && props.isManager ? <React.Fragment>
                         <Grid item>
                             <TextField name="promisedate" type="date"
                                 onChange={(event) => updateDate(event.target.value)} />

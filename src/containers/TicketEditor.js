@@ -6,7 +6,7 @@ import AssistanceType from '../components/AssistanceType';
 import Comment from '../components/Comment';
 import TicketField from '../components/TicketField';
 import StatusAvatar from '../components/StatusAvatar';
-import { Button, Paper, Grid, TextField, Avatar } from '@material-ui/core'
+import { Paper, Grid, TextField, Avatar } from '@material-ui/core'
 import { FabProgress, ButtonProgress } from '../components/ButtonsProgress/ButtonsProgress';
 import FileCancel from 'mdi-material-ui/FileCancel';
 import Send from 'mdi-material-ui/Send';
@@ -51,13 +51,13 @@ class TicketEditor extends React.Component {
 
     }
 
-    handleSubmit = (_status, _comments,finishCallBack) => {
+    handleSubmit = (_status, _comments, finishCallBack) => {
         const { thirdPart } = this.state;
-        const status = _status === statusCodes.NEW.value ?
+        const status = _status === statusCodes.NEW.value && this.props.loggedUser.isManager ?
             statusCodes.IN_PROCESS.value :
             _status
         const comments = _comments ? _comments : this.state.comments;
-
+        console.log(thirdPart);
         const data = {
             status,
             comments,
@@ -70,7 +70,7 @@ class TicketEditor extends React.Component {
                 || status === statusCodes.REJECTED.value) {
                 this.finishDate = response.data.post.date;
             }
-            if(finishCallBack){
+            if (finishCallBack) {
                 finishCallBack();
             }
 
@@ -100,20 +100,22 @@ class TicketEditor extends React.Component {
 
     }
     handleDialogClose = (isOKClicked, third) => {
-        this.setState({ isDialogOpen: false });
+
         if (isOKClicked) {
-            this.setState({ thirdPart: third }, this.handleSubmit(statusCodes.THIRD.value,null, this.finishCallBack));
+            console.log("third", third);
+
+            this.setState({ thirdPart: third, isDialogOpen: false }, () => this.handleSubmit(statusCodes.THIRD.value, null, this.finishCallBack));
 
 
-        }else{
-
-            if(this.finishCallBack){
+        } else {
+            this.setState({ isDialogOpen: false });
+            if (this.finishCallBack) {
                 this.finishCallBack();
-                this.finishCallBack=null;
+                this.finishCallBack = null;
             }
 
         }
-       
+
 
     }
     changeCategory = (category) => {
@@ -134,39 +136,40 @@ class TicketEditor extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.state.currentStatus === statusCodes.NEW.value) {
+        if (this.props.loggedUser.isManager) {
+            if (this.state.currentStatus === statusCodes.NEW.value) {
 
-            this.handleSubmit(statusCodes.IN_PROCESS.value, "Asignación a ingeniero");
+                this.handleSubmit(statusCodes.IN_PROCESS.value, "Asignación a ingeniero");
 
-        } else {
-            if (this.state.currentStatus !== this.props.status
-                || this.props.promiseDate !== this.promiseDate
-                || this.props.assistance !== this.assistance
-                || this.props.finishDate !== this.finishDate
-            ) {
+            } else {
+                if (this.state.currentStatus !== this.props.status
+                    || this.props.promiseDate !== this.promiseDate
+                    || this.props.assistance !== this.assistance
+                    || this.props.finishDate !== this.finishDate
+                ) {
 
-                this.props.dispatch(actionUpdateList({
-                    id: this.props.id,
-                    status: this.state.currentStatus,
-                    promiseDate: this.promiseDate,
-                    finishDate: this.finishDate,
-                    assistance: this.assistance,
-                    engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,
-                    statusAvatar: <StatusAvatar status={this.state.currentStatus} />,
-                }));
+                    this.props.dispatch(actionUpdateList({
+                        id: this.props.id,
+                        status: this.state.currentStatus,
+                        promiseDate: this.promiseDate,
+                        finishDate: this.finishDate,
+                        assistance: this.assistance,
+                        engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,
+                        statusAvatar: <StatusAvatar status={this.state.currentStatus} />,
+                    }));
+                }
             }
         }
 
-
     }
-    getPhoto = (users,posts) => {
-               
-        this.helper.getProfilePics(users,(photos) => {
-           this.setState({
-                usersIDs:photos,
-                postList: posts.map(post =>{
-                    for(let i = 0; i < photos.length; i++){
-                        if(photos[i].id === post.userID){
+    getPhoto = (users, posts) => {
+
+        this.helper.getProfilePics(users, (photos) => {
+            this.setState({
+                usersIDs: photos,
+                postList: posts.map(post => {
+                    for (let i = 0; i < photos.length; i++) {
+                        if (photos[i].id === post.userID) {
                             post.photo = photos[i].photo;
                         }
                     }
@@ -206,11 +209,12 @@ class TicketEditor extends React.Component {
     render() {
         const postList = this.state.postList.map((post, index) => {
             return <Comment key={index} author={post.userFullName} date={post.date}
+                third={post.third}
                 comment={post.comments} photo={post.photo} />;
         });
         const _canBeOn = canBeOn(this.state.currentStatus);
         const isManager = this.props.loggedUser.isManager;
-        const submitDisabled = !(this.state.comments !== "" && _canBeOn)
+        const submitDisabled = !(this.state.comments !== "" && (_canBeOn || !isManager))
         const photo = this.props.loggedUser ? this.props.loggedUser.photo : "";
 
         return (
@@ -228,18 +232,23 @@ class TicketEditor extends React.Component {
                                 detail={this.props.description}
                                 status={this.state.currentStatus}
                                 changeCategory={this.changeCategory}
-                                editing={_canBeOn}
+                                editing={_canBeOn && isManager}
                                 problem={this.props.problem} />
                         </Grid>
                         <Grid item>
                             <Paper style={{ padding: "10px" }}>
                                 <PromiseDate promiseDate={this.props.promiseDate}
                                     changePromiseDate={this.changePromiseDate}
+                                    isManager={isManager}
                                     id={this.props.id} />
-                                <AssistanceType id={this.props.id}
-                                    assistance={this.props.assistance}
-                                    changeAssistance={this.changeAssistance}
-                                    assistanceOptions={this.props.assistanceTypes} />
+                                {isManager ?
+                                    <AssistanceType id={this.props.id}
+                                        assistance={this.props.assistance}
+
+                                        changeAssistance={this.changeAssistance}
+                                        assistanceOptions={this.props.assistanceTypes} />
+                                    : null
+                                }
                             </Paper>
 
                         </Grid>
@@ -267,23 +276,25 @@ class TicketEditor extends React.Component {
 
                                     </div>
 
-                                    <div style={{ textAlign: "right", 
-                                        margin: "10px",display:"flex",justifyContent:"flex-end" }}>
+                                    {isManager ? <div style={{
+                                        textAlign: "right",
+                                        margin: "10px", display: "flex", justifyContent: "flex-end"
+                                    }}>
 
 
                                         <ButtonProgress
-                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.REJECTED.value,null,finishCallBack)}
+                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.REJECTED.value, null, finishCallBack)}
                                             color={"secondary"} submitDisabled={submitDisabled}
                                             text={"Rechazar"}
                                             variant={"outlined"}
                                             icon={<FileCancel />} />
 
                                         <ButtonProgress
-                                            onClick={(finishCallBack) =>{ 
-                                                    this.finishCallBack = finishCallBack;
-                                                    this.setState({ isDialogOpen: true });
+                                            onClick={(finishCallBack) => {
+                                                this.finishCallBack = finishCallBack;
+                                                this.setState({ isDialogOpen: true });
 
-                                                }                                            
+                                            }
                                             }
                                             color={"primary"} submitDisabled={submitDisabled}
                                             variant={"contained"}
@@ -291,14 +302,16 @@ class TicketEditor extends React.Component {
                                             icon={<Send />} />
 
                                         <ButtonProgress
-                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.SOLVED.value,null,finishCallBack)}
+                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.SOLVED.value, null, finishCallBack)}
                                             submitDisabled={submitDisabled}
                                             color={"primary"}
                                             variant={"contained"}
                                             text={"Finalizar"}
                                             icon={<Check />} />
 
-                                    </div>
+                                    </div> : null
+
+                                    }
                                 </Paper>
 
                             </Grid>

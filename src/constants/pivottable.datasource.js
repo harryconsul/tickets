@@ -1,10 +1,10 @@
 export const oldReport = {
-    report:{
+    report: {
         dataSource: {
             dataSourceType: "json",
             data: [],
-          },
-          slice: {
+        },
+        slice: {
             rows: [
                 {
                     uniqueName: "Categoria"
@@ -167,39 +167,152 @@ export const oldReport = {
                 ]
             }
         },
-        datePattern: "GMT+1:dd-MMMM-yyyy",                 
-        
+        datePattern: "GMT+1:dd-MMMM-yyyy",
+
     },
     webService: "reporteflexiblea",
-    
+
 }
 export const topUsers = {
-    report:{
-        dataSource:{
+    report: {
+        dataSource: {
             dataSourceType: "json",
-            data:[],
-        }
+            data: [],
+        },
 
+        slice: {
+            rows: [
+                {
+                    uniqueName: "Usuario"
+                },
+                {
+                    uniqueName: "Estatus"
+                }
+            ],
+            columns: [
+                {
+                    uniqueName: "[Measures]"
+                }
+            ],
+            measures: [
+                {
+                    uniqueName: "Solicitudes",
+                    formula: "count(\"NoSolicitud\")",
+                    caption: "Solicitudes"
+                }
+            ],
+            sorting: {
+                column: {
+                    type: "asc",
+                    tuple: [],
+                    measure: {
+                        uniqueName: "Solicitudes",
+                        aggregation: "none"
+                    }
+                }
+            }
+        },
+        options: {
+            grid: {
+                type: "classic"
+            }
+        }
     },
-    webService:"reporteflextopusuarios"
+    webService: "reporteflextopusuarios"
 }
 export const statusReport = {
-    report:{
-        dataSource:{
+    report: {
+        dataSource: {
             dataSourceType: "json",
-            data:[],
+            data: [],
         }
 
+
     },
-    webService:"reporteflexsolicitudes"
+    webService: "reporteflexsolicitudes"
 }
 export const ticketsAmount = {
-    report:{
-        dataSource:{
+    report: {
+        dataSource: {
             dataSourceType: "json",
-            data:[],
+            data: [],
+        },
+        slice: {
+            rows: [
+                {
+                    uniqueName: "Usuario",
+                    sort: "unsorted"
+                },
+                {
+                    uniqueName: "NoSolicitud",
+                    sort: "desc"
+                },
+                {
+                    uniqueName: "Categoria",
+                    sort: "unsorted"
+                },
+                {
+                    uniqueName: "Departamento",
+                    sort: "unsorted"
+                },
+                {
+                    uniqueName: "FechaAlta.Month",
+                    sort: "unsorted"
+                },
+                {
+                    uniqueName: "FechaAlta.Day",
+                    sort: "unsorted"
+                },
+                {
+                    uniqueName: "Estatus",
+                    sort: "unsorted"
+                },
+                {
+                    uniqueName: "FechaAlta.Year",
+                    sort: "unsorted"
+                }
+            ],
+            columns: [
+                {
+                    uniqueName: "[Measures]"
+                }
+            ],
+            measures: [
+                {
+                    uniqueName: "NoSolicitud",
+                    aggregation: "sum"
+                }
+            ],
+            sorting: {
+                column: {
+                    type: "desc",
+                    tuple: [],
+                    measure: {
+                        uniqueName: "NoSolicitud",
+                        aggregation: "sum"
+                    }
+                }
+            },
+            flatOrder: [
+                "NoSolicitud",
+                "Usuario",
+                "Categoria",
+                "Departamento",
+                "FechaAlta.Month",
+                "FechaAlta.Day",
+                "Estatus",
+                "FechaAlta.Year"
+            ]
+        },
+        options: {
+            grid: {
+                type: "flat",
+                showTotals: "off",
+                showGrandTotals: "off"
+            }
         }
+    
 
     },
-    webService:"reporteflexsolicitudes"
+    webService: "reporteflexsolicitudes"
 }

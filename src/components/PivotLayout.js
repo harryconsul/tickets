@@ -1,11 +1,13 @@
 import React from 'react';
-import { Grid,MenuItem } from '@material-ui/core';
+import { Grid,MenuItem,Tabs,Tab } from '@material-ui/core';
 import PivotTable from './PivotTable';
 import ControlledInput from './ControlledInput';
 import { pivotTableDataSource } from '../constants/'
 
 const PivotLayout = (props) => {
     const [rango,setRango] = React.useState(7);
+    const [tab,setTab] = React.useState(3);
+    
     return (
         <Grid container spacing={16} justify={"center"} >
             <Grid item md={12}>
@@ -25,15 +27,21 @@ const PivotLayout = (props) => {
                 })}
                 </ControlledInput>
             </Grid>
-            <Grid item md={6} >
-                <PivotTable {...pivotTableDataSource.topUsers} data={{Rango:rango,Usuario:props.usuario}} />
-            </Grid>
-
-            <Grid item md={6}>
-                <PivotTable {...pivotTableDataSource.statusReport}  data={{Rango:rango,Usuario:props.usuario}}/>
-            </Grid>
+            
             <Grid item md={12}>
-                <PivotTable {...pivotTableDataSource.ticketsAmount}  data={{Rango:rango,Usuario:props.usuario}}/>
+                <Tabs value ={tab} onChange={(event,tab)=>{
+                    console.log(tab);
+                    setTab(tab)
+                }
+                    }>
+                    <Tab label={"Todas mis solicitudes"} />
+                    <Tab label={"Top 10 Usuarios"} />
+                    
+                </Tabs>
+                {   tab===0?
+                    <PivotTable {...pivotTableDataSource.ticketsAmount}  data={{Rango:rango,Usuario:props.usuario}}/>
+                    : <PivotTable {...pivotTableDataSource.topUsers} data={{Rango:rango,Usuario:props.usuario}} />
+                }
             </Grid>
         </Grid>
     )

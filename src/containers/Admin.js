@@ -31,7 +31,7 @@ class Admin extends React.Component {
                 <div style={{marginTop:this.state.margin}}>
                     <Route  path="/" component={IssuesManager} />
                     <Route path="/graficas" component={Dashboard} />
-                    <Route path="/reportes"  component={()=><PivotLayout user={this.props.user.username} timeRanges={this.props.timeRanges}  />} />
+                    <Route path="/reportes"  component={()=><PivotLayout usuario={this.props.user.username} timeRanges={this.props.timeRanges}  />} />
                     <Route path="/nueva-solicitud" component={NewTicketFlow} />
                 </div>
             </div>

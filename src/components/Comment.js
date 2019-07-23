@@ -11,6 +11,7 @@ class Comment extends React.Component {
         return false;
     }
     render() {
+        
         return (
             <Grid container style={{ marginBottom: "10px" }} >
                 <Grid item md={1}>
@@ -21,7 +22,13 @@ class Comment extends React.Component {
                         <Grid container>
                             <Grid item md={8}> <Typography variant={"h6"}> {this.props.author} </Typography></Grid>
                             <Grid item md={4} style={{ display: "inline-flex" }}> <CalendarClock />  <Typography variant={"caption"}>{this.props.date}</Typography> </Grid>
-                            <Grid item md={10}><Typography variant={"body1"}> {this.props.comment} </Typography> </Grid>
+                            <Grid item md={10}><Typography variant={"body1"}> {this.props.comment }  </Typography> </Grid>
+                            {
+                                this.props.third!==""?
+                                <Grid item md={10}><Typography variant={"body1"}> Con tercero: {this.props.third }  </Typography> </Grid>
+                                :null
+                            }
+                            
                         </Grid>
                     </Paper>
                 </Grid>

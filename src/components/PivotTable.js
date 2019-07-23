@@ -7,10 +7,8 @@ class PivotTable extends React.Component {
     state={
         ref:React.createRef(),
     }
-   
-    componentDidMount(){
-
-        axios.post(this.props.webService).then((response)=>{
+    postData=()=>{
+        axios.post(this.props.webService,this.props.data).then((response)=>{
             const report = {...this.props.report};
             report.dataSource.data = response.data.SDTData;
             const flex = this.state.ref.current.flexmonster;            
@@ -18,7 +16,14 @@ class PivotTable extends React.Component {
           
 
         });
+    }
+    componentDidMount(){
 
+        this.postData();
+
+    }
+    componentDidUpdate(){
+        this.postData();
     }
    
     render() { 

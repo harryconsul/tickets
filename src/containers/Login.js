@@ -1,6 +1,7 @@
 import React from 'react';
 import {Grid,Paper,Typography,Button}  from '@material-ui/core'
 import Microsoft from 'mdi-material-ui/Microsoft';
+import  seva from '../assets/seva.png'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Login = (props)=>{
@@ -10,9 +11,7 @@ const Login = (props)=>{
                     wrap="nowrap" style={{height:"100%"}} justify={"center"}
                 spacing={32}>
                     <Grid item>
-                        <Typography variant={"h4"} >
-                            Sistema de Reportes TI
-                        </Typography>
+                        <img alt="Seva- Servicios TI" src={seva} />
                     </Grid>
                                        
                     <Grid item >

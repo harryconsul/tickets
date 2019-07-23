@@ -17,7 +17,7 @@ const AssistanceType = (props) => {
                 <Typography variant={"subtitle2"}>Tipo de Atención</Typography>
             </Grid>
             <Grid container direction="row" justify={"space-between"} >
-
+                
                 <Grid item>
                     <Select name="promisedate" type="date" native
                         value={assistance}

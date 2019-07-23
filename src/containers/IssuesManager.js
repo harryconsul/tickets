@@ -59,23 +59,27 @@ class IssuesManager extends React.Component {
         }
     }
     onTicketClick = (id) => {
+        const isManager = this.props.user.isManager;
+        const basePath = isManager?"/":"/mis-solicitudes/";
         const ticket = this.props.result.find(item => item.id === id);
         this.setState({ selectedTicket: ticket }, () => {
-            this.props.history.push("/solicitud/" + id);
+            this.props.history.push(basePath+"solicitud/" + id);
         });
 
 
     }
     render() {
         let { ticketList, selectedTicket } = this.state;
+        const isManager = this.props.user.isManager;
+        const basePath = isManager?"/":"/mis-solicitudes/";
         ticketList = this.props.result;
         return (
 
             <React.Fragment>
-                <Route exact path={"/"} component={() =>
+                <Route exact path={basePath} component={() =>
                     <IssuesList ticketList={ticketList} onTicketClick={this.onTicketClick} />
                 } />
-                <Route path={"/solicitud/:id"} component={() =>
+                <Route path={basePath+"solicitud/:id"} component={() =>
                     <TicketEditor {...selectedTicket}
                         handleTicketUpdate={this.handleTicketUpdate} />
                 } />
