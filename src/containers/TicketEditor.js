@@ -40,6 +40,7 @@ class TicketEditor extends React.Component {
             currentStatus: props.status,
             currentCategoryName: props.categoryName,
             userPhoto: "",
+            engineerPhoto:"",
 
 
 
@@ -183,12 +184,20 @@ class TicketEditor extends React.Component {
         //this.setState({currentStatus:this.props.status})
 
         axios.post("obtienedetallesolicitud", { id: this.props.id }).then(response => {
+            //Get the picture to display in the ticket summary
+            this.helper.getProfilePics([{ id: response.data.engineerUserID, photo: "" }], (photos) => {
+                if (photos.length) {
+                    this.setState({ engineerPhoto: photos[0].photo });
+                }
+            }); 
+            
             const userIDs = response.data.userIDs.map(item => {
                 return {
                     id: item,
                     photo: ""
                 }
             });
+            
             this.getPhoto(userIDs, response.data.posts);
 
             this.setState({
@@ -199,12 +208,12 @@ class TicketEditor extends React.Component {
             });
         });
 
-
         this.helper.getProfilePics([{ id: this.props.userID, photo: "" }], (photos) => {
             if (photos.length) {
                 this.setState({ userPhoto: photos[0].photo });
             }
         });
+       
     }
     render() {
         const postList = this.state.postList.map((post, index) => {
@@ -216,7 +225,7 @@ class TicketEditor extends React.Component {
         const isManager = this.props.loggedUser.isManager;
         const submitDisabled = !(this.state.comments !== "" && (_canBeOn || !isManager))
         const photo = this.props.loggedUser ? this.props.loggedUser.photo : "";
-
+        const summaryPhoto = isManager ? this.state.userPhoto: this.state.engineerPhoto;
         return (
             <React.Fragment>
                 <Grid container style={{ marginTop: "10px" }} >
@@ -225,7 +234,7 @@ class TicketEditor extends React.Component {
                         <Grid item>
                             <TicketSummary ticketNumber={this.props.id}
                                 isManager={isManager}
-                                photo={this.state.userPhoto}
+                                photo={summaryPhoto}
                                 department={this.props.department}
                                 userFullName={this.props.user}
                                 category={this.state.currentCategoryName}
