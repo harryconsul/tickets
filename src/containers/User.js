@@ -29,7 +29,7 @@ class User extends React.Component {
                 history={this.props.history} />
                 <div style={{marginTop:this.state.margin}}>
                     <Route  path="/mis-solicitudes" component={IssuesManager} />
-                    <Route path="/" component={NewTicketFlow} />
+                    <Route exact path="/" component={NewTicketFlow} />
                 </div>
             </div>
 
