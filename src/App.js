@@ -3,7 +3,6 @@ import './App.css';
 import User from './containers/User';
 import Admin from './containers/Admin'
 import Login from './containers/Login';
-import hello from 'hellojs';
 import { UserAgentApplication } from 'msal';
 
 import GraphSdkHelper from './helpers/GraphSdkHelper';
@@ -72,34 +71,46 @@ class App extends React.Component {
 
 
           }
+
           this.props.dispatch(actionGetCatalogs(user.username));
-          axios.post("registrausuario", { user })
-            .then(response => {
-              const perfil = response.data.Perfil;
-              user.profile = perfil;
-              
-              if (perfil === 'A' || perfil === 'S') {
-                user.isManager = true
+
+          const registrarUsuario = new Promise((resolve, reject) => {
+            axios.post("registrausuario", { user })
+              .then(response => {
+                const perfil = response.data.Perfil;
+                user.profile = perfil;
+
+                //A= Administrador , S = Supervisor
+                if (perfil === 'A' || perfil === 'S') {
+                  user.isManager = true
+                } else {
+                  user.isManager = false
+                }
+
+                resolve(user);
+              })
+              .catch(error => {
+                reject(error);
+              });
+          });
+
+          const myPicture = new Promise((resolve, reject) => {
+            this.graphClient.getMyPicture((err, response) => {
+              if (!err && response) {
+                user.photo = response;
+                resolve(user);
               } else {
-                user.isManager = false
+                reject(err);
               }
             })
-            .catch(error => {
-              console.log(error);
+          });
+
+          Promise.all([registrarUsuario, myPicture])
+            .then(values => {
+              console.log(values);
+              //Setear los datos del usuario Redux.
+              this.props.dispatch(actionLogin(user))
             });
-
-          this.graphClient.getMyPicture((err, response) => {
-            if (!err && response) {
-              user.photo = response;
-              this.props.dispatch(actionLogin(user));
-
-
-
-            } else {
-              console.log("error", err, "response", response)
-              this.props.dispatch(actionLogin(user));
-            }
-          })
 
         })
       }
@@ -129,11 +140,6 @@ class App extends React.Component {
       console.log(err);
 
     }
-  }
-
-  // Sign the user out of the session.
-  logout = () => {
-    hello('aad').logout();
   }
 
   render() {
