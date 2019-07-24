@@ -76,10 +76,13 @@ class TicketEditor extends React.Component {
             }
 
             if (!_comments) {
+                const post = {
+                    ...response.data.post,photo:this.props.loggedUser.photo
+                }
 
                 this.setState({
                     comments: "",
-                    postList: [response.data.post, ...this.state.postList],
+                    postList: [post, ...this.state.postList],
                     currentStatus: status,
                 });
             } else {
