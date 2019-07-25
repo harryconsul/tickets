@@ -28,8 +28,9 @@ class User extends React.Component {
                     isManager={false} barRef={this.state.ref} textColor={"white"}
                 history={this.props.history} />
                 <div style={{marginTop:this.state.margin}}>
-                    <Route  path="/mis-solicitudes" component={IssuesManager} />
                     <Route exact path="/" component={NewTicketFlow} />
+                    <Route  path="/mis-solicitudes" component={IssuesManager} />
+                    
                 </div>
             </div>
 

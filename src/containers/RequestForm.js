@@ -50,9 +50,7 @@ const defaultFields = [
 ]
 
 class RequestForm extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+    
     state = {
         problem: "", problems: [], problemSet: [], detail: "",
         fields: [...defaultFields], persona: null, disabled: true
@@ -64,7 +62,7 @@ class RequestForm extends React.Component {
             const _problem = _problems[_problemIndex];
             _problems.splice(_problemIndex, 1);
 
-            this.setState({ problem: _problem.label, problems: _problems, fields: _problem.fields });
+            this.setState({disabled: false, problem: _problem.label, problems: _problems, fields: _problem.fields });
         }
     }
 
