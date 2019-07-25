@@ -107,7 +107,6 @@ class App extends React.Component {
 
           Promise.all([registrarUsuario, myPicture])
             .then(values => {
-              console.log(values);
               //Setear los datos del usuario Redux.
               this.props.dispatch(actionLogin(user))
             });
