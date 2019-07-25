@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid,Paper,Typography,Button}  from '@material-ui/core'
+import {Grid,Paper,Button}  from '@material-ui/core'
 import Microsoft from 'mdi-material-ui/Microsoft';
 import  seva from '../assets/seva.png'
 import CircularProgress from '@material-ui/core/CircularProgress';

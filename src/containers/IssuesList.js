@@ -88,7 +88,7 @@ class IssuesList extends React.Component {
         const { onTicketClick } = this.props;
         const { ticketList, status } = this.state;
         return (
-            <div>
+            <div style={{width:'100%'}}>
                 {
                     this.props.user.isManager?
                     <Tabs value={status} onChange={this.onChangeTab}>
