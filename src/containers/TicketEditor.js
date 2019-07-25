@@ -16,6 +16,7 @@ import Graph from '../helpers/GraphSdkHelper';
 import { connect } from 'react-redux';
 import { statusCodes } from '../constants';
 import { actionUpdateList } from '../actions/user.actions';
+
 const canBeOn = status => {
     if (status !== statusCodes.SOLVED.value
         && status !== statusCodes.REJECTED.value) {
@@ -50,6 +51,34 @@ class TicketEditor extends React.Component {
         this.finishDate = props.finishDate;
         this.helper = new Graph(this.props.loggedUser.accessToken);
 
+    }
+
+    getNotificacion = (status, comments) => {
+        const data = {
+            Id: this.props.id,
+            Estatus: status,
+            Comentario: comments
+        }
+
+        axios.post("buscarnotificacion", data).then(response => {
+            const correo = response.data.Notificacion.Para;
+            console.log(correo);
+            if (correo !== '') {
+                const recipient = [{
+                    EmailAddress: {
+                        Address: correo
+                    }
+                }];
+
+                this.helper.sendMail(recipient , response.data.Notificacion.Asunto,
+                    response.data.Notificacion.Correo , (err) =>{
+                        if (!err) {
+                            console.log("La notificación fue enviada");
+                        }
+                    });
+            }
+
+        });
     }
 
     handleSubmit = (_status, _comments, finishCallBack) => {
@@ -227,6 +256,7 @@ class TicketEditor extends React.Component {
         const _canBeOn = canBeOn(this.state.currentStatus);
         const isManager = this.props.loggedUser.isManager;
         const submitDisabled = !(this.state.comments !== "" && (_canBeOn || !isManager))
+        const submitComment = !(this.state.comments !== "")
         const photo = this.props.loggedUser ? this.props.loggedUser.photo : "";
         const summaryPhoto = isManager ? this.state.userPhoto: this.state.engineerPhoto;
         return (
@@ -282,7 +312,7 @@ class TicketEditor extends React.Component {
                                             value={this.state.comments}
                                             onChange={(event) => this.setState({ comments: event.target.value })}
                                         />
-                                        <FabProgress submitDisabled={submitDisabled}
+                                        <FabProgress submitDisabled={submitComment}
                                             handleSubmit={this.handleSubmit}
                                             status={this.state.currentStatus} />
 
