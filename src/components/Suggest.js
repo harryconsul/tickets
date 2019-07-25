@@ -275,7 +275,7 @@ class Suggest extends Component{
                     )}
                 </Downshift>:
                  <Downshift id="downshift-simple" 
-                 onStateChange={this.handleStateChange} >
+                 onStateChange={this.handleStateChange} initialIsOpen={this.props.showOnEmpty}>
                      {({
                      getInputProps,
                      getItemProps,

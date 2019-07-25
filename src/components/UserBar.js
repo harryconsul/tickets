@@ -2,7 +2,7 @@ import React from 'react';
 import { Avatar, Popover, Typography, Grid ,Button} from '@material-ui/core';
 import Logout from 'mdi-material-ui/Logout';
 import { connect } from 'react-redux';
-
+import {withRouter} from 'react-router-dom';
 
 class UserBar extends React.Component {
     state = {
@@ -52,7 +52,10 @@ class UserBar extends React.Component {
                         </Grid>
                         <Grid>
                             <Button variant={"contained"} color={"secondary"}
-                             onClick={()=>this.props.user.logout()}
+                             onClick={()=>{
+                                    this.props.history.push("/");
+                                    this.props.user.logout()}
+                                 }
                              >
                                  Salir
                                  <Logout/>
@@ -77,4 +80,4 @@ const mapStateToProps = state => {
         user: state.user,
     }
 }
-export default connect(mapStateToProps)(UserBar)
+export default withRouter(connect(mapStateToProps)(UserBar));
