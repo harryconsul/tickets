@@ -24,7 +24,8 @@ const ThirdDialogForm = props => {
                 <DialogContentText>
                     {props.text}
                 </DialogContentText>
-                <Suggest isMultiple={false} listaMedicos={props.thirds} 
+                <Suggest  listaMedicos={props.thirds} 
+                    showOnEmpty={true}
                     handleSuggest={handleThirdSuggest}
                 />
             </DialogContent>

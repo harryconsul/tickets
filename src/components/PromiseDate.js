@@ -5,11 +5,14 @@ import axios from 'axios';
 
 const PromiseDate = (props) => {
     const [date, updateDate] = React.useState(props.promiseDate);
-    const [isEditing, setIsEditing] = React.useState(props.promiseDate === "0000-00-00" ? true : false);
+    const [isEditing, setIsEditing] = React.useState(props.promiseDate === "" ? true : false);
     const submitPromiseDate = () => {
-        axios.post("registrafechacompromiso", { date,SolicitudId:props.id }).then((response) => {
+     
+        const _formatedDate = date.replace("T"," ")
+        console.log("formated date",_formatedDate);
+        axios.post("registrafechacompromiso", { date:_formatedDate,SolicitudId:props.id }).then((response) => {
                 setIsEditing(false);
-                props.changePromiseDate(date);
+                props.changePromiseDate(_formatedDate);
         });
     }
     return (
@@ -21,13 +24,13 @@ const PromiseDate = (props) => {
                 <Grid container direction="row" justify={"space-between"} >
                     {isEditing && props.isManager ? <React.Fragment>
                         <Grid item>
-                            <TextField name="promisedate" type="date"
+                            <TextField name="promisedate" type="datetime-local"
                                 onChange={(event) => updateDate(event.target.value)} />
 
                         </Grid>
                         <Grid item>
                             <Button color="primary" onClick={submitPromiseDate}
-                                 disabled={date==="0000-00-00"}
+                                 disabled={date===""}
                                 variant={"outlined"} >
                                 <DateIcon />
                             </Button>
