@@ -38,7 +38,7 @@ const ThirdDialogForm = props => {
                     onClick={() => props.handleDialogClose(true,third)}
                     disabled={!third}
                     variant={"contained"}>
-                    Enviar 
+                    Aceptar 
                     </Button>
             </DialogActions>
         </Dialog>

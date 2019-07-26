@@ -40,6 +40,8 @@ class TicketEditor extends React.Component {
             usersIDs: [],
             currentStatus: props.status,
             currentCategoryName: props.categoryName,
+            currentTecnico : props.engineer,
+            currentCategoryId: props.categoryId,
             userPhoto: "",
             engineerPhoto:"",
 
@@ -115,7 +117,7 @@ class TicketEditor extends React.Component {
                     currentStatus: status,
                 });
             } else {
-                const engineer = this.props.user.username;
+                const engineer = this.props.loggedUser.username;
                 //this.props.handleTicketUpdate({ id: this.props.id, status, engineer });
                 this.props.dispatch(actionUpdateList(
                     {
@@ -161,6 +163,17 @@ class TicketEditor extends React.Component {
             this.setState({ currentCategoryName: response.data.categoryName })
         })
     }
+
+    changeTecnico = (tecnico) => {
+        axios.post("cambiartecnico",{
+            SolicitudId: this.props.id,
+            UsuarioLogin: this.props.loggedUser.username,
+            Tecnico: tecnico
+        }).then(response => {
+            this.setState({currentTecnico:tecnico});
+        });
+    }
+
     changePromiseDate = (promiseDate) => {
         this.promiseDate = promiseDate;
     }
@@ -179,6 +192,7 @@ class TicketEditor extends React.Component {
                     || this.props.promiseDate !== this.promiseDate
                     || this.props.assistance !== this.assistance
                     || this.props.finishDate !== this.finishDate
+                    || this.props.engineer !== this.state.currentTecnico
                 ) {
 
                     this.props.dispatch(actionUpdateList({
@@ -187,7 +201,7 @@ class TicketEditor extends React.Component {
                         promiseDate: this.promiseDate,
                         finishDate: this.finishDate,
                         assistance: this.assistance,
-                        engineer: this.props.engineer.trim() !== "" ? this.props.engineer : this.props.loggedUser.username,
+                        engineer:this.state.currentTecnico,
                         statusAvatar: <StatusAvatar status={this.state.currentStatus} />,
                     }));
                 }
@@ -267,6 +281,7 @@ class TicketEditor extends React.Component {
                         <Grid item>
                             <TicketSummary ticketNumber={this.props.id}
                                 isManager={isManager}
+                                userName={this.props.loggedUser.username}
                                 photo={summaryPhoto}
                                 department={this.props.department}
                                 userFullName={this.props.user}
@@ -274,8 +289,10 @@ class TicketEditor extends React.Component {
                                 detail={this.props.description}
                                 status={this.state.currentStatus}
                                 changeCategory={this.changeCategory}
+                                changeTecnico = {this.changeTecnico}
                                 editing={_canBeOn && isManager}
-                                problem={this.props.problem} />
+                                problem={this.props.problem}
+                                categoryId={this.state.currentCategoryId} />
                         </Grid>
                         <Grid item>
                             <Paper style={{ padding: "10px" }}>

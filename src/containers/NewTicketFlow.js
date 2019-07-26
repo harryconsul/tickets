@@ -20,7 +20,7 @@ function getBase64(file) {
 
             }
         } catch (error) {
-            reject("No fue posible leer el contenido del archivo, talvez este vacio");
+            reject("No fue posible leer el contenido del archivo, tal vez este vacío");
         }
     }
     );

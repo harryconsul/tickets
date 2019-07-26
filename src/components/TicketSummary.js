@@ -8,17 +8,27 @@ const TicketSummary = props => {
     const styleLineSpace = { marginBottom: "10px" };
 
     const [categories, setCategories] = React.useState([]);
-    const [dialogOpen, setDialogOpen] = React.useState(false);
-    const handleDialogClose = (isOk, categoryId) => {
-        setDialogOpen(false);
+    const [tecnicos, setTecnicos] = React.useState([]);
+
+    const [dialogCategoyOpen, setCategoryDialogOpen] = React.useState(false);
+    const [dialogTecnicoOpen, setTecnicoDialogOpen] = React.useState(false);
+
+    const handleCategoryDialogClose = (isOk, categoryId) => {
+        setCategoryDialogOpen(false);
         if (isOk && categoryId) {
             props.changeCategory(categoryId);
         }
+    }
 
+    const handleTecnicoDialogClose = (isOk, tecnico) => {
+        setTecnicoDialogOpen(false);
+        if (isOk && tecnico) {
+            props.changeTecnico(tecnico);
+        }
     }
 
     const handleDialogCategoria = () => {
-        setDialogOpen(true);
+        setCategoryDialogOpen(true);
         if (!categories.length) {
             axios.post("obtienecategorias").then(response => {
                 const categoriesList = response.data.Categorias
@@ -30,9 +40,32 @@ const TicketSummary = props => {
                         }
                         return list;
                     }, []);
-                console.log("Categories " , categoriesList);
                 setCategories(categoriesList.map(item => ({ nombre: item.label, value: item.id })));
             });
+        }
+    }
+
+    const handleDialogTecnico = () => {
+        setTecnicoDialogOpen(true);
+        if (!tecnicos.length) {
+            const data = {
+                UsuarioLogin: props.userName,
+                CategoriaId: props.categoryId
+            }
+            console.log(data);
+            //Devoler los técnicos, excepto el que esta pidiendo el cambio
+            axios.post("obtienetecnicos", data)
+                .then(response => {
+
+                    const tecnicos = response.data.Tecnicos;
+                    console.log(tecnicos);
+                    setTecnicos(tecnicos.map(
+                        item => ({
+                            nombre: item.name,
+                            value: item.username
+                        })
+                    ));
+                });
         }
     }
 
@@ -60,7 +93,7 @@ const TicketSummary = props => {
 
                     }
                     {props.editing ?
-                        <Button color={"secondary"} onClick={handleDialogCategoria} variant={"outlined"} >
+                        <Button color={"secondary"} onClick={handleDialogTecnico} variant={"outlined"} >
                             Reasignar
                         </Button>
                         :
@@ -69,10 +102,17 @@ const TicketSummary = props => {
                 </div>
 
             </Paper>
-            <ThirdDialogForm isDialogOpen={dialogOpen}
-                title={"Cambiar de Categoria"}
-                text={"Selecciona la categoria correcta de la solicitud"}
-                handleDialogClose={handleDialogClose} thirds={categories}
+            <ThirdDialogForm isDialogOpen={dialogCategoyOpen}
+                title={"Cambiar de Categoría"}
+                text={"Selecciona la categoría correcta de la solicitud"}
+                handleDialogClose={handleCategoryDialogClose} thirds={categories}
+
+            />
+
+            <ThirdDialogForm isDialogOpen={dialogTecnicoOpen}
+                title={"Reasignar Solicitud"}
+                text={"Seleccionar quien atendera la solicitud"}
+                handleDialogClose={handleTecnicoDialogClose} thirds={tecnicos}
 
             />
         </div>
