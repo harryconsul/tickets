@@ -9,43 +9,55 @@ const Dashboard = (props)=>{
             <Grid item md={7}>
                 <Paper> 
                     <Chart feed = {"graficapiedepartamentos"} 
+                        feedPayload={{UsuarioLogin:props.usuario}}
                         hasGradient={true} />
                 </Paper>
             </Grid>            
             <Grid item md={5}>
                 <Paper>
                 <Chart feed = {"graficaareati"} 
+                        feedPayload={{UsuarioLogin:props.usuario}}
                         hasGradient={true} />
                 </Paper>
             </Grid>
-            <Grid item md={3}>
+            <Grid item md={12} container  justify="space-between" >
+            <Grid md={2} item>
                 <Paper>
                 <Chart feed = {"graficagaugetickets"}
-                     feedPayload={{Estatus:statusCodes.NEW.value}}
+                     feedPayload={{UsuarioLogin:props.usuario,Estatus:statusCodes.NEW.value}}
                         hasGradient={false} />
                 </Paper>
             </Grid>
-            <Grid item md={3}>
+            <Grid  md={2} item >
                 <Paper>
                 <Chart feed = {"graficagaugetickets"}
-                     feedPayload={{Estatus:statusCodes.IN_PROCESS.value}}
+                     feedPayload={{UsuarioLogin:props.usuario,Estatus:statusCodes.IN_PROCESS.value}}
                         hasGradient={false} />
                 </Paper>
             </Grid>
-            <Grid item md={3}> 
+            <Grid md={2} item >
                 <Paper>
                 <Chart feed = {"graficagaugetickets"}
-                     feedPayload={{Estatus:statusCodes.REJECTED.value}}
+                     feedPayload={{UsuarioLogin:props.usuario,Estatus:statusCodes.THIRD.value}}
                         hasGradient={false} />
                 </Paper>
             </Grid>
-            <Grid item md={3}>
+            <Grid md={2} item > 
                 <Paper>
                 <Chart feed = {"graficagaugetickets"}
-                     feedPayload={{Estatus:statusCodes.SOLVED.value}}
+                     feedPayload={{UsuarioLogin:props.usuario,Estatus:statusCodes.REJECTED.value}}
                         hasGradient={false} />
                 </Paper>
             </Grid>
+            <Grid md={2} item >
+                <Paper>
+                <Chart feed = {"graficagaugetickets"}
+                     feedPayload={{UsuarioLogin:props.usuario,Estatus:statusCodes.SOLVED.value}}
+                        hasGradient={false} />
+                </Paper>
+            </Grid>
+            </Grid>
+            
 
         </Grid>
     )
