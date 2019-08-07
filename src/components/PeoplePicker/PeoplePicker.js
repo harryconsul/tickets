@@ -194,7 +194,10 @@ class PeoplePicker extends Component {
             loadingText: 'Cargando...',
             isLoading: this.state.isLoadingPics
           }}
-          inputProps={{ placeholder: '¿Quién solicita? Inicie escribiendo el nombre del usuario' }}
+          inputProps={{
+                autoFocus:this.props.autoFocus,
+                placeholder: '¿Quién solicita? Inicie escribiendo el nombre del usuario' }
+             }
           getTextFromItem={(persona) => persona.primaryText}
           onChange={this._onSelectionChanged}
           onGetMoreResults={this.state.selectedPeople.length === 0 ? this._onGetMoreResults : null}
