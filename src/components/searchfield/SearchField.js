@@ -1,9 +1,7 @@
 import React from 'react';
 import { InputBase, IconButton } from '@material-ui/core';
 import SearchIcon from 'mdi-material-ui/Magnify';
-import StatusAvatar from '../StatusAvatar'
 import './SearchField.css';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { actionSearch } from '../../actions/user.actions';
 import BusquedaAvanzada from '../../components/BusquedaAvanzada';
@@ -36,7 +34,10 @@ class SearchField extends React.Component {
             };
 
            this.props.dispatch(actionSearch(data))
-                .then(()=>this.props.history.push("/mis-solicitudes"));
+                .then(()=>{
+                    this.setClean(true);
+            
+            });
 
         }
     }
@@ -95,7 +96,7 @@ class SearchField extends React.Component {
                 />
                 {this.props.isManager ?
                     <BusquedaAvanzada
-                        history={this.props.history} setClean={this.setClean.bind(this)}
+                        setClean={this.setClean.bind(this)}
                         clean={this.state.clean} cleanSearch={this.cleanSearch.bind(this)}
                         setInputClean={this.setInputClean.bind(this)}
                     />

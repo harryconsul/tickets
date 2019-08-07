@@ -1,6 +1,7 @@
 import React from 'react';
 import * as actionConstants from './action.constants';
 import StatusAvatar from '../components/StatusAvatar';
+import {history} from '../helpers/history';
 import axios from 'axios';
 export const actionLogin = user => {
     return {
@@ -32,25 +33,18 @@ export const actionSearch = (search) => {
 
                     })
 
-                    /*
-                    if (data.Problema.length !== 0 || data.Id > 0 || data.Atiende.length !== 0
-                        || data.Solicitante.length !== 0 || data.Departamento.length !== 0 || data.Rango.length !== 0 || data.Resuelto) {
-                        //Devolvemos en true, porque ya hay datos en los filtros.
-                        this.props.setClean(true);
-                    }*/
-                    /*
-                    //Pasar filtros al filtro principal
-                    const departamento = this.getNombre(data.Departamento, "departamentos");
-                    const rango = this.getNombre(data.Rango, "rangos");
-                    const categoria = this.getNombre(data.Categoria, "categorias");
-                    this.props.setInputClean(data, departamento, rango, categoria);
-                    */
+                
                     //Close Popover
                     /*
                    
                     */
                     dispatch(doSearch({search,isSearching:true}, ticketList));
-                    resolve("busqueda exitosa");
+                   
+                    if(history.location.pathname.indexOf("mis-solicitudes")<0){
+                        history.push("/mis-solicitudes");
+                    }
+
+                    resolve("Busqueda completa");
 
                 }).catch(reason => {
                     reject(reason);

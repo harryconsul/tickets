@@ -8,11 +8,12 @@ import { UserAgentApplication } from 'msal';
 import GraphSdkHelper from './helpers/GraphSdkHelper';
 import { applicationId, graphScopes } from './helpers/config';
 
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { actionLogin, actionGetCatalogs } from './actions/user.actions';
 import axios from 'axios';
+import {history} from './helpers/history';
 
 class App extends React.Component {
   constructor(props) {
@@ -145,7 +146,7 @@ class App extends React.Component {
 
     return (
       //<Router basename="/Tickets/R" >
-      <Router  >
+      <Router history={history} >
 
         {this.props.user ?
 
