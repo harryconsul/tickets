@@ -9,11 +9,10 @@ import axios from 'axios';
 const columnsArray = [{ label: "No. Solicitud", value: "id" },
 { label: "Estatus", value: "statusAvatar" },
 { label: "Problema", value: "problem" },
-//{ label: "Descripcion", value: "description" },
+{label:"¿Quien solicita?",value:"user"},
  { label: "¿Quién lo atiende?", value: "engineer" },
 { label: "Fecha Alta", value: "date" }, 
 { label: "Categoría", value: "categoryName" },
-{label:"Fecha Compromiso",value:"promiseDate"},
 {label:"Fecha Cierre",value:"finishDate"},
 {label:"Tipo de Atencion",value:"assistance"},
 ];

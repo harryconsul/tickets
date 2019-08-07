@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route ,withRouter} from 'react-router-dom';
+import { Route ,withRouter,Redirect} from 'react-router-dom';
 import MenuBar from '../components/MenuBar';
 import Dashboard from '../containers/Dashboard';
 import IssuesManager from './IssuesManager';
@@ -29,11 +29,12 @@ class Admin extends React.Component {
                     isManager={true} barRef={this.state.ref} textColor={"white"}
                 history={this.props.history} />
                 <div style={{marginTop:this.state.margin}}>
-                    <Route  path="/" component={IssuesManager} />
+                    <Route  path="/mis-solicitudes" component={IssuesManager} />
                     <Route path="/graficas" component={()=><Dashboard usuario={this.props.user.username} />} />
                     <Route path="/reportes"  component={()=><PivotLayout usuario={this.props.user.username} timeRanges={this.props.timeRanges}  />} />
                     <Route path="/nueva-solicitud" component={NewTicketFlow} />
                 </div>
+                <Redirect from='/' to='/mis-solicitudes' />
             </div>
 
         )

@@ -30,6 +30,9 @@ const canBeOn = status => {
 class TicketEditor extends React.Component {
     constructor(props) {
         super(props);
+        let tecnico  = props.engineer?props.engineer.trim():"";
+        tecnico = tecnico===""?props.loggedUser.username:tecnico;
+        
         this.state = {
             comments: "",
             thirdPart: 0,
@@ -40,7 +43,7 @@ class TicketEditor extends React.Component {
             usersIDs: [],
             currentStatus: props.status,
             currentCategoryName: props.categoryName,
-            currentTecnico : props.engineer,
+            currentTecnico : tecnico,
             currentCategoryId: props.categoryId,
             userPhoto: "",
             engineerPhoto:"",
@@ -54,6 +57,21 @@ class TicketEditor extends React.Component {
         this.helper = new Graph(this.props.loggedUser.accessToken);
 
     }
+    /*shouldComponentUpdate(nextProps,nextState){
+        if(
+            nextState.currentStatus!==this.state.currentStatus ||
+            nextState.postList.length!==this.state.postList.length ||
+            nextState.fields.length!==this.state.fields.length ||
+            nextState.isDialogOpen!==this.state.isDialogOpen ||
+            nextState.comments!==this.state.comments ||
+            nextState.thirdPart!==this.state.thirdPart ||
+            nextState.userPhoto!==this.state.userPhoto ||
+            nextState.engineerPhoto!==this.state.engineerPhoto
+        ){
+            return true;
+        }
+        return false;
+    }*/
 
     getNotificacion = (status, comments) => {
         const data = {
@@ -106,7 +124,7 @@ class TicketEditor extends React.Component {
                 finishCallBack();
             }
 
-            if (!_comments) {
+            
                 const post = {
                     ...response.data.post,photo:this.props.loggedUser.photo
                 }
@@ -115,17 +133,9 @@ class TicketEditor extends React.Component {
                     comments: "",
                     postList: [post, ...this.state.postList],
                     currentStatus: status,
-                });
-            } else {
-                const engineer = this.props.loggedUser.username;
-                //this.props.handleTicketUpdate({ id: this.props.id, status, engineer });
-                this.props.dispatch(actionUpdateList(
-                    {
-                        id: this.props.id,
-                        status, engineer, statusAvatar: <StatusAvatar status={status} />
-                    }
-                ));
-            }
+                },this.dispatchTicketChanges);
+            
+            
 
             //Buscar si hay algo que notificar.
             this.getNotificacion(status, comments);
@@ -160,7 +170,7 @@ class TicketEditor extends React.Component {
             UsuarioLogin: this.props.loggedUser.username,
 
         }).then(response => {
-            this.setState({ currentCategoryName: response.data.categoryName })
+            this.setState({ currentCategoryName: response.data.categoryName },this.dispatchTicketChanges())
         })
     }
 
@@ -170,45 +180,32 @@ class TicketEditor extends React.Component {
             UsuarioLogin: this.props.loggedUser.username,
             Tecnico: tecnico
         }).then(response => {
-            this.setState({currentTecnico:tecnico});
+            this.setState({currentTecnico:tecnico},this.dispatchTicketChanges());
+
         });
     }
 
     changePromiseDate = (promiseDate) => {
         this.promiseDate = promiseDate;
+        this.dispatchTicketChanges();
     }
     changeAssistance = (assistance) => {
         this.assistance = assistance;
+        this.dispatchTicketChanges();
     }
-
-    componentWillUnmount() {
-        if (this.props.loggedUser.isManager) {
-            if (this.state.currentStatus === statusCodes.NEW.value) {
-
-                this.handleSubmit(statusCodes.IN_PROCESS.value, "Asignación a ingeniero");
-
-            } else {
-                if (this.state.currentStatus !== this.props.status
-                    || this.props.promiseDate !== this.promiseDate
-                    || this.props.assistance !== this.assistance
-                    || this.props.finishDate !== this.finishDate
-                    || this.props.engineer !== this.state.currentTecnico
-                ) {
-
-                    this.props.dispatch(actionUpdateList({
-                        id: this.props.id,
-                        status: this.state.currentStatus,
-                        promiseDate: this.promiseDate,
-                        finishDate: this.finishDate,
-                        assistance: this.assistance,
-                        engineer:this.state.currentTecnico,
-                        statusAvatar: <StatusAvatar status={this.state.currentStatus} />,
-                    }));
-                }
-            }
-        }
-
+    dispatchTicketChanges(){
+        console.log("status",this.state.currentStatus);
+        this.props.dispatch(actionUpdateList({
+            id: this.props.id,
+            status: this.state.currentStatus,
+            promiseDate: this.promiseDate,
+            finishDate: this.finishDate,
+            assistance: this.assistance,
+            engineer:this.state.currentTecnico,
+            statusAvatar: <StatusAvatar status={this.state.currentStatus} />,
+        }));
     }
+    
     getPhoto = (users, posts) => {
 
         this.helper.getProfilePics(users, (photos) => {
@@ -251,14 +248,25 @@ class TicketEditor extends React.Component {
                 , thirds: response.data.thirds.map(item => ({ nombre: item.name, value: item.id }))
 
 
+            },()=>{
+                this.helper.getProfilePics([{ id: this.props.userID, photo: "" }], (photos) => {
+                    if (photos.length) {
+                        this.setState({ userPhoto: photos[0].photo });
+                    }
+                });
+                if (this.props.loggedUser.isManager) {
+                    if (this.state.currentStatus === statusCodes.NEW.value) {
+        
+                        this.handleSubmit(statusCodes.IN_PROCESS.value, "Asignación al responsable");
+        
+                    }
+                }
             });
+            
         });
 
-        this.helper.getProfilePics([{ id: this.props.userID, photo: "" }], (photos) => {
-            if (photos.length) {
-                this.setState({ userPhoto: photos[0].photo });
-            }
-        });
+       
+      
        
     }
     render() {

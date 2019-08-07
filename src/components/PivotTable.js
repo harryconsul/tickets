@@ -1,6 +1,7 @@
 import React from 'react';
 import * as FlexmonsterReact from 'react-flexmonster';
 import 'flexmonster/flexmonster.min.css';
+
 import axios from 'axios';
 import {Paper} from '@material-ui/core'
 class PivotTable extends React.Component {
@@ -32,7 +33,7 @@ class PivotTable extends React.Component {
                 <FlexmonsterReact.Pivot  ref={this.state.ref}                          
                  toolbar={true}
                  report={this.state.report}
-                 licenseKey="Z7O9-XI8B41-5G2L3U-0G0V3Q-5W4N1X-1B455K-0K4P5R-4Q5T6Q-1L063R-6E6D"
+                 licenseKey="Z7LB-XBI30F-160R3S-3I6L56"
                      />
             </Paper>
         )

@@ -100,7 +100,7 @@ class App extends React.Component {
                 user.photo = response;
                 resolve(user);
               } else {
-                reject(err);
+                resolve(user);
               }
             })
           });

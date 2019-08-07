@@ -1,3 +1,4 @@
+import spanish from 'flexmonster/es.json'
 export const oldReport = {
     report: {
         dataSource: {
@@ -168,6 +169,7 @@ export const oldReport = {
             }
         },
         datePattern: "GMT+1:dd-MMMM-yyyy",
+        localization: spanish,
 
     },
     webService: "reporteflexiblea",
@@ -216,7 +218,9 @@ export const topUsers = {
             grid: {
                 type: "classic"
             }
-        }
+        },
+        localization: spanish,
+
     },
     webService: "reporteflextopusuarios"
 }
@@ -225,7 +229,8 @@ export const statusReport = {
         dataSource: {
             dataSourceType: "json",
             data: [],
-        }
+        },
+        localization: spanish,
 
 
     },
@@ -310,8 +315,8 @@ export const ticketsAmount = {
                 showTotals: "off",
                 showGrandTotals: "off"
             }
-        }
-    
+        },
+        localization: spanish,
 
     },
     webService: "reporteflexsolicitudes"

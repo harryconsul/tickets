@@ -52,7 +52,7 @@ const MenuBar = props => {
                                             <MenuLink link="/reportes" icon={GridIcon} />
                                         </Grid>
                                         <Grid item>
-                                            <MenuLink link="/" icon={FormatListNumbered} />
+                                            <MenuLink link="/mis-solicitudes" icon={FormatListNumbered} />
                                         </Grid>
                                     </React.Fragment>
                                 )

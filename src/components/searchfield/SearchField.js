@@ -35,20 +35,9 @@ class SearchField extends React.Component {
                 Busqueda: _searchValue
             };
 
-            axios.post("obtienesolicitudes", data).then(response => {
+           this.props.dispatch(actionSearch(data))
+                .then(()=>this.props.history.push("/mis-solicitudes"));
 
-                const ticketList = response.data.Solicitudes.map(ticket => {
-                    return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
-
-                })
-
-                this.props.dispatch(actionSearch(ticketList));
-                this.props.history.push("/");
-
-                this.setClean(true);
-            }).catch(reason => {
-                console.log(reason);
-            })
         }
     }
 

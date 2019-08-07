@@ -8,54 +8,12 @@ import axios from 'axios';
 import 'typeface-roboto';
 import { Provider } from 'react-redux';
 import store from './store/store';
-//axios.defaults.baseURL = "https://192.168.0.234/Tickets/rest/";
-axios.defaults.baseURL = "http://127.0.0.1/Tickets.NetEnvironment/rest/";
+axios.defaults.baseURL = "https://192.168.0.158:3001/rest/";
+//axios.defaults.baseURL = "https://localhost/Tickets.NetEnvironment/rest/";
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 
-const theme3 = createMuiTheme({
-  palette: {
-    type: 'dark',
-    background: { default: '#171717', paper: '#212121' },
-    text: {
-      secondary: "#B8B635"
-    },
-    secondary: {
-      light: "#458CFF",
-      dark: "#458CFF",
-      main: "#ff4081"
-
-    }
-  },
-  typography: {
-    useNextVariants: true,
-  },
-});
-const theme4 = createMuiTheme({
-  palette: {
-    type: 'light',
-    background: { default: '#3AAFA9', paper: '#3AAFA9' },
-    text: {
-      secondary: "#17252A" //"#B8B635"//
-    },
-    secondary: {
-      light: "#17252A",
-      dark: "#17252A",
-      main: "#17252A"
-
-    },
-    primary: {
-      light: "#2B7A78",
-      dark: "#2B7A78",
-      main: "#2B7A78"
-
-    }
-  },
-  typography: {
-    useNextVariants: true,
-  },
-});
 
 const theme = createMuiTheme({
   palette: {

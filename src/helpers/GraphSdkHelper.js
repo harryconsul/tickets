@@ -5,16 +5,19 @@
 import { Client } from "@microsoft/microsoft-graph-client";
 
 const getBlobUrl = async (response) => {
-  const blob = await response.blob();
-  try {
-    const url = window.URL || window.webkitURL;
-    const blobUrl = url.createObjectURL(blob);
-    return blobUrl;
+  if (response) {
+    const blob = await response.blob();
+    try {
+      const url = window.URL || window.webkitURL;
+      const blobUrl = url.createObjectURL(blob);
+      return blobUrl;
 
-  } catch (e) {
-    throw (e);
+    } catch (e) {
+      throw (e);
+    }
+  }else{
+    throw({msg:"Error"});
   }
-
 
 }
 export default class GraphSdkHelper {
@@ -103,7 +106,7 @@ export default class GraphSdkHelper {
           this._handleError(err);
         }
         callback(err, (res) ? res.value : []);
-      }).catch(reason=>console.log(reason));
+      }).catch(reason => console.log(reason));
   }
   // GET user/id/photo/$value for each person 
   getProfilePics(personas, callback) {
@@ -119,7 +122,7 @@ export default class GraphSdkHelper {
               .header('Cache-Control', 'no-cache')
               .responseType('blob')
               .get((err, res, rawResponse) => {
-               
+
                 if (rawResponse) {
 
                   getBlobUrl(rawResponse)
@@ -165,10 +168,10 @@ export default class GraphSdkHelper {
   }
 
   // POST me/sendMail
-  sendMail(recipients , subject , mail , callback) {
+  sendMail(recipients, subject, mail, callback) {
     //`<p></p>`
     const email = {
-      Subject: subject ,
+      Subject: subject,
       Body: {
         ContentType: 'HTML',
         Content: mail

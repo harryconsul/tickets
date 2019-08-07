@@ -5,6 +5,9 @@ const initialState =  {
     preferences: {},
     assistanceTypes: [],
     timeRanges:[],
+    search:{
+
+    },
 
 }
 
@@ -19,6 +22,7 @@ const sessionReducer = (state =initialState, action) => {
             return {
                 ...state,
                 result: action.result,
+                search:action.search,
             }
         case actionConstants.UPDATELIST:
 
@@ -42,7 +46,14 @@ const sessionReducer = (state =initialState, action) => {
 
                 
             }
-
+        case actionConstants.COMPLETE_SEARCH:
+            return{
+                ...state,
+                search:{
+                    ...state.search,
+                    isSearching:false,
+                }
+            }
 
         default:
             return state;

@@ -138,35 +138,13 @@ class BusquedaAvanzada extends Component{
                 Categoria: this.state.categoria,
                 Rango: this.state.rango,
                 Resuelto: this.state.check
-            }
+            }    
             
-            axios.post("busquedaavanzada", data)
-            .then( response => {
-                const ticketList =response.data.Solicitudes.map(ticket => {
-                    return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
-
-                })
-                if(data.Problema.length !== 0 || data.Id > 0 || data.Atiende.length !==0 
-                    || data.Solicitante.length !== 0 || data.Departamento.length !== 0 || data.Rango.length !== 0 || data.Resuelto){
-                    //Devolvemos en true, porque ya hay datos en los filtros.
-                    this.props.setClean(true);
-                }
-
-                //Pasar filtros al filtro principal
-                const departamento = this.getNombre(data.Departamento,"departamentos");
-                const rango        = this.getNombre(data.Rango,"rangos");
-                const categoria    = this.getNombre(data.Categoria,"categorias"); 
-                this.props.setInputClean(data , departamento , rango , categoria);
-
-                //Close Popover
+            this.props.dispatch(actionSearch(data)).then(()=>{
                 popupState.close();
-                
-                this.props.dispatch(actionSearch(ticketList));
-                this.props.history.push("/");
-                
-            }).catch(reason => {
-                console.log(reason);
+                this.props.history.push("/mis-solicitudes");
             });
+              
         }
     }
     

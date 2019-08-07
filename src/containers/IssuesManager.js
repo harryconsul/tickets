@@ -1,42 +1,48 @@
 import React from 'react';
 import IssuesList from './IssuesList';
-import axios from 'axios';
+
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import TicketEditor from './TicketEditor';
 import StatusAvatar from '../components/StatusAvatar'
-import { actionSearch } from '../actions/user.actions';
+import { actionSearch, actionCompleteSearch } from '../actions/user.actions';
+
 
 class IssuesManager extends React.Component {
     state = {
         selectedTicket: null,
     }
     componentDidMount() {
-        if (!this.props.result.length) {
-            this.postSearch();
-        }
+        // if (!this.props.result.length) {
+
+        this.postSearch();
+        //}
 
 
     }
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.location.pathname.indexOf("/solicitud/") < 0) {
 
+            return true;
+        }
+        return false;
+    }
     postSearch = (searchValue = "") => {
-        const _searchValue = searchValue === "" ? this.state.search : searchValue
-        if (this.props.user) {
-            const data = {
-                UsuarioLogin: this.props.user.username,
-                Perfil: this.props.user.profile,
-                Busqueda: _searchValue
-            };
-            
-            axios.post("obtienesolicitudes", data).then(response => {
-                const ticketList = response.data.Solicitudes.map(ticket => {
-                    return { ...ticket, statusAvatar: <StatusAvatar status={ticket.status} /> }
-                });
-                this.props.dispatch(actionSearch(ticketList));
+        if (this.props.isSearching) {
+            this.props.dispatch(actionCompleteSearch())
+        } else {
+            const _searchValue = searchValue === "" ? this.state.search : searchValue
+            if (this.props.user) {
+                const data = {
+                    UsuarioLogin: this.props.user.username,
+                    Perfil: this.props.user.profile,
+                    Busqueda: null
+                };
 
-            }).catch(reason => {
-                console.log(reason);
-            })
+                this.props.dispatch(actionSearch(data)).then(()=>{
+                    this.props.dispatch(actionCompleteSearch())
+                });
+            }
         }
     }
     handleTicketUpdate = ({ id, engineer, status }) => {
@@ -59,19 +65,27 @@ class IssuesManager extends React.Component {
         }
     }
     onTicketClick = (id) => {
-        const isManager = this.props.user.isManager;
-        const basePath = isManager?"/":"/mis-solicitudes/";
-        const ticket = this.props.result.find(item => item.id === id);
+
+        const basePath = "/mis-solicitudes/";
+        const original_ticket = this.props.result.find(item => item.id === id);
+        const ticket = {
+            ...original_ticket,
+            statusAvatar: null,
+            fields: [],
+        }
+
         this.setState({ selectedTicket: ticket }, () => {
-            this.props.history.push(basePath+"solicitud/" + id);
+            this.props.history.push(basePath + "solicitud/" + id);
         });
+
+
 
 
     }
     render() {
         let { ticketList, selectedTicket } = this.state;
-        const isManager = this.props.user.isManager;
-        const basePath = isManager?"/":"/mis-solicitudes/";
+
+        const basePath = "/mis-solicitudes/";
         ticketList = this.props.result;
         return (
 
@@ -79,9 +93,9 @@ class IssuesManager extends React.Component {
                 <Route exact path={basePath} component={() =>
                     <IssuesList ticketList={ticketList} onTicketClick={this.onTicketClick} />
                 } />
-                <Route path={basePath+"solicitud/:id"} component={() =>
+                <Route exact path={basePath + "solicitud/:id"} component={() =>
                     <TicketEditor {...selectedTicket}
-                        handleTicketUpdate={this.handleTicketUpdate} />
+                    />
                 } />
 
             </React.Fragment>
@@ -95,6 +109,7 @@ const mapStateToProps = state => {
     return {
         user: state.user,
         result: state.result,
+        isSearching: state.search.isSearching,
     }
 }
 export default connect(mapStateToProps)(IssuesManager)
