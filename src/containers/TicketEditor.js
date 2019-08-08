@@ -16,6 +16,8 @@ import Graph from '../helpers/GraphSdkHelper';
 import { connect } from 'react-redux';
 import { statusCodes } from '../constants';
 import { actionUpdateList } from '../actions/user.actions';
+import {SnackBarMessage} from '../components/SnackBarMesssage/SnackBarMessage';
+import {history} from '../helpers/history';
 
 const canBeOn = status => {
     if (status !== statusCodes.SOLVED.value
@@ -47,7 +49,8 @@ class TicketEditor extends React.Component {
             currentCategoryId: props.categoryId,
             userPhoto: "",
             engineerPhoto:"",
-
+            snackOpen:false,
+            message: '',
 
 
         }
@@ -135,15 +138,36 @@ class TicketEditor extends React.Component {
                     currentStatus: status,
                 },this.dispatchTicketChanges);
             
-            
-
             //Buscar si hay algo que notificar.
             this.getNotificacion(status, comments);
+
+            //Mostrar SnackBar Message, cuando ESTATUS sea RESUELTO
+            if(status === statusCodes.SOLVED.value){
+                const message = "La solicitud " + this.props.id + " ha sido finalizada"
+                this.setState({
+                    snackOpen:true,
+                    message: message,
+                })
+
+                //history.push("/");
+            }
+
+
         }).catch(reason => {
             console.log(reason);
         });
 
     }
+
+    handleSnackBarClose = (event, reason) =>{
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({
+            snackOpen: false,
+        })
+    }
+
     handleDialogClose = (isOKClicked, third) => {
 
         if (isOKClicked) {
@@ -387,6 +411,7 @@ class TicketEditor extends React.Component {
                         {postList}
                     </Grid>
                 </Grid>
+                <SnackBarMessage open={this.state.snackOpen} handleClose = {this.handleSnackBarClose} message = {this.state.message}/>
                 <ThirdDialogForm isDialogOpen={this.state.isDialogOpen}
                     title={"Enviar con tercero"}
                     text={"Selecciona el tercero con el que procesaras la solicitud"}
