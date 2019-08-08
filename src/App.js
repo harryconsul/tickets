@@ -50,6 +50,22 @@ class App extends React.Component {
     }
   }
 
+  savePreference = (username) =>{
+    //Cuando un admin, de alta tickets es posible auto-asignarse el ticket.
+    const data = {
+        UsuarioLogin: username,
+        operacion:"U",
+        key:"auto-asignar-solicitud",
+        value:'N',
+    };
+
+    axios.post("trabajarpreferencias",data).then(response=>{
+        console.log(response.data);
+    }).catch(reason=>{
+        console.log(reason);
+    })
+}
+
   getUserProfile = async () => {
     try {
 
@@ -82,9 +98,11 @@ class App extends React.Component {
 
                 //A= Administrador , S = Supervisor
                 if (perfil === 'A' || perfil === 'S') {
-                  user.isManager = true
+                  user.isManager = true;
+                  this.savePreference(user.username);
+
                 } else {
-                  user.isManager = false
+                  user.isManager = false;
                 }
 
                 resolve(user);
