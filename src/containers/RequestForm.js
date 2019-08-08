@@ -173,14 +173,16 @@ class RequestForm extends React.Component {
                     {
                         this.props.isAdmin ?
                             <Grid item xs={12} style={{ marginBottom: '20px' }}>
-                                <PeoplePicker setPersona={this.setPersona} />
+                                <PeoplePicker 
+                                autoFocus={this.props.isAdmin}
+                                setPersona={this.setPersona} />
                             </Grid>
                             :
                             null
                     }
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ControlledInput id={"problem"} name={"problem"} value={this.state.problem}
-                            areYouFirst={true}
+                            areYouFirst={!this.props.isAdmin}
                             label={"Descripción del problema"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
                     </Grid>

@@ -3,7 +3,7 @@
 *  See LICENSE in the source repository root for complete license information. 
 */
 import { Client } from "@microsoft/microsoft-graph-client";
-
+import {history} from './history';
 const getBlobUrl = async (response) => {
   if (response) {
     const blob = await response.blob();
@@ -155,8 +155,8 @@ export default class GraphSdkHelper {
   // GET users?$filter=displayName startswith('{searchText}')
   searchForPeople(searchText, callback) {
     this.client
-      .api('/users')
-      .filter(`startswith(displayName,'${searchText}')`)
+      .api('/users')      
+      .filter(`startswith(displayName,'${searchText}') or startswith(givenName,'${searchText}') or startswith(surname,'${searchText}') or startswith(mail,'${searchText}') or startswith(userPrincipalName,'${searchText}')`)
       .select('displayName,givenName,surname,mail,userPrincipalName,id')
       .top(5)
       .get((err, res) => {
@@ -216,7 +216,7 @@ export default class GraphSdkHelper {
     // This sample just redirects to the login function when the token is expired.
     // Production apps should implement more robust token management.
     if (err.statusCode === 401 && err.message === 'Access token has expired.') {
-      this.props.login();
+      history.push("/");
     }
   }
 }
