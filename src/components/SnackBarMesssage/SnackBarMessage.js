@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Icon from '@material-ui/core/Icon';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -11,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
+import { withStyles } from '@material-ui/core/styles';
 
 const variantIcon = {
     success: CheckCircleIcon,
@@ -21,7 +21,7 @@ const variantIcon = {
 
 const styles = theme => ({
     success: {
-        backgroundColor: green[600],
+        backgroundColor: "#7ebc01",
     },
     error: {
         backgroundColor: theme.palette.error.dark,
@@ -37,7 +37,7 @@ const styles = theme => ({
     },
     iconVariant: {
         opacity: 0.9,
-        marginRight: theme.spacing(1),
+        marginRight: theme.spacing.unit,
     },
     message: {
         display: 'flex',
@@ -46,8 +46,9 @@ const styles = theme => ({
 });
 
 const ContentWrapper = (props) => {
-    const classes = styles;
+    const { classes } = props;
     const { className, message, onClose, variant, ...other } = props;
+    const Icon = variantIcon[variant];
 
     return (
         <SnackbarContent
@@ -74,16 +75,9 @@ ContentWrapper.propTypes = {
     message: PropTypes.string,
     onClose: PropTypes.func,
     variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired,
-  };
+};
 
-  const style2 = (theme) => ({
-    margin: {
-      margin: theme.spacing(1),
-    },
-  });
-
-export const SnackBarMessage = (props) => {
-    const classes = style2;
+function SnackBarMessage(props) {
     return (
         <div>
             <Snackbar
@@ -92,15 +86,22 @@ export const SnackBarMessage = (props) => {
                     horizontal: 'left',
                 }}
                 open={props.open}
-                autoHideDuration={6000}
+                autoHideDuration={2000}
                 onClose={props.handleClose}
             >
                 <ContentWrapper
                     onClose={props.handleClose}
                     variant="success"
                     message={props.message}
+                    classes={props.classes}
                 />
             </Snackbar>
         </div>
     );
 }
+
+SnackBarMessage.propTypes = {
+    classes: PropTypes.object.isRequired,
+}
+
+export default withStyles(styles) (SnackBarMessage);
