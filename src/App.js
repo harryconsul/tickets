@@ -55,7 +55,7 @@ class App extends React.Component {
     //Cuando un admin, de alta tickets es posible auto-asignarse el ticket.
     const data = {
         UsuarioLogin: username,
-        operacion:"U",
+        operacion:"A",
         key:"auto-asignar-solicitud",
         value:'N',
     };
