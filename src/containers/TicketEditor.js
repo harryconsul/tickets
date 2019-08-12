@@ -16,6 +16,8 @@ import Graph from '../helpers/GraphSdkHelper';
 import { connect } from 'react-redux';
 import { statusCodes } from '../constants';
 import { actionUpdateList } from '../actions/user.actions';
+import SnackBarMessage from '../components/SnackBarMesssage/SnackBarMessage';
+import {history} from '../helpers/history';
 
 const canBeOn = status => {
     if (status !== statusCodes.SOLVED.value
@@ -47,8 +49,8 @@ class TicketEditor extends React.Component {
             currentCategoryId: props.categoryId,
             userPhoto: "",
             engineerPhoto:"",
-
-
+            snackOpen:false,
+            message: '',
 
         }
         this.promiseDate = props.promiseDate;
@@ -101,13 +103,13 @@ class TicketEditor extends React.Component {
         });
     }
 
-    handleSubmit = (_status, _comments, finishCallBack) => {
+    handleSubmit = (_status, _comments, _showSnackBar, finishCallBack) => {
         const { thirdPart } = this.state;
         const status = _status === statusCodes.NEW.value && this.props.loggedUser.isManager ?
             statusCodes.IN_PROCESS.value :
             _status
         const comments = _comments ? _comments : this.state.comments;
-        console.log(thirdPart);
+        
         const data = {
             status,
             comments,
@@ -135,21 +137,44 @@ class TicketEditor extends React.Component {
                     currentStatus: status,
                 },this.dispatchTicketChanges);
             
-            
-
             //Buscar si hay algo que notificar.
             this.getNotificacion(status, comments);
+
+            //Mostrar SnackBar Message, cuando ESTATUS sea RESUELTO
+            if(status === statusCodes.SOLVED.value && _showSnackBar){
+                const message = "Ha finalizado la solicitud " + this.props.id;
+                this.setState({
+                    snackOpen:true,
+                    message: message,
+                })
+                setTimeout(()=>{
+                    history.push("/mis-solicitudes");
+                },3000);
+                
+            }
+
+
         }).catch(reason => {
             console.log(reason);
         });
 
     }
+
+    handleSnackBarClose = (event, reason) =>{
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({
+            snackOpen: false,
+        })
+    }
+
     handleDialogClose = (isOKClicked, third) => {
 
         if (isOKClicked) {
             console.log("third", third);
 
-            this.setState({ thirdPart: third, isDialogOpen: false }, () => this.handleSubmit(statusCodes.THIRD.value, null, this.finishCallBack));
+            this.setState({ thirdPart: third, isDialogOpen: false }, () => this.handleSubmit(statusCodes.THIRD.value, null, false, this.finishCallBack));
 
 
         } else {
@@ -350,7 +375,7 @@ class TicketEditor extends React.Component {
 
 
                                         <ButtonProgress
-                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.REJECTED.value, null, finishCallBack)}
+                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.REJECTED.value, null, false, finishCallBack)}
                                             color={"secondary"} submitDisabled={submitDisabled}
                                             text={"Rechazar"}
                                             variant={"outlined"}
@@ -369,7 +394,7 @@ class TicketEditor extends React.Component {
                                             icon={<Send />} />
 
                                         <ButtonProgress
-                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.SOLVED.value, null, finishCallBack)}
+                                            onClick={(finishCallBack) => this.handleSubmit(statusCodes.SOLVED.value, null, true, finishCallBack)}
                                             submitDisabled={submitDisabled}
                                             color={"primary"}
                                             variant={"contained"}
@@ -387,6 +412,7 @@ class TicketEditor extends React.Component {
                         {postList}
                     </Grid>
                 </Grid>
+                <SnackBarMessage open={this.state.snackOpen} handleClose = {this.handleSnackBarClose} message = {this.state.message}/>
                 <ThirdDialogForm isDialogOpen={this.state.isDialogOpen}
                     title={"Enviar con tercero"}
                     text={"Selecciona el tercero con el que procesaras la solicitud"}

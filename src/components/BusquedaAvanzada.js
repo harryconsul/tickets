@@ -9,7 +9,6 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import ControlledInput from './ControlledInput';
-import StatusAvatar from './StatusAvatar';
 import { actionSearch } from '../actions/user.actions';
 import { IconButton } from '@material-ui/core';
 import DownIcon from 'mdi-material-ui/MenuDown';

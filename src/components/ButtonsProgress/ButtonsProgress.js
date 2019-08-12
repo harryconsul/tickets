@@ -17,7 +17,7 @@ export const FabProgress = (props) => {
                 className="buttonProgress"
                 onClick={() => {
                     setLoading(true);
-                    props.handleSubmit(props.status,null,()=>setLoading(false));
+                    props.handleSubmit(props.status,null,false,()=>setLoading(false));
                 }}>
                 <SubmitCommentIcon />
             </Fab>

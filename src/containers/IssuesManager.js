@@ -31,7 +31,7 @@ class IssuesManager extends React.Component {
         if (this.props.isSearching) {
             this.props.dispatch(actionCompleteSearch())
         } else {
-            const _searchValue = searchValue === "" ? this.state.search : searchValue
+            //const _searchValue = searchValue === "" ? this.state.search : searchValue
             if (this.props.user) {
                 const data = {
                     UsuarioLogin: this.props.user.username,
