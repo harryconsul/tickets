@@ -37,6 +37,7 @@ const defaultFields = [
         label: "Imagen Adjunta (Ctrl - V )",
         name: "Imagen",
         type: "image",
+        value:"",
         values: [],
     },
     {
@@ -44,6 +45,7 @@ const defaultFields = [
         label: "Archivo Adjunto",
         name: "Archivo",
         type: "file",
+        value:"",
         values: [],
     },
 
