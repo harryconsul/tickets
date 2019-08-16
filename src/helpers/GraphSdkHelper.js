@@ -97,10 +97,10 @@ export default class GraphSdkHelper {
   getPeople(callback) {
     this.client
       .api('/me/people')
-      .version('beta')
-      .filter(`personType eq 'Person'`)
-      .select('id,displayName,givenName,surname,emailAddresses,userPrincipalName,department')
-      .top(5)
+      //.version('beta')
+      //.filter(`personType eq 'Person'`)
+      .select('id,displayName,givenName,surname,emailAddresses,userPrincipalName,department,jobTitle')
+      .top(200)
       .get((err, res) => {
         if (err) {
           this._handleError(err);
@@ -156,9 +156,9 @@ export default class GraphSdkHelper {
   searchForPeople(searchText, callback) {
     this.client
       .api('/users')      
-      .filter(`startswith(displayName,'${searchText}') or startswith(givenName,'${searchText}') or startswith(surname,'${searchText}') or startswith(mail,'${searchText}') or startswith(userPrincipalName,'${searchText}')`)
-      .select('displayName,givenName,surname,mail,userPrincipalName,id')
-      .top(5)
+      //.filter(`startswith(displayName,'${searchText}') or startswith(givenName,'${searchText}') or startswith(surname,'${searchText}') or startswith(mail,'${searchText}') or startswith(userPrincipalName,'${searchText}')`)
+      .select('id,displayName,givenName,surname,mail,userPrincipalName,jobTitle')
+      .top(999)
       .get((err, res) => {
         if (err) {
           this._handleError(err);

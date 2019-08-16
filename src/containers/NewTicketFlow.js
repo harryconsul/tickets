@@ -6,6 +6,7 @@ import SummitAck from '../components/SummitAck';
 import { statusCodes } from '../constants'
 import axios from 'axios';
 import GraphSDKHelper from '../helpers/GraphSdkHelper';
+import SnackBarMessage from '../components/SnackBarMesssage/SnackBarMessage';
 import { connect } from 'react-redux';
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -55,6 +56,8 @@ class NewTicketFlow extends React.Component {
             problemDetail: {},
             ticketId: null,
             steps: baseSteps(),
+            snackOpen:false,
+            errorMessage:"",
             engineerPhoto: "",
         });
     }
@@ -102,7 +105,11 @@ class NewTicketFlow extends React.Component {
                     this.postRegistrarSolicitud(user.username,fields);
                 })
                 .catch(error => {
-                    console.log(error);
+                    this.setState({
+                            snackOpen:true,
+                            errorMessage:":( Ups tenemos un problema registrando al usuario que solicita ,reporta este problema al administrador del sistema",
+                            ticketId:"####",
+                    });
                 });
         } else {
             this.postRegistrarSolicitud(this.props.user.username,fields);
@@ -133,7 +140,11 @@ class NewTicketFlow extends React.Component {
             })
 
         }).catch(reason => {
-            console.log("Error ", reason);
+            this.setState({
+                snackOpen:true,
+                errorMessage:":( Ups tuvimos un problema registrando tu reporte , revisa en tu bandeja si logro registrarse",
+                ticketId:"####",
+        });
         })
     }
     getActiveComponent = () => {
@@ -173,6 +184,10 @@ class NewTicketFlow extends React.Component {
                 {
                     this.getActiveComponent()
                 }
+                <SnackBarMessage open={this.state.snackOpen} variant="error" 
+                    handleClose = {()=>this.setState({errorMessage:"",snackOpen:false})}
+                    autoHideDuration={10000}
+                     message = {this.state.errorMessage}/>
             </div>
         )
     }

@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles'; 
 
 const variantIcon = {
     success: CheckCircleIcon,
@@ -86,12 +86,12 @@ function SnackBarMessage(props) {
                     horizontal: 'left',
                 }}
                 open={props.open}
-                autoHideDuration={2000}
+                autoHideDuration={props.autoHideDuration}
                 onClose={props.handleClose}
             >
                 <ContentWrapper
                     onClose={props.handleClose}
-                    variant="success"
+                    variant={props.variant}
                     message={props.message}
                     classes={props.classes}
                 />
@@ -100,8 +100,12 @@ function SnackBarMessage(props) {
     );
 }
 
+SnackBarMessage.defaultProps={
+    autoHideDuration:2000,
+}
 SnackBarMessage.propTypes = {
     classes: PropTypes.object.isRequired,
+    autoHideDuration:PropTypes.number.isRequired,
 }
 
 export default withStyles(styles) (SnackBarMessage);

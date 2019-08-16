@@ -412,7 +412,7 @@ class TicketEditor extends React.Component {
                         {postList}
                     </Grid>
                 </Grid>
-                <SnackBarMessage open={this.state.snackOpen} handleClose = {this.handleSnackBarClose} message = {this.state.message}/>
+                <SnackBarMessage open={this.state.snackOpen} variant="success" handleClose = {this.handleSnackBarClose} message = {this.state.message}/>
                 <ThirdDialogForm isDialogOpen={this.state.isDialogOpen}
                     title={"Enviar con tercero"}
                     text={"Selecciona el tercero con el que procesaras la solicitud"}

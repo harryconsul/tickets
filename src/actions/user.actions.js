@@ -39,8 +39,8 @@ export const actionSearch = (search) => {
                    
                     */
                     dispatch(doSearch({search,isSearching:true}, ticketList));
-                   
-                    if(history.location.pathname.indexOf("mis-solicitudes")<0){
+                    console.log(history.location.pathname);
+                    if(history.location.pathname!=="/mis-solicitudes"){
                         history.push("/mis-solicitudes");
                     }
 
