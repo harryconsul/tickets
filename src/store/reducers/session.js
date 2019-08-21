@@ -66,6 +66,8 @@ const sessionReducer = (state = initialState, action) => {
     }
 
 }
+
+//Clonar los resultados y solo actualizar la linea afectada. 
 const updateResults = (results, item) => {
     const newResults = results.map(result => ({ ...result }));
     const indexOf = newResults.findIndex(result => item.id === result.id);

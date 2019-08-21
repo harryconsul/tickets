@@ -9,3 +9,8 @@ const store = createStore(sessionReducer,
 
 
 export default store;
+
+/*
+    redux-thunk: middle ware en medio de dispatch y 
+    reducer. dispatch -> action -> thunk -> reducer. NO PURE FUNCTIONS
+*/
