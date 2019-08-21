@@ -47,9 +47,9 @@ class Chart extends React.Component {
                             events:{
                                 click:(event)=>{
                                     if(typeof(event.point.id) === "number" ){
-                                        console.log("id" , event.point.id);
+                                        
                                        
-                                        this.fetchGraphData("graficabarrascategorias",{DepartamentoId:event.point.id});
+                                        this.fetchGraphData("graficabarrascategorias",{UsuarioLogin:this.props.feedPayload.UsuarioLogin,DepartamentoId:event.point.id});
 
                                     }
                                 }
@@ -133,7 +133,7 @@ class Chart extends React.Component {
                     return {...item,data}
     
                 });
-                console.log("drillDown", drilldownSeries);
+                
                 properData.drilldown.series = drilldownSeries;
             }
             if(properData.yAxis){
@@ -149,7 +149,7 @@ class Chart extends React.Component {
 
                 }
             }
-            console.log("proper data",properData);
+            
             
             this.setState({ data: properData });
             

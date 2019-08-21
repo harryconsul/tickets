@@ -75,7 +75,7 @@ class App extends React.Component {
 
       if (accessToken) {
         this.graphClient = new GraphSdkHelper(accessToken.accessToken);
-        this.graphClient.searchForPeople("",(error,result)=>window.usuarios=result);
+        
         this.graphClient.getMyProfile((err, me) => {
 
           const user = {

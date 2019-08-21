@@ -69,6 +69,12 @@ const getCatalogs = (preferences, assistanceTypes, timeRanges) => {
         timeRanges,
     }
 }
+export const actionChangePage=(page)=>{
+    return{
+        type:actionConstants.CHANGE_PAGE,
+        page,
+    }
+}
 export const actionUpdatePreferences = (preferenceType, value) => {
 
     return {
@@ -89,7 +95,11 @@ export const actionGetCatalogs = (username) => {
 
         axios.post("trabajarpreferencias", data).then(response => {
             const preferences = response.data.preferences.reduce((previous, current) => {
-                previous[current.key] = JSON.parse(current.value);
+                try{
+                    previous[current.key] = JSON.parse(current.value);
+                }catch{
+                    previous[current.key] = current.value;
+                }
                 return previous;
             }, {});
             const assistanceTypes = response.data.assistanceTypes;

@@ -1,17 +1,18 @@
 import * as actionConstants from '../../actions/action.constants';
-const initialState =  { 
-    user: null, 
-    result: [], 
+const initialState = {
+    user: null,
+    result: [],
     preferences: {},
     assistanceTypes: [],
-    timeRanges:[],
-    search:{
+    timeRanges: [],
+    search: {
 
     },
+    page:0,
 
 }
 
-const sessionReducer = (state =initialState, action) => {
+const sessionReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionConstants.LOGIN:
             return {
@@ -22,7 +23,7 @@ const sessionReducer = (state =initialState, action) => {
             return {
                 ...state,
                 result: action.result,
-                search:action.search,
+                search: action.search,
             }
         case actionConstants.UPDATELIST:
 
@@ -42,17 +43,22 @@ const sessionReducer = (state =initialState, action) => {
 
             return {
                 ...state,
-                preferences: {...state.preferences,[action.preferenceType]:action.value,},
+                preferences: { ...state.preferences, [action.preferenceType]: action.value, },
 
-                
+
             }
         case actionConstants.COMPLETE_SEARCH:
-            return{
+            return {
                 ...state,
-                search:{
+                search: {
                     ...state.search,
-                    isSearching:false,
+                    isSearching: false,
                 }
+            }
+        case actionConstants.CHANGE_PAGE:
+            return {
+                ...state,
+                page: action.page
             }
 
         default:

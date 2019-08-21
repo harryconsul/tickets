@@ -2,7 +2,7 @@ import React from 'react';
 import { CustomColumnsTable } from 'custom-columns-table/';
 import { Tabs, Tab } from '@material-ui/core';
 import { statusCodes } from '../constants/';
-import {actionUpdatePreferences} from '../actions/user.actions';
+import {actionUpdatePreferences,actionChangePage} from '../actions/user.actions';
 import {connect} from 'react-redux';
 import { EmailOutline, EmailOpenOutline, AccountClockOutline, Check, FileCancelOutline } from 'mdi-material-ui'
 import axios from 'axios';
@@ -67,6 +67,9 @@ class IssuesList extends React.Component {
 
     
     } 
+    onChangePage=()=>{
+
+    }
     savePreferenceToServer=(columns)=>{
         const data = {
             UsuarioLogin:this.props.user.username,
@@ -105,8 +108,10 @@ class IssuesList extends React.Component {
                 <CustomColumnsTable columnsArray={columnsArray}
                     itemsList={ticketList} defaultColumns={["id", "statusAvatar", "problem", "engineer"]}
                     labelRowsPerPage={"Solicitudes por Pagina"}
+                    changePageCallback={(page)=>this.props.dispatch(actionChangePage(page))}
                     savePreferenceToServer={this.savePreferenceToServer}
                     preferences={{columnsSelected:this.props.columnas}}
+                    initialPage={this.props.page}  
                     numberColumnLabel={"#"} rowClickHandle={onTicketClick} />
             </div>
         )
@@ -116,6 +121,7 @@ const mapStateToProps=state=>{
     return{
         user:state.user,
         columnas:state.preferences.columnas,
+        page:state.page,
     }
 }
 export default connect(mapStateToProps)(IssuesList);

@@ -25,6 +25,7 @@ class User extends React.Component {
             <div>
                 
                 <MenuBar currentOption={this.props.location.pathname} 
+                    profile={this.props.user.profile}
                     isManager={false} barRef={this.state.ref} textColor={"white"}
                 history={this.props.history} />
                 <div style={{marginTop:this.state.margin}}>

@@ -7,18 +7,18 @@ import EmailPlusOutline from 'mdi-material-ui/EmailPlusOutline'
 import GridIcon from 'mdi-material-ui/Grid'
 import MenuLink from './MenuLink';
 import UserBar from './UserBar';
-export const getOptionName = (path,isManager=true) => {
+export const getOptionName = (path, isManager = true) => {
     switch (path) {
         case "/graficas":
             return "Dashboard";
         case "/reportes":
             return "Reportes";
         case "/mis-solicitudes":
-                return "Mis Solicitudes";
+            return "Mis Solicitudes";
         case "/nueva-solicitud":
             return "Nueva Solicitud";
         default:
-            return isManager?"Administración":"Nueva Solicitud";
+            return isManager ? "Administración" : "Nueva Solicitud";
     }
 }
 const MenuBar = props => {
@@ -54,6 +54,11 @@ const MenuBar = props => {
                                         <Grid item>
                                             <MenuLink link="/mis-solicitudes" icon={FormatListNumbered} />
                                         </Grid>
+                                        {props.profile === 'S' ?
+                                            <Grid item>
+                                                <MenuLink link="/organizacion" icon={FormatListNumbered} />
+                                            </Grid> : null
+                                        }
                                     </React.Fragment>
                                 )
                                 :
@@ -78,7 +83,7 @@ const MenuBar = props => {
                     </Grid>
                 </Toolbar>
             </AppBar>
-        </div>
+        </div >
     )
 }
 export default MenuBar;

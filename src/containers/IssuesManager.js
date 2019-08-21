@@ -90,8 +90,8 @@ class IssuesManager extends React.Component {
         return (
 
             <React.Fragment>
-                <Route exact path={basePath} component={() =>
-                    <IssuesList ticketList={ticketList} onTicketClick={this.onTicketClick} />
+                <Route  exact path={basePath } component={(props) =>
+                    <IssuesList {...props} ticketList={ticketList} onTicketClick={this.onTicketClick} />
                 } />
                 <Route exact path={basePath + "solicitud/:id"} component={() =>
                     <TicketEditor {...selectedTicket}
