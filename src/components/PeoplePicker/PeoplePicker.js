@@ -195,9 +195,10 @@ class PeoplePicker extends Component {
             isLoading: this.state.isLoadingPics
           }}
           inputProps={{
-                autoFocus:this.props.autoFocus,
-                placeholder: '¿Quién solicita? Inicie escribiendo el nombre del usuario' }
-             }
+            autoFocus: this.props.autoFocus,
+            placeholder: '¿Quién solicita? Inicie escribiendo el nombre del usuario'
+          }
+          }
           getTextFromItem={(persona) => persona.primaryText}
           onChange={this._onSelectionChanged}
           onGetMoreResults={this.state.selectedPeople.length === 0 ? this._onGetMoreResults : null}
@@ -232,14 +233,19 @@ class PeoplePicker extends Component {
 
   // Configure the error message.
   _showError = (err) => {
-    this.setState({
-      result: {
-        type: MessageBarType.error,
-        text: `Error ${err.statusCode}: ${err.code} - ${err.message}`
-      }
-    });
+    if (err.code) {
+      this.setState({
+        result: {
+          type: MessageBarType.error,
+          text: `Error ${err.statusCode}: ${err.code} - ${err.message}`
+        }
+      });
+    }else{
+      this.setState({result:null});
+    }
   }
-}
+
+}//end of PeoplePicker class component
 
 const mapStateToProps = state => {
   return {

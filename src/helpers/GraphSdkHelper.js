@@ -238,6 +238,7 @@ export default class GraphSdkHelper {
     // Production apps should implement more robust token management.
     if (err.statusCode === 401 && err.message === 'Access token has expired.') {
       history.push("/");
+      window.location.reload();
     }
   }
 }
