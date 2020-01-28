@@ -11,7 +11,7 @@ const Login = (props)=>{
                     wrap="nowrap" style={{height:"100%"}} justify={"center"}
                 spacing={32}>
                     <Grid item>
-                        <img alt="Seva- Servicios TI" src={seva} />
+                        <img alt="Servicios TI" src={} />
                     </Grid>
                                        
                     <Grid item >
