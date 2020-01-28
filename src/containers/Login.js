@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid,Paper,Button}  from '@material-ui/core'
 import Microsoft from 'mdi-material-ui/Microsoft';
-import  seva from '../assets/seva.png'
+import  ti911 from '../assets/ti911.png'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Login = (props)=>{
@@ -11,7 +11,7 @@ const Login = (props)=>{
                     wrap="nowrap" style={{height:"100%"}} justify={"center"}
                 spacing={32}>
                     <Grid item>
-                        <img alt="Servicios TI" src={} />
+                        <img alt="Servicios TI" src={ti911} />
                     </Grid>
                                        
                     <Grid item >
