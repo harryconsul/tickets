@@ -33,7 +33,7 @@ class PivotTable extends React.Component {
                 <FlexmonsterReact.Pivot  ref={this.state.ref}                          
                  toolbar={true}
                  report={this.state.report}
-                 licenseKey="Z7LB-XBI30F-160R3S-3I6L56"
+                 licenseKey="Z7QE-XCC244-3E3C4S-193J3N"
                      />
             </Paper>
         )
