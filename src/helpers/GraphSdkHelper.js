@@ -100,7 +100,7 @@ export default class GraphSdkHelper {
       .version('beta')
       .filter(`personType eq 'Person'`)
       .select('id,displayName,givenName,surname,emailAddresses,userPrincipalName,department')
-      .top(5)
+      .top(7)
       .get((err, res) => {
         if (err) {
           this._handleError(err);

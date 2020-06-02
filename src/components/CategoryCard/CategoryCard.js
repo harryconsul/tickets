@@ -17,7 +17,7 @@ import Test from 'mdi-material-ui/TestTube';
 import User from 'mdi-material-ui/AccountAlert';
 import Comunication from 'mdi-material-ui/AccessPointNetwork';
 import Billing from 'mdi-material-ui/CashUsd'
-import Email from 'mdi-material-ui/Outlook'
+import Email from 'mdi-material-ui/MicrosoftOutlook';
 import Printer from 'mdi-material-ui/Printer';
 import Computer from 'mdi-material-ui/Laptop';
 import CardText from 'mdi-material-ui/CardText';
@@ -171,4 +171,4 @@ const iconSelection = (semantic, type = 'main', style) => {
 
 
 }
-export default withTheme()(CategoryCard);
+export default withTheme(CategoryCard);

@@ -54,7 +54,7 @@ class PeoplePicker extends Component {
       persona.department = p.department;
 
       return persona;
-    });
+    }).filter(item => item.secondaryText.includes('dicipa')); //sólo correos con dominio dicipa
   }
 
   // Gets the profile photo for each user.
@@ -106,7 +106,9 @@ class PeoplePicker extends Component {
   // Handler for when text is entered into the picker control.
   // Populate the people list.
   _onFilterChanged = (filterText, items) => {
+    console.warn('Selected',this.state.selectedPeople);
     if (this.state.selectedPeople.length === 0) {
+      
       if (this._peopleList) {
         return filterText ? this._peopleList.concat(this._searchResults)
           .filter(item => item.primaryText.toLowerCase().indexOf(filterText.toLowerCase()) === 0)

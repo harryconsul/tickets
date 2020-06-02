@@ -3,6 +3,7 @@ import TicketSummary from '../components/TicketSummary';
 import ThirdDialogForm from '../components/ThirdDialogForm'
 import PromiseDate from '../components/PromiseDate';
 import AssistanceType from '../components/AssistanceType';
+import Calificar from '../components/Calificar';
 import Comment from '../components/Comment';
 import TicketField from '../components/TicketField';
 import StatusAvatar from '../components/StatusAvatar';
@@ -17,7 +18,7 @@ import { connect } from 'react-redux';
 import { statusCodes } from '../constants';
 import { actionUpdateList } from '../actions/user.actions';
 import SnackBarMessage from '../components/SnackBarMesssage/SnackBarMessage';
-import {history} from '../helpers/history';
+import { history } from '../helpers/history';
 
 const canBeOn = status => {
     if (status !== statusCodes.SOLVED.value
@@ -32,9 +33,9 @@ const canBeOn = status => {
 class TicketEditor extends React.Component {
     constructor(props) {
         super(props);
-        let tecnico  = props.engineer?props.engineer.trim():"";
-        tecnico = tecnico===""?props.loggedUser.username:tecnico;
-        
+        let tecnico = props.engineer ? props.engineer.trim() : "";
+        tecnico = tecnico === "" ? props.loggedUser.username : tecnico;
+
         this.state = {
             comments: "",
             thirdPart: 0,
@@ -45,17 +46,19 @@ class TicketEditor extends React.Component {
             usersIDs: [],
             currentStatus: props.status,
             currentCategoryName: props.categoryName,
-            currentTecnico : tecnico,
+            currentTecnico: tecnico,
             currentCategoryId: props.categoryId,
             userPhoto: "",
-            engineerPhoto:"",
-            snackOpen:false,
+            engineerPhoto: "",
+            snackOpen: false,
             message: '',
 
         }
         this.promiseDate = props.promiseDate;
         this.assistance = props.assistance;
         this.finishDate = props.finishDate;
+        this.calificacion = props.calificacion;
+        this.evaluacion = props.evaluacion;
         this.helper = new Graph(this.props.loggedUser.accessToken);
 
     }
@@ -92,8 +95,8 @@ class TicketEditor extends React.Component {
                     }
                 }];
 
-                this.helper.sendMail(recipient , response.data.Notificacion.Asunto,
-                    response.data.Notificacion.Correo , (err) =>{
+                this.helper.sendMail(recipient, response.data.Notificacion.Asunto,
+                    response.data.Notificacion.Correo, (err) => {
                         if (!err) {
                             console.log("La notificación fue enviada");
                         }
@@ -109,7 +112,7 @@ class TicketEditor extends React.Component {
             statusCodes.IN_PROCESS.value :
             _status
         const comments = _comments ? _comments : this.state.comments;
-        
+
         const data = {
             status,
             comments,
@@ -126,31 +129,31 @@ class TicketEditor extends React.Component {
                 finishCallBack();
             }
 
-            
-                const post = {
-                    ...response.data.post,photo:this.props.loggedUser.photo
-                }
 
-                this.setState({
-                    comments: "",
-                    postList: [post, ...this.state.postList],
-                    currentStatus: status,
-                },this.dispatchTicketChanges);
-            
+            const post = {
+                ...response.data.post, photo: this.props.loggedUser.photo
+            }
+
+            this.setState({
+                comments: "",
+                postList: [post, ...this.state.postList],
+                currentStatus: status,
+            }, this.dispatchTicketChanges);
+
             //Buscar si hay algo que notificar.
             this.getNotificacion(status, comments);
 
             //Mostrar SnackBar Message, cuando ESTATUS sea RESUELTO
-            if(status === statusCodes.SOLVED.value && _showSnackBar){
+            if (status === statusCodes.SOLVED.value && _showSnackBar) {
                 const message = "Ha finalizado la solicitud " + this.props.id;
                 this.setState({
-                    snackOpen:true,
+                    snackOpen: true,
                     message: message,
                 })
-                setTimeout(()=>{
+                setTimeout(() => {
                     history.push("/mis-solicitudes");
-                },3000);
-                
+                }, 3000);
+
             }
 
 
@@ -160,7 +163,7 @@ class TicketEditor extends React.Component {
 
     }
 
-    handleSnackBarClose = (event, reason) =>{
+    handleSnackBarClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -195,17 +198,17 @@ class TicketEditor extends React.Component {
             UsuarioLogin: this.props.loggedUser.username,
 
         }).then(response => {
-            this.setState({ currentCategoryName: response.data.categoryName },this.dispatchTicketChanges())
+            this.setState({ currentCategoryName: response.data.categoryName }, this.dispatchTicketChanges())
         })
     }
 
     changeTecnico = (tecnico) => {
-        axios.post("cambiartecnico",{
+        axios.post("cambiartecnico", {
             SolicitudId: this.props.id,
             UsuarioLogin: this.props.loggedUser.username,
             Tecnico: tecnico
         }).then(response => {
-            this.setState({currentTecnico:tecnico},this.dispatchTicketChanges());
+            this.setState({ currentTecnico: tecnico }, this.dispatchTicketChanges());
 
         });
     }
@@ -218,19 +221,29 @@ class TicketEditor extends React.Component {
         this.assistance = assistance;
         this.dispatchTicketChanges();
     }
-    dispatchTicketChanges(){
-        console.log("status",this.state.currentStatus);
+    changeCalificacion = (calificacion) => {
+        this.calificacion = calificacion;
+        this.dispatchTicketChanges();
+    }
+    changeEvaluacion = (evaluacion) => {
+        this.evaluacion = evaluacion;
+        this.dispatchTicketChanges()
+    }
+    dispatchTicketChanges() {
+        console.log("status", this.state.currentStatus);
         this.props.dispatch(actionUpdateList({
             id: this.props.id,
             status: this.state.currentStatus,
             promiseDate: this.promiseDate,
             finishDate: this.finishDate,
             assistance: this.assistance,
-            engineer:this.state.currentTecnico,
+            calificacion: this.calificacion,
+            evaluacion: this.evaluacion,
+            engineer: this.state.currentTecnico,
             statusAvatar: <StatusAvatar status={this.state.currentStatus} />,
         }));
     }
-    
+
     getPhoto = (users, posts) => {
 
         this.helper.getProfilePics(users, (photos) => {
@@ -257,15 +270,15 @@ class TicketEditor extends React.Component {
                 if (photos.length) {
                     this.setState({ engineerPhoto: photos[0].photo });
                 }
-            }); 
-            
+            });
+
             const userIDs = response.data.userIDs.map(item => {
                 return {
                     id: item,
                     photo: ""
                 }
             });
-            
+
             this.getPhoto(userIDs, response.data.posts);
 
             this.setState({
@@ -273,7 +286,7 @@ class TicketEditor extends React.Component {
                 , thirds: response.data.thirds.map(item => ({ nombre: item.name, value: item.id }))
 
 
-            },()=>{
+            }, () => {
                 this.helper.getProfilePics([{ id: this.props.userID, photo: "" }], (photos) => {
                     if (photos.length) {
                         this.setState({ userPhoto: photos[0].photo });
@@ -281,20 +294,21 @@ class TicketEditor extends React.Component {
                 });
                 if (this.props.loggedUser.isManager) {
                     if (this.state.currentStatus === statusCodes.NEW.value) {
-        
+
                         this.handleSubmit(statusCodes.IN_PROCESS.value, "Asignación al responsable");
-        
+
                     }
                 }
             });
-            
+
         });
 
-       
-      
-       
+
+
+
     }
     render() {
+        console.warn('Evalucación:',this.props.evaluacion);
         const postList = this.state.postList.map((post, index) => {
             return <Comment key={index} author={post.userFullName} date={post.date}
                 third={post.third}
@@ -305,7 +319,7 @@ class TicketEditor extends React.Component {
         const submitDisabled = !(this.state.comments !== "" && (_canBeOn || !isManager))
         const submitComment = !(this.state.comments !== "")
         const photo = this.props.loggedUser ? this.props.loggedUser.photo : "";
-        const summaryPhoto = isManager ? this.state.userPhoto: this.state.engineerPhoto;
+        const summaryPhoto = isManager ? this.state.userPhoto : this.state.engineerPhoto;
         return (
             <React.Fragment>
                 <Grid container style={{ marginTop: "10px" }} >
@@ -322,13 +336,22 @@ class TicketEditor extends React.Component {
                                 detail={this.props.description}
                                 status={this.state.currentStatus}
                                 changeCategory={this.changeCategory}
-                                changeTecnico = {this.changeTecnico}
+                                changeTecnico={this.changeTecnico}
+                                evaluacion={this.props.evaluacion}
+                                changeEvaluacion={this.changeEvaluacion}
                                 editing={_canBeOn && isManager}
                                 problem={this.props.problem}
                                 categoryId={this.state.currentCategoryId} />
                         </Grid>
                         <Grid item>
                             <Paper style={{ padding: "10px" }}>
+                                <Calificar id={this.props.id}
+                                    owner={this.props.owner}
+                                    user={this.props.loggedUser.username}
+                                    calificacion={this.props.calificacion}
+                                    status={this.props.status}   
+                                    changeCalificacion={this.changeCalificacion}
+                                />
                                 <PromiseDate promiseDate={this.props.promiseDate}
                                     changePromiseDate={this.changePromiseDate}
                                     isManager={isManager}
@@ -412,7 +435,7 @@ class TicketEditor extends React.Component {
                         {postList}
                     </Grid>
                 </Grid>
-                <SnackBarMessage open={this.state.snackOpen} variant="success" handleClose = {this.handleSnackBarClose} message = {this.state.message}/>
+                <SnackBarMessage open={this.state.snackOpen} variant="success" handleClose={this.handleSnackBarClose} message={this.state.message} />
                 <ThirdDialogForm isDialogOpen={this.state.isDialogOpen}
                     title={"Enviar con tercero"}
                     text={"Selecciona el tercero con el que procesaras la solicitud"}

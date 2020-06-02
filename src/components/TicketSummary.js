@@ -3,10 +3,11 @@ import { Paper, Typography, Button } from '@material-ui/core';
 import EngineerAvatar from './EngineerAvatar';
 import StatusAvatar from './StatusAvatar';
 import ThirdDialogForm from './ThirdDialogForm';
+import Evaluar from './Evaluar';
 import axios from 'axios';
 const TicketSummary = props => {
     const styleLineSpace = { marginBottom: "10px" };
-
+    const status = ['RE', 'RU'];
     const [categories, setCategories] = React.useState([]);
     const [tecnicos, setTecnicos] = React.useState([]);
 
@@ -99,6 +100,22 @@ const TicketSummary = props => {
                         :
                         null
                     }
+
+                </div>
+                <div>
+                    {
+                        status.includes(props.status) ?
+                            <Evaluar
+                                id={props.ticketNumber}
+                                evaluacion={props.evaluacion}
+                                status={props.status}
+                                user={props.userName}
+                                changeEvaluacion={props.changeEvaluacion}
+                            />
+                            :
+                            null
+                    }
+
                 </div>
 
             </Paper>

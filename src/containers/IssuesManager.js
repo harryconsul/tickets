@@ -68,6 +68,7 @@ class IssuesManager extends React.Component {
 
         const basePath = "/mis-solicitudes/";
         const original_ticket = this.props.result.find(item => item.id === id);
+        
         const ticket = {
             ...original_ticket,
             statusAvatar: null,
@@ -84,7 +85,6 @@ class IssuesManager extends React.Component {
     }
     render() {
         let { ticketList, selectedTicket } = this.state;
-
         const basePath = "/mis-solicitudes/";
         ticketList = this.props.result;
         return (

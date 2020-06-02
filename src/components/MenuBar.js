@@ -38,7 +38,7 @@ const MenuBar = props => {
                         <Grid md={5} item>
                             <SearchField history={props.history} isManager={props.isManager} />
                         </Grid>
-                        <Grid md={5} item container spacing={8} justify={"flex-end"}>
+                        <Grid md={5} item container spacing={1} justify={"flex-end"}>
                             {props.isManager ?
                                 (
                                     <React.Fragment>

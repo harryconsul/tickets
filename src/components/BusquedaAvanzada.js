@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Popover, Button, Paper, Grid, MenuItem } from '@material-ui/core';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
-import Settings from 'mdi-material-ui/Settings';
+import Settings from 'mdi-material-ui/SettingsHelper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
