@@ -249,8 +249,16 @@ export const ticketsAmount = {
                     sort: "unsorted"
                 },
                 {
+                    uniqueName: "Tecnico",
+                    sort: "unsorted"
+                },
+                {
                     uniqueName: "NoSolicitud",
                     sort: "desc"
+                },
+                {
+                    uniqueName: "Estatus",
+                    sort: "unsorted"
                 },
                 {
                     uniqueName: "Categoria",
@@ -261,21 +269,9 @@ export const ticketsAmount = {
                     sort: "unsorted"
                 },
                 {
-                    uniqueName: "FechaAlta.Month",
+                    uniqueName: "FechaAlta",
                     sort: "unsorted"
                 },
-                {
-                    uniqueName: "FechaAlta.Day",
-                    sort: "unsorted"
-                },
-                {
-                    uniqueName: "Estatus",
-                    sort: "unsorted"
-                },
-                {
-                    uniqueName: "FechaAlta.Year",
-                    sort: "unsorted"
-                }
             ],
             columns: [
                 {
@@ -301,12 +297,11 @@ export const ticketsAmount = {
             flatOrder: [
                 "NoSolicitud",
                 "Usuario",
+                "Tecnico",
+                "Estatus",
                 "Categoria",
                 "Departamento",
-                "FechaAlta.Month",
-                "FechaAlta.Day",
-                "Estatus",
-                "FechaAlta.Year"
+                "FechaAlta",
             ]
         },
         options: {

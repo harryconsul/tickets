@@ -95,6 +95,8 @@ class App extends React.Component {
           const registrarUsuario = new Promise((resolve, reject) => {
             axios.post("registrausuario", { user })
               .then(response => {
+                user.notificaciones = response.data.Notificaciones;
+
                 const perfil = response.data.Perfil;
                 user.profile = perfil;
 

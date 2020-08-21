@@ -173,14 +173,12 @@ class RequestForm extends React.Component {
                         <ProblemTypeCloud problems={this.state.problems} onClick={this.onClickProblem} />
                     </Grid>
                     {
-                        this.props.isAdmin ?
+                        this.props.isAdmin &&
                             <Grid item xs={12} style={{ marginBottom: '20px' }}>
                                 <PeoplePicker 
                                 autoFocus={this.props.isAdmin}
                                 setPersona={this.setPersona} />
                             </Grid>
-                            :
-                            null
                     }
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
                         <ControlledInput id={"problem"} name={"problem"} value={this.state.problem}
@@ -188,6 +186,7 @@ class RequestForm extends React.Component {
                             label={"Descripción del problema"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
                     </Grid>
+                    
                     {
                     /*
                     <Grid item xs={12} style={{ marginBottom: '20px' }}>
