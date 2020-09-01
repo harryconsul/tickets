@@ -7,6 +7,7 @@ import EmailPlusOutline from 'mdi-material-ui/EmailPlusOutline'
 import GridIcon from 'mdi-material-ui/Grid'
 import MenuLink from './MenuLink';
 import UserBar from './UserBar';
+import dicipa from '../assets/logo-dicipa.png';
 export const getOptionName = (path, isManager = true) => {
     switch (path) {
         case "/graficas":
@@ -27,6 +28,9 @@ const MenuBar = props => {
             <AppBar style={{ backgroundColor: "#8e92d3" }} >
                 <Toolbar>
                     <Grid container spacing={16} style={{ margin: 0 }}>
+                        <Grid md={1} item>
+                        <img alt="DICIPA" src={dicipa} width="70" height="45" />
+                        </Grid>
                         <Grid md={2} item>
                             <Typography variant={"h6"} style={{ color: "white" }} >
                                 {
@@ -38,7 +42,7 @@ const MenuBar = props => {
                         <Grid md={5} item>
                             <SearchField history={props.history} isManager={props.isManager} />
                         </Grid>
-                        <Grid md={5} item container spacing={1} justify={"flex-end"}>
+                        <Grid md={4} item container spacing={1} justify={"flex-end"}>
                             {props.isManager ?
                                 (
                                     <React.Fragment>

@@ -8,8 +8,10 @@ import Support from 'mdi-material-ui/FaceAgent';
 import Inventory from 'mdi-material-ui/PackageVariant';
 import Report from 'mdi-material-ui/FileChart';
 import Database from 'mdi-material-ui/Database';
-import { FileWord, FileExcel, ChartPie,AccountCheck,
-     ClipboardAccount, AccountGroup } from 'mdi-material-ui';
+import {
+    FileWord, FileExcel, ChartPie, AccountCheck,
+    ClipboardAccount, AccountGroup
+} from 'mdi-material-ui';
 import Phone from 'mdi-material-ui/Deskphone';
 import Skype from 'mdi-material-ui/Skype';
 import Web from 'mdi-material-ui/Web';
@@ -38,6 +40,7 @@ const CategoryCard = props => {
     return (
         <Paper elevation={6} classes={{ root: "paper" }}
             style={{ padding: '10%', margin: '10px', textAlign: 'center' }} onClick={() => props.onClick(props.id)} >
+            {/* Requerimiento: no incluir como tooltip el nombre de los técnicos.
             <Tooltip title={
                 <React.Fragment>
                     <Typography style={{ color: "white" }} variant={"subtitle1"}>Este tipo de problema es atendido por:</Typography>
@@ -71,104 +74,106 @@ const CategoryCard = props => {
 
 
             </Tooltip>
+            */}
+            <div>
+                {setIcon(props.icon, props.type, _iconStyle)}
+                <Typography variant={props.type === 'main' ? "h5" : "h6"} color={"textSecondary"}>
+                    {props.label}
+                </Typography>
+            </div>
         </Paper>
     );
 
 }
-
-const iconSelection = (semantic, type = 'main', style) => {
-    const lower = semantic.toLowerCase();
-    const _style = style;
-
-    if (lower.indexOf("finanzas") >= 0 || lower.indexOf("cobrar") >= 0)
-        return <Money style={_style} />;
-
-    if (lower.indexOf("comunicación") >= 0)
-        return <Comunication style={_style} />;
-
-    if (lower.indexOf("reporte") >= 0)
-        return <Report style={_style} />;
-
-    if (lower.indexOf("logistica") >= 0)
-        return <Inventory style={_style} />;
-
-    if (lower.indexOf("ventas") >= 0)
-        return <Sales style={_style} />;
-
-    if (lower.indexOf("telefon") >= 0)
-        return <Phone style={_style} />;
-
-    if (lower.indexOf("skype") >= 0 || lower.indexOf("videoconferencias") >= 0)
-        return <Skype style={_style} />;
-
-    if (lower.indexOf("mantenimiento") >= 0 || lower.indexOf("call") >= 0)
-        return <Support style={_style} />;
-
-    if (lower.indexOf("pagar") >= 0)
-        return <CreditCard style={_style} />;
-
-    if (lower.indexOf("resultado") >= 0)
-        return <Note style={_style} />;
-
-    if (lower.indexOf("interfaz") >= 0)
-        return <Plug style={_style} />;
-
-    if (lower.indexOf("red") >= 0 || lower.indexOf("internet") >= 0)
-        return <Wifi style={_style} />;
-
-    if (lower.indexOf("web") >= 0)
-        return <Web style={_style} />;
-
-    if (lower.indexOf("laboratorio") >= 0)
-        return <Test style={_style} />;
-
-    if (lower.indexOf("usuario") >= 0)
-        return <User style={_style} />;
-
-    if (lower.indexOf("equipo") >= 0)
-        return <Computer style={_style} />;
-
-    if (lower.indexOf("impresora") >= 0)
-        return <Printer style={_style} />;
-
-    if (lower.indexOf("office") >= 0 || lower.indexOf("intranet") >= 0)
-        return <Microsoft style={_style} />;
-
-    if (lower.indexOf("correo") >= 0)
-        return <Email style={_style} />;
-
-    if (lower.indexOf("facturación") >= 0)
-        return <Billing style={_style} />;
-
-    if (lower.indexOf("comodato") >= 0)
-        return <CardText style={_style} />;
-
-    if (lower.indexOf("conexiones") >= 0)
-        return <Database style={_style} />;
-
-    if (lower.indexOf("word") >= 0)
-        return <FileWord style={_style} />;
-
-    if (lower.indexOf("excel") >= 0)
-        return <FileExcel style={_style} />;
-
-    if (lower==="oracle fusion")
-        return <ClipboardAccount style={_style} />;
-
-    if (lower==="taleo")
-        return <AccountCheck style={_style} />;
-
-    if (lower=== "hcm") 
-        return <AccountGroup style={_style} />;
-
-
-    if (lower === "bi")
-        return <ChartPie style={_style} />;
-
-
-    return <Application style={_style} />
-
-
-
+const setIcon = (icon, type = 'main', style) => {
+    switch (icon) {
+        case 'Money':
+            return <Money style={style} />;
+            break;
+        case 'Comunication':
+            return <Comunication style={style} />;
+            break;
+        case 'Report':
+            return <Report style={style} />;
+            break;
+        case 'Inventory':
+            return <Inventory style={style} />;
+            break;
+        case 'Sales':
+            return <Sales style={style} />;
+            break;
+        case 'Phone':
+            return <Phone style={style} />;
+            break;
+        case 'Skype':
+            return <Skype style={style} />;
+            break;
+        case 'Support':
+            return <Support style={style} />;
+            break;
+        case 'CreditCard':
+            return <CreditCard style={style} />;
+            break;
+        case 'Note':
+            return <Note style={style} />;
+            break;
+        case 'Plug':
+            return <Plug style={style} />;
+            break;
+        case 'Wifi':
+            return <Wifi style={style} />;
+            break;
+        case 'Web':
+            return <Web style={style} />;
+            break;
+        case 'Test':
+            return <Test style={style} />;
+            break;
+        case 'User':
+            return <User style={style} />;
+            break;
+        case 'Computer':
+            return <Computer style={style} />;
+            break;
+        case 'Printer':
+            return <Printer style={style} />;
+            break;
+        case 'Microsoft':
+            return <Microsoft style={style} />;
+            break;
+        case 'Email':
+            return <Email style={style} />;
+            break;
+        case 'Billing':
+            return <Billing style={style} />;
+            break;
+        case 'CardText':
+            return <CardText style={style} />;
+            break;
+        case 'Database':
+            return <Database style={style} />;
+            break;
+        case 'FileWord':
+            return <FileWord style={style} />;
+            break;
+        case 'FileExcel':
+            return <FileExcel style={style} />;
+            break;
+        case 'ClipboardAccount':
+            return <ClipboardAccount style={style} />;
+            break;
+        case 'AccountCheck':
+            return <AccountCheck style={style} />;
+            break;
+        case 'AccountGroup':
+            return <AccountGroup style={style} />;
+            break;
+        case 'ChartPie':
+            return <ChartPie style={style} />;
+            break;
+        default:
+            return <Web style={style} />;
+    }
 }
+
 export default withTheme(CategoryCard);
