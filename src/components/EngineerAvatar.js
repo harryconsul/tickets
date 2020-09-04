@@ -15,7 +15,7 @@ const EngineerAvatar = props =>{
                 <Typography variant={"caption"} style={{textAlign:"center"}}>
                     <i>
                     {props.isManager?props.userFullName + " - " + props.department
-                     : "Nos pondremos pilas para atenderte"
+                     : "Recibimos su solicitud, nos pondremos en contacto para atenderte."
                     }
                     </i>
                 </Typography>

@@ -42,7 +42,7 @@ const defaultFields = [
     },
     {
         id: "file",
-        label: "Archivo Adjunto",
+        label: "Si requiere anexar un documento, de clic en seleccionar archivo",
         name: "Archivo",
         type: "file",
         value:"",
@@ -169,7 +169,7 @@ class RequestForm extends React.Component {
         return (
             <Paper style={{ padding: '20px' }}>
                 <Grid container space={16} >
-                    <Grid item xs={12} style={{ marginBottom: '20px' }}>
+                    <Grid item xs={12} style={{ marginBottom: '10px' }}>
                         <ProblemTypeCloud problems={this.state.problems} onClick={this.onClickProblem} />
                     </Grid>
                     {
@@ -180,28 +180,19 @@ class RequestForm extends React.Component {
                                 setPersona={this.setPersona} />
                             </Grid>
                     }
-                    <Grid item xs={12} style={{ marginBottom: '20px' }}>
+                    <Grid item xs={12} style={{ marginBottom: '10px' }}>
                         <ControlledInput id={"problem"} name={"problem"} value={this.state.problem}
                             areYouFirst={!this.props.isAdmin}
                             label={"Descripción del problema"} style={{ width: '90%' }} icon={<PencilIcon />}
                             onChange={this.onChange} />
                     </Grid>
-                    
-                    {
-                    /*
-                    <Grid item xs={12} style={{ marginBottom: '20px' }}>
-                        <ControlledInput id={"detail"} name={"detail"} value={this.state.detail}
-                            label={"Detalle de la Solicitud"} style={{ width: '90%' }} icon={<PencilIcon />}
-                            onChange={this.onChange} />
-                    </Grid>
-                    */}
-
+                    <Grid container direction="row" justify="flex-start" alignItems="baseline">
                     {
                         this.state.fields.map(field =>
-                            <Grid item xs={12} key={field.id} style={{ marginBottom: '20px' }}>
+                            <Grid item xs={6} key={field.id} style={{ marginBottom: '20px' }}>
                                 {field.type === 'image' ?
                                     <div> <Typography variant={"body1"}>{field.label} </Typography> <canvas id='imgCanvas'
-                                        style={{ minWidth: '100px', minHeight: '100px', border: "1px solid" }}
+                                        style={{ minWidth: '100px', minHeight: '100px', border: "1px solid" ,maxWidth:'50%' }}
                                     />
                                     </div>
                                     :
@@ -216,7 +207,8 @@ class RequestForm extends React.Component {
                         )
 
                     }
-                    <Grid item xs={12} alignItems={'flex-end'} container direction={'column'} >
+                    </Grid>
+                    <Grid container item xs={12} justify="center">
                         <Grid item xs={3} style={{ float: 'right' }}>
                             <Button variant={'contained'} color={'primary'}
                                 disabled={this.state.disabled}

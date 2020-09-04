@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { NormalPeoplePicker } from 'office-ui-fabric-react/lib/Pickers';
 import { Persona, PersonaPresence } from 'office-ui-fabric-react/lib/Persona';
-import { Label } from 'office-ui-fabric-react/lib/Label';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 
 import GraphSDKHelper from '../../helpers/GraphSdkHelper';
 import { connect } from 'react-redux';
 import './PeoplePicker.css';
+import Typography from '@material-ui/core/Typography';
 
 //Mostraba warning en el campo de suggest de usuarios.
 import { initializeIcons } from '@uifabric/icons';
@@ -106,9 +106,7 @@ class PeoplePicker extends Component {
   // Handler for when text is entered into the picker control.
   // Populate the people list.
   _onFilterChanged = (filterText, items) => {
-    console.warn('Selected',this.state.selectedPeople);
     if (this.state.selectedPeople.length === 0) {
-      
       if (this._peopleList) {
         return filterText ? this._peopleList.concat(this._searchResults)
           .filter(item => item.primaryText.toLowerCase().indexOf(filterText.toLowerCase()) === 0)
@@ -116,6 +114,7 @@ class PeoplePicker extends Component {
       }
       else {
         return new Promise((resolve, reject) => this.sdkHelper.getPeople((err, people) => {
+          console.warn('People', people);
           if (!err) {
             this._peopleList = this._mapUsersToPersonas(people, false);
             this._getPics(this._peopleList);
@@ -183,10 +182,7 @@ class PeoplePicker extends Component {
   render() {
     return (
       <div>
-        <Label>
-          Si no ves a quien buscas, da clic en <b>Buscar</b>.
-        </Label>
-
+        <Typography variant={"body1"}>Si no ves a quien buscas, da clic en <b>Buscar</b>. </Typography>
         <NormalPeoplePicker
           onResolveSuggestions={this._onFilterChanged}
           pickerSuggestionsProps={{
@@ -242,8 +238,8 @@ class PeoplePicker extends Component {
           text: `Error ${err.statusCode}: ${err.code} - ${err.message}`
         }
       });
-    }else{
-      this.setState({result:null});
+    } else {
+      this.setState({ result: null });
     }
   }
 

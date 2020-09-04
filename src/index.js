@@ -8,8 +8,10 @@ import axios from 'axios';
 import 'typeface-roboto';
 import { Provider } from 'react-redux';
 import store from './store/store';
-//axios.defaults.baseURL = "https://ti911.dicipa.com.mx:3001/rest/";
-axios.defaults.baseURL = "http://localhost/Tickets.NetEnvironment/rest/";
+axios.defaults.baseURL = "https://ti911.dicipa.com.mx:3001/rest/";
+//axios.defaults.baseURL = "http://localhost/Tickets.NetEnvironment/rest/";
+//axios.defaults.baseURL = "https://ti911.dicipa.com.mx:3002/rest/";
+
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 

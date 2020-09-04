@@ -26,9 +26,32 @@ const getStatusColor = status => {
     }
     return color;
 }
+const getDescription = status => {
+    switch (status) {
+        case statusCodes.IN_PROCESS.value:
+            return "EN PROCESO";
+            break;
+        case statusCodes.SOLVED.value:
+            return "RESUELTO";
+            break;
+        case statusCodes.REJECTED.value:
+            return "CANCELADA";
+        case statusCodes.THIRD.value:
+            return "TERCEROS";
+            break;
+        case statusCodes.BY_USER.value:
+            return "USUARIO";
+            break;
+        default:
+            return "NUEVO";
+            break;
+    }
+}
+
 const StatusAvatar = props => {
+
     return (
-        <Avatar style={{ backgroundColor: getStatusColor(props.status) }}>
+        <Avatar style={{ backgroundColor: getStatusColor(props.status)}}>
             {props.status}
         </Avatar>
     );

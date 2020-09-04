@@ -77,7 +77,7 @@ class App extends React.Component {
         this.graphClient = new GraphSdkHelper(accessToken.accessToken);
         
         this.graphClient.getMyProfile((err, me) => {
-
+          
           const user = {
             accessToken: accessToken.accessToken,
             id: me.id,

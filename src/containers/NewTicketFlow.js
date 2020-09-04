@@ -8,6 +8,8 @@ import axios from 'axios';
 import GraphSDKHelper from '../helpers/GraphSdkHelper';
 import SnackBarMessage from '../components/SnackBarMesssage/SnackBarMessage';
 import { connect } from 'react-redux';
+import Graph from '../helpers/GraphSdkHelper';
+
 function getBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -37,7 +39,11 @@ const baseSteps = () => {
 }
 
 class NewTicketFlow extends React.Component {
+    constructor(props) {
+        super(props);
 
+        this.helper = new Graph(this.props.user.accessToken);
+    }
     state = {
         activeStep: 0,
         steps: baseSteps(),
@@ -56,8 +62,8 @@ class NewTicketFlow extends React.Component {
             problemDetail: {},
             ticketId: null,
             steps: baseSteps(),
-            snackOpen:false,
-            errorMessage:"",
+            snackOpen: false,
+            errorMessage: "",
             engineerPhoto: "",
         });
     }
@@ -102,21 +108,48 @@ class NewTicketFlow extends React.Component {
 
             axios.post("registrausuario", { user })
                 .then(response => {
-                    this.postRegistrarSolicitud(user.username,fields);
+                    this.postRegistrarSolicitud(user.username, fields);
                 })
                 .catch(error => {
                     this.setState({
-                            snackOpen:true,
-                            errorMessage:":( Ups tenemos un problema registrando al usuario que solicita ,reporta este problema al administrador del sistema",
-                            ticketId:"####",
+                        snackOpen: true,
+                        errorMessage: ":( Ups tenemos un problema registrando al usuario que solicita ,reporta este problema al administrador del sistema",
+                        ticketId: "####",
                     });
                 });
         } else {
-            this.postRegistrarSolicitud(this.props.user.username,fields);
+            this.postRegistrarSolicitud(this.props.user.username, fields);
         }
     }
 
-    postRegistrarSolicitud = (username,fields) => {
+    getNotificacion = (id) => {
+        const data = {
+            Id: id,
+            Estatus: statusCodes.NEW.value,
+            Comentario: ''
+        }
+        
+        axios.post("buscarnotificacion", data).then(response => {
+            const correo = response.data.Notificacion.Para;
+            console.log(correo);
+            if (correo !== '') {
+                const recipient = [{
+                    EmailAddress: {
+                        Address: correo
+                    }
+                }];
+
+                this.helper.sendMail(recipient, response.data.Notificacion.Asunto,
+                    response.data.Notificacion.Correo, (err) => {
+                        if (!err) {
+                            console.log("La notificación fue enviada");
+                        }
+                    });
+            }
+        });
+    }
+
+    postRegistrarSolicitud = (username, fields) => {
         const data = {
             Solicitud: {
                 user: username,
@@ -137,14 +170,19 @@ class NewTicketFlow extends React.Component {
                 if (photos.length) {
                     this.setState({ engineerPhoto: photos[0].photo });
                 }
-            })
+            });
+
+            const { user, registro } = data.Solicitud;
+            if (user != registro) {
+                this.getNotificacion(response.data.SolicitudId);
+            }
 
         }).catch(reason => {
             this.setState({
-                snackOpen:true,
-                errorMessage:":( Ups tuvimos un problema registrando tu reporte , revisa en tu bandeja si logro registrarse",
-                ticketId:"####",
-        });
+                snackOpen: true,
+                errorMessage: ":( Ups tuvimos un problema registrando tu reporte , revisa en tu bandeja si logro registrarse",
+                ticketId: "####",
+            });
         })
     }
     getActiveComponent = () => {
@@ -184,10 +222,10 @@ class NewTicketFlow extends React.Component {
                 {
                     this.getActiveComponent()
                 }
-                <SnackBarMessage open={this.state.snackOpen} variant="error" 
-                    handleClose = {()=>this.setState({errorMessage:"",snackOpen:false})}
+                <SnackBarMessage open={this.state.snackOpen} variant="error"
+                    handleClose={() => this.setState({ errorMessage: "", snackOpen: false })}
                     autoHideDuration={10000}
-                     message = {this.state.errorMessage}/>
+                    message={this.state.errorMessage} />
             </div>
         )
     }

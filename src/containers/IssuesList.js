@@ -10,17 +10,29 @@ import axios from 'axios';
 import SwitchCheck from '../components/SwitchControl/SwitchCheck';
 import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
+import CustomMaterialTable from '../components/MaterialTable/CustomMaterialTable';
 
-const columnsArray = [{ label: "No. Solicitud", value: "id" },
-{ label: "Estatus", value: "statusAvatar" },
-{ label: "Problema", value: "problem" },
-{ label: "¿Quien solicita?", value: "user" },
-{ label: "¿Quién lo atiende?", value: "engineer" },
-{ label: "Fecha Alta", value: "date" },
-{ label: "Categoría", value: "categoryName" },
-{ label: "Fecha Cierre", value: "finishDate" },
-{ label: "Tipo de Atencion", value: "assistance" },
+const usuario = [
+    {label: "Solicitud",value:"id"},
+    { label: "Estatus", value: "statusAvatar" },
+    { label: "Problema", value: "problem" },
+    { label: "¿Quién lo atiende?", value: "engineer" },
+    { label: "Fecha Alta", value: "date" },
+    { label: "Fecha Compromiso", value: "promiseDate" },
+    { label: "Fecha Cierre", value: "finishDate" },
 ];
+const administrador = [
+    { label: "Solicitud", value: "id" },
+    { label: "Estatus", value: "statusAvatar" },
+    { label: "Problema", value: "problem" },
+    { label: "¿Quién solicita?", value: "user" },
+    { label: "¿Quién lo atiende?", value: "engineer" },
+    { label: "Categoría", value: "categoryName" },
+    { label: "Fecha Alta", value: "date" },
+    { label: "Fecha Compromiso", value: "promiseDate" },
+    { label: "Fecha Cierre", value: "finishDate" },
+];
+
 const filterTicketsByStatus = (ticketList, statusTab) => {
     let status = [];
     switch (statusTab) {
@@ -125,8 +137,11 @@ class IssuesList extends React.Component {
         const resueltos = this.getTotalByStatus(3, myTickets);
         const rechazados = this.getTotalByStatus(4, myTickets);
 
+        const { user: { profile } } = this.props;
+        const columnas = profile === 'U' ? [...usuario] : [...administrador];
+        
         return (
-            <div style={{ width: '100%' }}>
+            <div >
                 {
                     this.props.user.isManager ?
                         <div>
@@ -134,34 +149,34 @@ class IssuesList extends React.Component {
                                 <Grid item xs={10}>
                                     <Tabs value={status} onChange={this.onChangeTab}>
                                         <Tab label={
-                                                <Badge className={classes.padding} color="primary" badgeContent={total}>
-                                                    TODOS
+                                            <Badge className={classes.padding} color="primary" badgeContent={total}>
+                                                TODOS
                                             </Badge>
-                                            }
+                                        }
                                         />
                                         <Tab label={
-                                                <Badge className={classes.padding} color="primary" badgeContent={nuevo}>
-                                                    NUEVOS
+                                            <Badge className={classes.padding} color="primary" badgeContent={nuevo}>
+                                                NUEVOS
                                                 </Badge>
-                                            }
+                                        }
                                             icon={<EmailOutline />} />
                                         <Tab label={
-                                                <Badge className={classes.padding} color="primary" badgeContent={proceso}>
-                                                    EN PROCESO
+                                            <Badge className={classes.padding} color="primary" badgeContent={proceso}>
+                                                EN PROCESO
                                             </Badge>
-                                            }
+                                        }
                                             icon={<EmailOpenOutline />} />
                                         {/*<Tab label={"Con tercero"} icon={<AccountClockOutline />} />*/}
                                         <Tab label={
-                                                <Badge className={classes.padding} color="primary" badgeContent={resueltos}>
-                                                    RESUELTOS
+                                            <Badge className={classes.padding} color="primary" badgeContent={resueltos}>
+                                                RESUELTOS
                                             </Badge>
-                                            } icon={<Check />} />
+                                        } icon={<Check />} />
                                         <Tab label={
-                                                <Badge className={classes.padding} color="primary" badgeContent={rechazados}>
-                                                    RECHAZADOS
+                                            <Badge className={classes.padding} color="primary" badgeContent={rechazados}>
+                                                RECHAZADOS
                                             </Badge>
-                                            } icon={<FileCancelOutline />} />
+                                        } icon={<FileCancelOutline />} />
                                     </Tabs>
                                 </Grid>
                                 <Grid item xs={2} alignItems="center">
@@ -172,14 +187,25 @@ class IssuesList extends React.Component {
                         :
                         null
                 }
-                <CustomColumnsTable columnsArray={columnsArray}
-                    itemsList={filteredList} defaultColumns={["id", "statusAvatar", "problem", "engineer"]}
+                <CustomMaterialTable 
+                    columnas={columnas} 
+                    list={filteredList}
+                    changePageCallback={(page) => this.props.dispatch(actionChangePage(page))}
+                    labelRowsPerPage={"Solicitudes por página"}
+                    rowClickHandle={onTicketClick}
+                />
+                
+                {/* <CustomColumnsTable
+                    columnsArray={columnas}
+                    itemsList={filteredList}
+                    defaultColumns={["id", "statusAvatar", "problem", "engineer"]}
                     labelRowsPerPage={"Solicitudes por página"}
                     changePageCallback={(page) => this.props.dispatch(actionChangePage(page))}
                     savePreferenceToServer={this.savePreferenceToServer}
                     preferences={{ columnsSelected: this.props.columnas }}
                     initialPage={this.props.page}
-                    numberColumnLabel={"#"} rowClickHandle={onTicketClick} />
+                    numberColumnLabel={"#"} rowClickHandle={onTicketClick} /> */}
+                
             </div>
         )
     }

@@ -3,6 +3,11 @@ import TicketSummary from './TicketSummary';
 import { Grid, Button, CircularProgress, Paper, Typography } from '@material-ui/core';
 
 const SummitAck = props => {
+
+    const ticketsList = () => {
+        alert('Hola');
+    }
+
     return (
         props.ticketNumber ?
             <Grid container direction={"column"} alignItems={"center"} spacing={16}>
@@ -11,7 +16,10 @@ const SummitAck = props => {
 
 
                 </Grid>
-                <Grid item md={12} style={{ width: "47%", textAlign: "right" }}>
+                <Grid item md={12} container direction="row" justify="space-evenly" alignItems="center">
+                    <Button href="/mis-solicitudes" variant={"contained"} >
+                        Ir a Solicitudes
+                    </Button>
                     <Button onClick={props.resetFlow} variant={"contained"} color={"primary"} >
                         Nueva Solicitud
                     </Button>
