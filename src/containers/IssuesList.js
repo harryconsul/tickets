@@ -173,7 +173,7 @@ class IssuesList extends React.Component {
                                             icon={<EmailOutline />} />
                                         <Tab label={
                                             <Badge className={classes.padding} color="primary" badgeContent={proceso}>
-                                                EN PROCESO
+                                                REVISIÓN
                                             </Badge>
                                         }
                                             icon={<EmailOpenOutline />} />
@@ -185,7 +185,7 @@ class IssuesList extends React.Component {
                                         } icon={<Check />} />
                                         <Tab label={
                                             <Badge className={classes.padding} color="primary" badgeContent={rechazados}>
-                                                RECHAZADOS
+                                                CANCELADAS
                                             </Badge>
                                         } icon={<FileCancelOutline />} />
                                     </Tabs>
