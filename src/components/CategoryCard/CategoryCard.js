@@ -35,7 +35,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 
 const CategoryCard = props => {
-    const _iconStyle = { fontSize: '80', color: props.theme.palette.secondary.light };
+    const _iconStyle = { fontSize: '50', color: props.theme.palette.secondary.light };
 
     return (
         <Paper elevation={6} classes={{ root: "paper" }}
@@ -75,9 +75,9 @@ const CategoryCard = props => {
 
             </Tooltip>
             */}
-            <div>
+            <div style={{height:"95px"}}>
                 {setIcon(props.icon, props.type, _iconStyle)}
-                <Typography variant={props.type === 'main' ? "h5" : "h6"} color={"textSecondary"}>
+                <Typography variant={props.type === 'main' ? "h6" : "subtitle1"} color={"textSecondary"}>
                     {props.label}
                 </Typography>
             </div>

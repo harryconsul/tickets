@@ -2,36 +2,39 @@ import React from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import IssuesManager from './IssuesManager';
 import NewTicketFlow from './NewTicketFlow';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import MenuBar from '../components/MenuBar';
 
 
 class User extends React.Component {
 
-    state={
-        ref:React.createRef(),
-        margin:"0",
+    state = {
+        ref: React.createRef(),
+        margin: "0",
     }
-    componentDidMount(){
-        
+    componentDidMount() {
+
         const style = window.getComputedStyle(this.state.ref.current.children[0]);
-            
-        const margin = Number(style.height.replace("px",""));
-        this.setState({margin})
+
+        const margin = Number(style.height.replace("px", ""));
+        this.setState({ margin })
 
     }
-    render(){
+    render() {
         return (
             <div>
-                
-                <MenuBar currentOption={this.props.location.pathname} 
+
+                <MenuBar
+                    currentOption={this.props.location.pathname}
                     profile={this.props.user.profile}
-                    isManager={false} barRef={this.state.ref} textColor={"white"}
-                history={this.props.history} />
-                <div style={{marginTop:this.state.margin}}>
+                    isManager={false}
+                    barRef={this.state.ref}
+                    textColor={"white"}
+                    history={this.props.history} />
+                <div style={{ marginTop: this.state.margin }}>
                     <Route exact path="/" component={NewTicketFlow} />
-                    <Route  path="/mis-solicitudes" component={IssuesManager} />
-                    
+                    <Route path="/mis-solicitudes" component={IssuesManager} />
+
                 </div>
             </div>
 
@@ -41,11 +44,11 @@ class User extends React.Component {
 };
 
 
-const mapStateToProps=state=>{
+const mapStateToProps = state => {
     return {
-        user:state.user,
-        timeRanges:state.timeRanges,
-    
+        user: state.user,
+        timeRanges: state.timeRanges,
+
     };
 }
 export default withRouter(connect(mapStateToProps)(User));

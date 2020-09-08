@@ -13,7 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CustomMaterialTable from '../components/MaterialTable/CustomMaterialTable';
 
 const usuario = [
-    {label: "Solicitud",value:"id"},
+    { label: "Solicitud", value: "id" },
     { label: "Estatus", value: "statusAvatar" },
     { label: "Problema", value: "problem" },
     { label: "¿Quién lo atiende?", value: "engineer" },
@@ -79,12 +79,17 @@ class IssuesList extends React.Component {
             ticketList: props.ticketList,
             columns: null,
             myTickets: false,
+            inProcess: false,
         }
 
     }
 
-    handleSwitch = (bandera) => {
+    handleSwitchAdmin = (bandera) => {
         this.setState({ myTickets: bandera });
+    }
+
+    handleSwitchUser = (bandera) => {
+        this.setState({ inProcess: bandera });
     }
 
     onChangeTab = (event, newStatus) => {
@@ -125,10 +130,12 @@ class IssuesList extends React.Component {
     render() {
         const { classes } = this.props;
         const { onTicketClick } = this.props;
-        const { ticketList, status, myTickets } = this.state;
-
-        const filteredList = ticketList.filter(ticket => {
-            return (ticket.engineer.indexOf(this.props.user.username) >= 0 || ticket.registro.indexOf(this.props.user.username) >= 0 || !myTickets);
+        const { ticketList, status, myTickets, inProcess } = this.state;
+        
+        let filteredList = ticketList.filter(ticket => {
+            return (ticket.engineer.indexOf(this.props.user.username) >= 0
+                || ticket.registro.indexOf(this.props.user.username) >= 0
+                || !myTickets);
         });
 
         const total = this.getTotalByStatus(0, myTickets);
@@ -139,7 +146,11 @@ class IssuesList extends React.Component {
 
         const { user: { profile } } = this.props;
         const columnas = profile === 'U' ? [...usuario] : [...administrador];
-        
+
+        //El perfil usuario podrá filtrar nuevo y en proceso
+        if (!inProcess && profile === 'U')
+            filteredList = filteredList.filter(({status}) => status.trim() === "NU" || status.trim() === "PR");
+
         return (
             <div >
                 {
@@ -180,21 +191,25 @@ class IssuesList extends React.Component {
                                     </Tabs>
                                 </Grid>
                                 <Grid item xs={2} alignItems="center">
-                                    <SwitchCheck labelName="Mis Solicitudes" handleSwitch={this.handleSwitch} />
+                                    <SwitchCheck labelName="Mis solicitudes" handleSwitch={this.handleSwitchAdmin} />
                                 </Grid>
                             </Grid>
                         </div>
                         :
-                        null
+                        <div>
+                            <Grid container direction="row" justify="flex-end">
+                                <SwitchCheck labelName="Todo" handleSwitch={this.handleSwitchUser} />
+                            </Grid>
+                        </div>
                 }
-                <CustomMaterialTable 
-                    columnas={columnas} 
+                <CustomMaterialTable
+                    columnas={columnas}
                     list={filteredList}
                     changePageCallback={(page) => this.props.dispatch(actionChangePage(page))}
                     labelRowsPerPage={"Solicitudes por página"}
                     rowClickHandle={onTicketClick}
                 />
-                
+
                 {/* <CustomColumnsTable
                     columnsArray={columnas}
                     itemsList={filteredList}
@@ -205,7 +220,7 @@ class IssuesList extends React.Component {
                     preferences={{ columnsSelected: this.props.columnas }}
                     initialPage={this.props.page}
                     numberColumnLabel={"#"} rowClickHandle={onTicketClick} /> */}
-                
+
             </div>
         )
     }

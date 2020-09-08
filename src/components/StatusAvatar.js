@@ -1,6 +1,8 @@
 import React from 'react';
 import { Avatar } from '@material-ui/core'
 import { statusCodes } from '../constants';
+import Chip from '@material-ui/core/Chip';
+
 const getStatusColor = status => {
     let color = null;
     switch (status) {
@@ -29,7 +31,7 @@ const getStatusColor = status => {
 const getDescription = status => {
     switch (status) {
         case statusCodes.IN_PROCESS.value:
-            return "EN PROCESO";
+            return "REVISIÓN";
             break;
         case statusCodes.SOLVED.value:
             return "RESUELTO";
@@ -51,9 +53,10 @@ const getDescription = status => {
 const StatusAvatar = props => {
 
     return (
-        <Avatar style={{ backgroundColor: getStatusColor(props.status)}}>
-            {props.status}
-        </Avatar>
+        // <Avatar style={{ backgroundColor: getStatusColor(props.status)}}>
+        //     {props.status}
+        // </Avatar>
+        <Chip label={getDescription(props.status)} style={{ backgroundColor: getStatusColor(props.status), color:"#fff"}}/>
     );
 }
 export default StatusAvatar;

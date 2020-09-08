@@ -15,7 +15,7 @@ export const getOptionName = (path, isManager = true) => {
         case "/reportes":
             return "Reportes";
         case "/mis-solicitudes":
-            return "Mis Solicitudes";
+            return "Solicitudes";
         case "/nueva-solicitud":
             return "Nueva Solicitud";
         default:
@@ -27,16 +27,21 @@ const MenuBar = props => {
         <div ref={props.barRef}>
             <AppBar style={{ backgroundColor: "#8e92d3" }} >
                 <Toolbar>
-                    <Grid container spacing={16} style={{ margin: 0 }}>
+                    <Grid container spacing={16} alignItems="center" style={{ margin: 0 }}>
                         <Grid md={1} item>
-                        <img alt="DICIPA" src={dicipa} width="70" height="45" />
+                            <img alt="DICIPA" src={dicipa} width="62" height="46" />
                         </Grid>
                         <Grid md={2} item>
                             <Typography variant={"h6"} style={{ color: "white" }} >
                                 {
+                                    /*
                                     props.isManager ?
                                         getOptionName(props.currentOption) :
-                                        "Nueva Solicitud"}
+                                        "Nueva Solicitud"
+                                    */
+                                   props.isManager ?
+                                    getOptionName(props.currentOption):getOptionName(props.currentOption,false)
+                                }
                             </Typography>
                         </Grid>
                         <Grid md={5} item>

@@ -15,11 +15,14 @@ class CustomMaterialTable extends React.Component {
         let newState = { ...this.state };
         newState.page = page;
         this.setState(newState)
-        if (this.props.changePageCallback) {
-            this.props.changePageCallback(page);
-        }
-
     };
+
+    handleChangeRowsPerPage = event => {
+        let newState = { ...this.state };
+        newState.rowsPerPage = event.target.value * 1;
+    
+        this.setState(newState);
+      };
 
     render() {
         const { columnas, list } = this.props;

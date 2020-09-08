@@ -12,7 +12,7 @@ const Login = (props) => {
                 wrap="nowrap" style={{ height: "100%" }} justify={"center"}
                 spacing={32}>
                 <Grid item style={{ marginBottom: "15px" }}>
-                    <img alt="Servicios TI" src={ti911} />
+                    <img alt="Servicios TI" src={ti911} width="367" height="156"/>
                 </Grid>
 
                 <Grid item style={{ marginBottom: "15px" }}>
@@ -26,9 +26,9 @@ const Login = (props) => {
                         </Button>
                     }
                 </Grid>
-                <Grid container direction="column" alignItems={"flex-end"}>
+                <Grid item container direction="column" alignItems={"flex-end"}>
                     <Grid item>
-                        <img alt="DICIPA" src={dicipa} width="100" height="70" />
+                        <img alt="DICIPA" src={dicipa} width="80" height="56" />
                     </Grid>
                 </Grid>
             </Grid>

@@ -22,7 +22,7 @@ export const MaterialFooter = (props) => {
 
     const handleLastPage = event => {
         props.onChangePage(event,
-            Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1),
+            Math.max(0, Math.ceil(props.count / props.rowsPerPage) - 1),
         );
     }
 

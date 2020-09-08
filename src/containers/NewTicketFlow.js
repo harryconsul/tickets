@@ -128,7 +128,7 @@ class NewTicketFlow extends React.Component {
             Estatus: statusCodes.NEW.value,
             Comentario: ''
         }
-        
+
         axios.post("buscarnotificacion", data).then(response => {
             const correo = response.data.Notificacion.Para;
             console.log(correo);
@@ -193,13 +193,15 @@ class NewTicketFlow extends React.Component {
                 return <RequestForm onComplete={this.nextStep} categoryId={this.state.problemType.id}
                     isAdmin={this.props.user.isManager} />
             default:
-                return <SummitAck ticketNumber={this.state.ticketId}
+                return <SummitAck
+                    ticketNumber={this.state.ticketId}
                     category={this.state.problemType.label}
                     detail={this.state.problemDetail.detail}
                     status={statusCodes.NEW.value}
                     resetFlow={this.resetFlow}
                     photo={this.state.engineerPhoto}
-                    problem={this.state.problemDetail.problem} />
+                    problem={this.state.problemDetail.problem} 
+                    logOut={this.logOut}/>
 
         }
 
@@ -211,6 +213,11 @@ class NewTicketFlow extends React.Component {
 
         }
     }
+
+    logOut = () => {
+        this.props.user.logout()
+    }
+
     render() {
 
 
