@@ -323,8 +323,7 @@ class TicketEditor extends React.Component {
         return (
             <React.Fragment>
                 <Grid container style={{ marginTop: "10px" }} >
-                    <Grid container direction={"column"} style={{ padding: "2%" }}
-                        item md={4} spacing={8}>
+                    <Grid item container md={4} direction={"column"} style={{ padding: "2%" }} spacing={1}>
                         <Grid item>
                             <TicketSummary ticketNumber={this.props.id}
                                 isManager={isManager}
@@ -404,7 +403,7 @@ class TicketEditor extends React.Component {
                                             variant={"outlined"}
                                             icon={<FileCancel />} />
 
-                                        <ButtonProgress
+                                        {/* <ButtonProgress
                                             onClick={(finishCallBack) => {
                                                 this.finishCallBack = finishCallBack;
                                                 this.setState({ isDialogOpen: true });
@@ -414,7 +413,7 @@ class TicketEditor extends React.Component {
                                             color={"primary"} submitDisabled={submitDisabled}
                                             variant={"contained"}
                                             text={"Enviar con Tercero"}
-                                            icon={<Send />} />
+                                            icon={<Send />} /> */}
 
                                         <ButtonProgress
                                             onClick={(finishCallBack) => this.handleSubmit(statusCodes.SOLVED.value, null, true, finishCallBack)}

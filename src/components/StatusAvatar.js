@@ -56,7 +56,7 @@ const StatusAvatar = props => {
         // <Avatar style={{ backgroundColor: getStatusColor(props.status)}}>
         //     {props.status}
         // </Avatar>
-        <Chip label={getDescription(props.status)} style={{ backgroundColor: getStatusColor(props.status), color:"#fff"}}/>
+        <Chip label={getDescription(props.status)} style={{ backgroundColor: getStatusColor(props.status), color:"#fff",...props.style}}/>
     );
 }
 export default StatusAvatar;

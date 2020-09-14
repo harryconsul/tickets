@@ -75,7 +75,7 @@ const CategoryCard = props => {
 
             </Tooltip>
             */}
-            <div style={{height:"95px"}}>
+            <div style={{height:"120px"}}>
                 {setIcon(props.icon, props.type, _iconStyle)}
                 <Typography variant={props.type === 'main' ? "h6" : "subtitle1"} color={"textSecondary"}>
                     {props.label}

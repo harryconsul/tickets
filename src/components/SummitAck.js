@@ -17,7 +17,7 @@ const SummitAck = props => {
                         Salir
                     </Button>
                     <Button href="/mis-solicitudes" variant={"contained"} >
-                        Ir a Solicitudes
+                        Ir a solicitudes previas
                     </Button>
                     <Button onClick={props.resetFlow} variant={"contained"} color={"primary"} >
                         Nueva Solicitud

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, Button } from '@material-ui/core';
+import { Paper, Typography, Button ,Grid } from '@material-ui/core';
 import EngineerAvatar from './EngineerAvatar';
 import StatusAvatar from './StatusAvatar';
 import ThirdDialogForm from './ThirdDialogForm';
@@ -78,30 +78,30 @@ const TicketSummary = props => {
                     department={props.department}
                     isManager={props.isManager} />
                 <Typography variant={"h6"} style={styleLineSpace} >
-                    {props.isManager ? "Necesito tu ayuda!" : "Hola! , Recibimos tu reporte "}
+                    {props.isManager ? "Necesito tu ayuda!" : "Hola! , Recibimos tu reporte número "}
                 </Typography>
                 <Typography variant={"h3"} style={styleLineSpace} color={"primary"} > {props.ticketNumber}   </Typography>
                 <Typography variant={"h5"} style={styleLineSpace}> {props.category}   </Typography>
                 <Typography variant={"subtitle1"} style={styleLineSpace}> {props.problem}   </Typography>
+                <StatusAvatar status={props.status} style={{marginBottom:"10px"}}/>
 
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <StatusAvatar status={props.status} />
+                <Grid container direction="row" justify="space-between" alignItems="center">
                     {props.editing ?
-                        <Button color={"secondary"} onClick={handleDialogCategoria} variant={"outlined"} >
-                            Cambiar Categoria
+                        <Button size="small" color={"secondary"} onClick={handleDialogCategoria} variant={"outlined"} >
+                            Cambiar Categoría
                         </Button>
                         : null
 
                     }
                     {props.editing ?
-                        <Button color={"secondary"} onClick={handleDialogTecnico} variant={"outlined"} >
+                        <Button size="small" color={"secondary"} onClick={handleDialogTecnico} variant={"outlined"} >
                             Reasignar
                         </Button>
                         :
                         null
                     }
 
-                </div>
+                </Grid>
                 <div>
                     {
                         status.includes(props.status) ?

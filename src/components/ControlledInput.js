@@ -56,6 +56,8 @@ class ControlledInput extends React.Component {
                     style={this.props.style} type={this.props.type} required={this.props.required}
                     error={this.props.error} select={this.props.select} helperText={this.props.helperText}
                     InputLabelProps={{ children: this.props.label, shrink: true }} autoComplete={"off"}
+                    variant={this.props.variant?"outlined":"standard"}
+                    multiline={this.props.multiline?true:false}
                 >
                     {this.props.children}
                 </TextField>

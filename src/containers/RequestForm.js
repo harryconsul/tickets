@@ -34,10 +34,10 @@ function loadCanvas(blobImg, canvasId) {
 const defaultFields = [
     {
         id: "img",
-        label: "Imagen Adjunta (Ctrl - V )",
+        label: "Si requiere adjuntar imagen (Ctrl-V)",
         name: "Imagen",
         type: "image",
-        value:"",
+        value: "",
         values: [],
     },
     {
@@ -45,14 +45,14 @@ const defaultFields = [
         label: "Si requiere anexar un documento, de clic en seleccionar archivo",
         name: "Archivo",
         type: "file",
-        value:"",
+        value: "",
         values: [],
     },
 
 ]
 
 class RequestForm extends React.Component {
-    
+
     state = {
         problem: "", problems: [], problemSet: [], detail: "",
         fields: [...defaultFields], persona: null, disabled: true
@@ -64,7 +64,7 @@ class RequestForm extends React.Component {
             const _problem = _problems[_problemIndex];
             _problems.splice(_problemIndex, 1);
 
-            this.setState({disabled: false, problem: _problem.label, problems: _problems, fields: _problem.fields });
+            this.setState({ disabled: false, problem: _problem.label, problems: _problems, fields: _problem.fields });
         }
     }
 
@@ -174,50 +174,50 @@ class RequestForm extends React.Component {
                     </Grid>
                     {
                         this.props.isAdmin &&
-                            <Grid item xs={12} style={{ marginBottom: '20px' }}>
-                                <PeoplePicker 
+                        <Grid item xs={12} style={{ marginBottom: '20px' }}>
+                            <PeoplePicker
                                 autoFocus={this.props.isAdmin}
                                 setPersona={this.setPersona} />
-                            </Grid>
+                        </Grid>
                     }
-                    <Grid item xs={12} style={{ marginBottom: '10px' }}>
+                    <Grid item xs={12} style={{ marginBottom: '50px' }}>
                         <ControlledInput id={"problem"} name={"problem"} value={this.state.problem}
                             areYouFirst={!this.props.isAdmin}
                             label={"Descripción del problema"} style={{ width: '90%' }} icon={<PencilIcon />}
-                            onChange={this.onChange} />
+                            onChange={this.onChange} variant={true} multiline={true} />
                     </Grid>
                     <Grid container direction="row" justify="flex-start" alignItems="baseline">
-                    {
-                        this.state.fields.map(field =>
-                            <Grid item xs={6} key={field.id} style={{ marginBottom: '20px' }}>
-                                {field.type === 'image' ?
-                                    <div> <Typography variant={"body1"}>{field.label} </Typography> <canvas id='imgCanvas'
-                                        style={{ minWidth: '100px', minHeight: '100px', border: "1px solid" ,maxWidth:'50%' }}
-                                    />
-                                    </div>
-                                    :
-                                    <ControlledInput id={field.name} name={field.name} value={field.value}
-                                        label={field.label} style={{ width: '90%' }} icon={<PencilIcon />}
-                                        onChange={this.onChangeField} select={field.values.length ? true : false} type={field.type}>
-                                        {field.values ? field.values.map((item, index) =>
-                                            <MenuItem key={index} value={item}>{item} </MenuItem>) : null}
-                                    </ControlledInput>
-                                }
-                            </Grid>
-                        )
+                        {
+                            this.state.fields.map(field =>
+                                <Grid item xs={6} key={field.id} style={{ marginBottom: '20px' }}>
+                                    {field.type === 'image' ?
+                                        <div> <Typography variant={"body1"}>{field.label} </Typography> <canvas id='imgCanvas'
+                                            style={{ minWidth: '100px', minHeight: '100px', border: "1px solid", maxWidth: '50%' }}
+                                        />
+                                        </div>
+                                        :
+                                        <Grid container item xs={12} justify="left">
+                                            <ControlledInput id={field.name} name={field.name} value={field.value}
+                                                label={field.label} style={{ width: '90%' }} icon={<PencilIcon />}
+                                                onChange={this.onChangeField} select={field.values.length ? true : false} type={field.type}
+                                                style={{ marginBottom: '20px' }}>
+                                                {field.values ? field.values.map((item, index) =>
+                                                    <MenuItem key={index} value={item}>{item} </MenuItem>) : null}
+                                            </ControlledInput>
+                                            <Grid item xs={6} style={{ float: 'right' }}>
+                                                <Button variant={'contained'} color={'primary'}
+                                                    disabled={this.state.disabled}
+                                                    onClick={this.onClickSave}>
+                                                    Registrar Reporte
+                                                    <SaveIcon />
+                                                </Button>
+                                            </Grid>
+                                        </Grid>
+                                    }
+                                </Grid>
+                            )
 
-                    }
-                    </Grid>
-                    <Grid container item xs={12} justify="center">
-                        <Grid item xs={3} style={{ float: 'right' }}>
-                            <Button variant={'contained'} color={'primary'}
-                                disabled={this.state.disabled}
-                                onClick={this.onClickSave}>
-                                Registrar Reporte
-                                <SaveIcon />
-                            </Button>
-                        </Grid>
-
+                        }
                     </Grid>
                 </Grid>
             </Paper>
