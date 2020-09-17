@@ -198,9 +198,10 @@ class RequestForm extends React.Component {
                                         :
                                         <Grid container item xs={12} justify="left">
                                             <ControlledInput id={field.name} name={field.name} value={field.value}
-                                                label={field.label} style={{ width: '90%' }} icon={<PencilIcon />}
-                                                onChange={this.onChangeField} select={field.values.length ? true : false} type={field.type}
-                                                style={{ marginBottom: '20px' }}>
+                                                label={field.label} style={{ width: '90%', marginBottom: '50px' }}
+                                                icon={<PencilIcon />} onChange={this.onChangeField}
+                                                select={field.values.length ? true : false} type={field.type}
+                                            >
                                                 {field.values ? field.values.map((item, index) =>
                                                     <MenuItem key={index} value={item}>{item} </MenuItem>) : null}
                                             </ControlledInput>
