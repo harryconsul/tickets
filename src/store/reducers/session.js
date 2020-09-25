@@ -8,7 +8,7 @@ const initialState = {
     search: {
 
     },
-    page:0,
+    page: 0,
 
 }
 
@@ -59,6 +59,16 @@ const sessionReducer = (state = initialState, action) => {
             return {
                 ...state,
                 page: action.page
+            }
+        case actionConstants.MYTICKETS:
+            return {
+                ...state,
+                myTickets: action.myTickets
+            }
+        case actionConstants.INPROCESS:
+            return {
+                ...state,
+                inProcess: action.inProcess
             }
 
         default:

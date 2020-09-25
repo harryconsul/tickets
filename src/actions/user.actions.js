@@ -75,6 +75,21 @@ export const actionChangePage=(page)=>{
         page,
     }
 }
+
+export const actionKeepAdminSwitch=(myTickets)=>{
+    return{
+        type:actionConstants.MYTICKETS,
+        myTickets,
+    }
+}
+
+export const actionKeepUserSwitch=(inProcess)=>{
+    return{
+        type:actionConstants.INPROCESS,
+        inProcess,
+    }
+}
+
 export const actionUpdatePreferences = (preferenceType, value) => {
 
     return {
