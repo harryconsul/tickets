@@ -6,7 +6,7 @@ import axios from 'axios';
 const Calificar = (props) => {
     const [value, setValue] = useState(props.calificacion);
     const status = ['RE','RU'] //Resuelto y Resuelto por el Usuario
-    const properties = status.includes(props.status) && props.owner == props.user ? {readOnly:false}:{readOnly:true};
+    const properties = status.includes(props.status) && props.owner === props.user ? {readOnly:false}:{readOnly:true};
 
     useEffect(() => {
         axios.post("registrarcalificacion", { SolicitudId: props.id, Usuario: props.user, Calificacion: value })

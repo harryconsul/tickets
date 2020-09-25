@@ -10,7 +10,6 @@ import StatusAvatar from '../components/StatusAvatar';
 import { Paper, Grid, TextField, Avatar } from '@material-ui/core'
 import { FabProgress, ButtonProgress } from '../components/ButtonsProgress/ButtonsProgress';
 import FileCancel from 'mdi-material-ui/FileCancel';
-import Send from 'mdi-material-ui/Send';
 import Check from 'mdi-material-ui/Check';
 import axios from 'axios';
 import Graph from '../helpers/GraphSdkHelper';

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as actionConstants from './action.constants';
 import StatusAvatar from '../components/StatusAvatar';
-import {history} from '../helpers/history';
+import { history } from '../helpers/history';
 import axios from 'axios';
 export const actionLogin = user => {
     return {
@@ -16,11 +16,23 @@ export const doSearch = (search, result) => {
         result,
     }
 }
-export const actionCompleteSearch=()=>{
-    return{
-        type:actionConstants.COMPLETE_SEARCH
+export const actionCompleteSearch = () => {
+    return {
+        type: actionConstants.COMPLETE_SEARCH
     }
 }
+export const actionSwitchNotification = (data) => {
+    return new Promise((resolve, reject) => {
+        axios.post("actualizausuarionotificaciones", data)
+        .then(response => {
+           resolve(true);
+        })
+        .catch(reason => {
+            reject(false);
+        });
+    })
+}
+
 export const actionSearch = (search) => {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
@@ -33,14 +45,14 @@ export const actionSearch = (search) => {
 
                     })
 
-                
+
                     //Close Popover
                     /*
                    
                     */
-                    dispatch(doSearch({search,isSearching:true}, ticketList));
+                    dispatch(doSearch({ search, isSearching: true }, ticketList));
                     console.log(history.location.pathname);
-                    if(history.location.pathname!=="/mis-solicitudes"){
+                    if (history.location.pathname !== "/mis-solicitudes") {
                         history.push("/mis-solicitudes");
                     }
 
@@ -69,23 +81,23 @@ const getCatalogs = (preferences, assistanceTypes, timeRanges) => {
         timeRanges,
     }
 }
-export const actionChangePage=(page)=>{
-    return{
-        type:actionConstants.CHANGE_PAGE,
+export const actionChangePage = (page) => {
+    return {
+        type: actionConstants.CHANGE_PAGE,
         page,
     }
 }
 
-export const actionKeepAdminSwitch=(myTickets)=>{
-    return{
-        type:actionConstants.MYTICKETS,
+export const actionKeepAdminSwitch = (myTickets) => {
+    return {
+        type: actionConstants.MYTICKETS,
         myTickets,
     }
 }
 
-export const actionKeepUserSwitch=(inProcess)=>{
-    return{
-        type:actionConstants.INPROCESS,
+export const actionKeepUserSwitch = (inProcess) => {
+    return {
+        type: actionConstants.INPROCESS,
         inProcess,
     }
 }
@@ -110,9 +122,9 @@ export const actionGetCatalogs = (username) => {
 
         axios.post("trabajarpreferencias", data).then(response => {
             const preferences = response.data.preferences.reduce((previous, current) => {
-                try{
+                try {
                     previous[current.key] = JSON.parse(current.value);
-                }catch{
+                } catch {
                     previous[current.key] = current.value;
                 }
                 return previous;

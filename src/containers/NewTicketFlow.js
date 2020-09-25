@@ -173,7 +173,7 @@ class NewTicketFlow extends React.Component {
             });
 
             const { user, registro } = data.Solicitud;
-            if (user != registro) {
+            if (user !== registro) {
                 this.getNotificacion(response.data.SolicitudId);
             }
 

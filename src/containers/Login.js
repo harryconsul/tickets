@@ -10,7 +10,7 @@ const Login = (props) => {
         <Paper style={{ width: "50%", margin: "10% 25% 30% 25%", height: "50%", padding: "20px" }}>
             <Grid container direction="column" alignItems={"center"}
                 wrap="nowrap" style={{ height: "100%" }} justify={"center"}
-                spacing={32}>
+                spacing={1}>
                 <Grid item style={{ marginBottom: "15px" }}>
                     <img alt="Servicios TI" src={ti911} width="367" height="156"/>
                 </Grid>

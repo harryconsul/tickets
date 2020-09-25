@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableRow, TableCell } from '@material-ui/core';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 const styleRow = { fontWeight: "560" };
 

@@ -5,7 +5,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
 import CloseIcon from '@material-ui/icons/Close';
-import { amber, green } from '@material-ui/core/colors';
+import { amber } from '@material-ui/core/colors';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
@@ -37,7 +37,7 @@ const styles = theme => ({
     },
     iconVariant: {
         opacity: 0.9,
-        marginRight: theme.spacing.unit,
+        marginRight: theme.spacing(),
     },
     message: {
         display: 'flex',

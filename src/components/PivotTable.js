@@ -1,6 +1,6 @@
 import React from 'react';
 import * as PivotTableDR from './PivotTableDR';
-import * as FlexmonsterReact from 'react-flexmonster';
+//Ahora WebDataRocks: import * as FlexmonsterReact from 'react-flexmonster';
 //import 'flexmonster/flexmonster.min.css';
 
 import axios from 'axios';
@@ -31,8 +31,9 @@ class PivotTable extends React.Component {
         return (
             <Paper style={{ padding: "10px" }} >
                 {
-                    <PivotTableDR.Pivot toolbar={true} ref={this.state.ref}
+                    <PivotTableDR.Pivot
                         toolbar={true}
+                        ref={this.state.ref}
                         report={this.state.report} />
                 }
             </Paper>

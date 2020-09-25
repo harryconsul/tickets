@@ -10,12 +10,12 @@ class MapOrganization extends React.Component {
         this.helper = new Graph(props.user.accessToken);
         this.state = {
             personas: new Map(),
-            isLoading:false,
+            isLoading: false,
 
         }
     }
     componentDidMount() {
-        this.setState({isLoading:true});
+        this.setState({ isLoading: true });
         this.helper.getAllPeople("", (error, result) => {
             const personas = result.reduce((previous, item) => {
 
@@ -26,13 +26,13 @@ class MapOrganization extends React.Component {
                 return previous;
             }
                 , new Map());
-            this.setState({ personas,isLoading:false });
+            this.setState({ personas, isLoading: false });
         });
     }
     uploadUsers = () => {
         const promises = []
-        this.setState({isLoading:true});
-        for (let [key, me] of this.state.personas) {
+        this.setState({ isLoading: true });
+        for (let [me] of this.state.personas) {
             if (me.inferredDepartment && me.mail) {
                 const user = {
                     id: me.id,
@@ -55,10 +55,10 @@ class MapOrganization extends React.Component {
                 });
                 promises.push(promise);
             }
-            Promise.all(promises).then((result)=>{
-                this.setState({isLoading:false});
-            }).catch(()=>{
-                this.setState({isLoading:false});
+            Promise.all(promises).then((result) => {
+                this.setState({ isLoading: false });
+            }).catch(() => {
+                this.setState({ isLoading: false });
             })
         }
 
@@ -66,7 +66,7 @@ class MapOrganization extends React.Component {
 
 
     getManagers = () => {
-        this.setState({isLoading:true});
+        this.setState({ isLoading: true });
         const personas = new Map();
         const promises = []
         for (let [key, value] of this.state.personas) {
@@ -77,12 +77,12 @@ class MapOrganization extends React.Component {
             })));
 
         }
-        Promise.all(promises).then(() => this.setState({ personas,isLoading:false }));
+        Promise.all(promises).then(() => this.setState({ personas, isLoading: false }));
 
 
     }
     analyzeCompany = () => {
-        this.setState({isLoading:true});
+        this.setState({ isLoading: true });
         const personas = new Map();
         for (let [key, current] of this.state.personas) {
             if (!current.inferredDepartment) {
@@ -117,7 +117,7 @@ class MapOrganization extends React.Component {
 
         }
 
-        this.setState({ personas ,isLoading:false});
+        this.setState({ personas, isLoading: false });
 
     }
     render() {
@@ -137,11 +137,11 @@ class MapOrganization extends React.Component {
                     <Button onClick={this.analyzeCompany}>
                         Analizar Empresa
                 </Button>
-                <Button onClick={this.uploadUsers}>
-                       Subir Usuarios
+                    <Button onClick={this.uploadUsers}>
+                        Subir Usuarios
                 </Button>
                 </div>
-                {this.state.isLoading? <CircularProgress />:null}
+                {this.state.isLoading ? <CircularProgress /> : null}
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     {personas.map(persona => <div>
                         {persona.displayName + " - " + persona.jobTitle}

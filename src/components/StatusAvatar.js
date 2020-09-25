@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar } from '@material-ui/core'
+//Cambio por Chip: import { Avatar } from '@material-ui/core';
 import { statusCodes } from '../constants';
 import Chip from '@material-ui/core/Chip';
 
@@ -32,21 +32,16 @@ const getDescription = status => {
     switch (status) {
         case statusCodes.IN_PROCESS.value:
             return "REVISIÓN";
-            break;
         case statusCodes.SOLVED.value:
             return "RESUELTO";
-            break;
         case statusCodes.REJECTED.value:
             return "CANCELADA";
         case statusCodes.THIRD.value:
             return "TERCEROS";
-            break;
         case statusCodes.BY_USER.value:
             return "USUARIO";
-            break;
         default:
             return "NUEVO";
-            break;
     }
 }
 

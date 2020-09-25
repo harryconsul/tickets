@@ -61,7 +61,7 @@ class App extends React.Component {
     };
 
     axios.post("trabajarpreferencias",data).then(response=>{
-        console.log(response.data);
+        //console.log(response.data);
     }).catch(reason=>{
         console.log(reason);
     })

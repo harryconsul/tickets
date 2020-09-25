@@ -16,7 +16,8 @@ const getBlobUrl = async (response) => {
       throw (e);
     }
   }else{
-    throw({msg:"Error"});
+    //throw({msg:"Error"});
+    throw(Error('No fue posible recuperar la img'));
   }
 
 }

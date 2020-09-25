@@ -7,7 +7,9 @@ import PropTypes from 'prop-types';
 
 class CustomMaterialTable extends React.Component {
     state = {
-        rowsPerPage: 10, page: 0, emptyRows: 0
+        rowsPerPage: 10,
+        page: this.props.initialPage ? this.props.initialPage : 0,
+        emptyRows: 0
     }
 
     handleChangePage = (event, page) => {
@@ -15,14 +17,20 @@ class CustomMaterialTable extends React.Component {
         let newState = { ...this.state };
         newState.page = page;
         this.setState(newState)
+        if (this.props.changePageCallback) {
+            this.props.changePageCallback(page);
+        }
     };
 
     handleChangeRowsPerPage = event => {
         let newState = { ...this.state };
         newState.rowsPerPage = event.target.value * 1;
-    
+
         this.setState(newState);
-      };
+        if (this.props.changeRowsPerPageCallback) {
+            this.props.changeRowsPerPageCallback(newState.rowsPerPage);
+        }
+    };
 
     render() {
         const { columnas, list } = this.props;
@@ -89,10 +97,8 @@ CustomMaterialTable.defaultProps = {
     labelRowsPerPage: "Rows per Page",
 }
 CustomMaterialTable.propTypes = {
-    itemsList: PropTypes.array.isRequired,
     labelRowsPerPage: PropTypes.string.isRequired,
     defaultColumns: PropTypes.array,
-    columnsArray: PropTypes.array.isRequired,
     savePreferenceToServer: PropTypes.func,
     toolbar: PropTypes.object,
     preferences: PropTypes.object,

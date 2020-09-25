@@ -1,6 +1,5 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
-import Application from 'mdi-material-ui/Application';
 import Money from 'mdi-material-ui/CurrencyUsd';
 import Wifi from 'mdi-material-ui/Wifi';
 import Plug from 'mdi-material-ui/PowerPlug';
@@ -29,9 +28,8 @@ import Sales from 'mdi-material-ui/Hand';
 import Note from 'mdi-material-ui/NoteText';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles'
-import { List, ListItem, ListItemText } from '@material-ui/core';
 import "./CategoryCard.css";
-import Tooltip from '@material-ui/core/Tooltip';
+//Sin uso: import Tooltip from '@material-ui/core/Tooltip';
 
 
 const CategoryCard = props => {
@@ -89,88 +87,60 @@ const setIcon = (icon, type = 'main', style) => {
     switch (icon) {
         case 'Money':
             return <Money style={style} />;
-            break;
         case 'Comunication':
             return <Comunication style={style} />;
-            break;
         case 'Report':
             return <Report style={style} />;
-            break;
         case 'Inventory':
             return <Inventory style={style} />;
-            break;
         case 'Sales':
             return <Sales style={style} />;
-            break;
         case 'Phone':
             return <Phone style={style} />;
-            break;
         case 'Skype':
             return <Skype style={style} />;
-            break;
         case 'Support':
             return <Support style={style} />;
-            break;
         case 'CreditCard':
             return <CreditCard style={style} />;
-            break;
         case 'Note':
             return <Note style={style} />;
-            break;
         case 'Plug':
             return <Plug style={style} />;
-            break;
         case 'Wifi':
             return <Wifi style={style} />;
-            break;
         case 'Web':
             return <Web style={style} />;
-            break;
         case 'Test':
             return <Test style={style} />;
-            break;
         case 'User':
             return <User style={style} />;
-            break;
         case 'Computer':
             return <Computer style={style} />;
-            break;
         case 'Printer':
             return <Printer style={style} />;
-            break;
         case 'Microsoft':
             return <Microsoft style={style} />;
-            break;
         case 'Email':
             return <Email style={style} />;
-            break;
         case 'Billing':
             return <Billing style={style} />;
-            break;
         case 'CardText':
             return <CardText style={style} />;
-            break;
         case 'Database':
             return <Database style={style} />;
-            break;
         case 'FileWord':
             return <FileWord style={style} />;
-            break;
         case 'FileExcel':
             return <FileExcel style={style} />;
-            break;
         case 'ClipboardAccount':
             return <ClipboardAccount style={style} />;
-            break;
         case 'AccountCheck':
             return <AccountCheck style={style} />;
-            break;
         case 'AccountGroup':
             return <AccountGroup style={style} />;
-            break;
         case 'ChartPie':
             return <ChartPie style={style} />;
-            break;
         default:
             return <Web style={style} />;
     }

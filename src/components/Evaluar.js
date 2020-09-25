@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 const Evaluar = (props) => {
 
     const [value, setValue] = useState(props.evaluacion);
-    const status = ['RE', 'RU'] //Resuelto y Resuelto por el Usuario
+    //Sin uso: const status = ['RE', 'RU'] //Resuelto y Resuelto por el Usuario
     const properties = { readOnly: false };//status.includes(props.status) ? {readOnly:false}:{readOnly:true};
     const classes = useStyles();
     
@@ -29,7 +29,7 @@ const Evaluar = (props) => {
         axios.post("registrarevaluacion", { SolicitudId: props.id, Usuario: props.user, Evaluacion: value })
             .then((response) => {
                 props.changeEvaluacion(value);
-                console.warn(value);
+                console.warn('here',{value});
             }).catch(reason => console.log("reason", reason));
     }, [value]);
 

@@ -1,6 +1,6 @@
 import React from "react";
 import CategoryCard from "../components/CategoryCard/CategoryCard";
-import { Grid, Link, Typography } from "@material-ui/core/";
+import { Grid } from "@material-ui/core/";
 import axios from 'axios';
 
 
@@ -30,7 +30,7 @@ class CategorySelection extends React.Component {
 
     }
     render() {
-        const styleBreadcum = { margin: '10px' }
+        //const styleBreadcum = { margin: '10px' }
         return (
             <Grid container >
                 {/* <Grid item xs={12} style={{ display: 'inline-flex' }} >

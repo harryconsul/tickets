@@ -4,8 +4,7 @@ import Logout from 'mdi-material-ui/Logout';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import SwitchCheck from './SwitchControl/SwitchCheck';
-import axios from 'axios';
-import {actionLogin} from '../actions/user.actions';
+import {actionLogin, actionSwitchNotification} from '../actions/user.actions';
 
 class UserBar extends React.Component {
     state = {
@@ -27,16 +26,13 @@ class UserBar extends React.Component {
             UsuarioLogin: username,
             Notificaciones: status,
         };
-
-        const actualizarNotifica = new Promise((resolve, reject) => {
-            axios.post("actualizausuarionotificaciones", data).then(response => {
-                user.notificaciones = status;
-                this.props.dispatch(actionLogin(user));
-                
-            }).catch(reason => {
-                console.log(reason);
-            })
-        });
+        
+        actionSwitchNotification(data)
+        .then(() => {
+            user.notificaciones = status;
+            this.props.dispatch(actionLogin(user));
+        })
+        .catch(() => console.error('No fue posible actualizar la notificación') );
     }
 
     render() {

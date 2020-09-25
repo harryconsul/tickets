@@ -27,7 +27,7 @@ const MenuBar = props => {
         <div ref={props.barRef}>
             <AppBar style={{ backgroundColor: "#8e92d3" }} >
                 <Toolbar>
-                    <Grid container spacing={16} alignItems="center" style={{ margin: 0 }}>
+                    <Grid container spacing={1} alignItems="center" style={{ margin: 0 }}>
                         <Grid md={1} item>
                             <img alt="DICIPA" src={dicipa} width="62" height="46" />
                         </Grid>

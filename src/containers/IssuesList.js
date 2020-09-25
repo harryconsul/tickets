@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CustomColumnsTable } from 'custom-columns-table/';
+//import { CustomColumnsTable } from 'custom-columns-table/';
 import { Tabs, Tab, Grid } from '@material-ui/core';
 import { statusCodes } from '../constants/';
-import { actionUpdatePreferences, actionChangePage } from '../actions/user.actions';
+import { actionUpdatePreferences, actionChangePage,actionKeepAdminSwitch,actionKeepUserSwitch } from '../actions/user.actions';
 import { connect } from 'react-redux';
-import { EmailOutline, EmailOpenOutline, AccountClockOutline, Check, FileCancelOutline } from 'mdi-material-ui'
+import { EmailOutline, EmailOpenOutline, Check, FileCancelOutline } from 'mdi-material-ui'
 import axios from 'axios';
 import SwitchCheck from '../components/SwitchControl/SwitchCheck';
 import Badge from '@material-ui/core/Badge';
@@ -64,10 +64,11 @@ const filterTicketsByStatus = (ticketList, statusTab) => {
 
 const styles = theme => ({
     margin: {
-        margin: theme.spacing.unit * 2,
+        margin: theme.spacing(2),
     },
     padding: {
-        padding: `0 ${theme.spacing.unit * 2}px`,
+        padding: `0 ${theme.spacing(2)}px`,
+
     },
 });
 
@@ -78,18 +79,22 @@ class IssuesList extends React.Component {
             status: 0,
             ticketList: props.ticketList,
             columns: null,
-            myTickets: false,
-            inProcess: false,
+            myTickets: this.props.myTickets ? this.props.myTickets : false,
+            inProcess: this.props.inProcess ? this.props.inProcess: false,
         }
 
     }
 
     handleSwitchAdmin = (bandera) => {
         this.setState({ myTickets: bandera });
+
+        this.props.dispatch(actionKeepAdminSwitch(bandera));
     }
 
     handleSwitchUser = (bandera) => {
         this.setState({ inProcess: bandera });
+
+        this.props.dispatch(actionKeepUserSwitch(bandera));
     }
 
     onChangeTab = (event, newStatus) => {
@@ -130,7 +135,7 @@ class IssuesList extends React.Component {
     render() {
         const { classes } = this.props;
         const { onTicketClick } = this.props;
-        const { ticketList, status, myTickets, inProcess } = this.state;
+        const { ticketList, status, myTickets , inProcess } = this.state;
         
         let filteredList = ticketList.filter(ticket => {
             return (ticket.engineer.indexOf(this.props.user.username) >= 0
@@ -190,15 +195,15 @@ class IssuesList extends React.Component {
                                         } icon={<FileCancelOutline />} />
                                     </Tabs>
                                 </Grid>
-                                <Grid item xs={2} alignItems="center">
-                                    <SwitchCheck labelName="Mis solicitudes" handleSwitch={this.handleSwitchAdmin} />
+                                <Grid item xs={2} >
+                                    <SwitchCheck status= {myTickets} labelName="Mis solicitudes" handleSwitch={this.handleSwitchAdmin} />
                                 </Grid>
                             </Grid>
                         </div>
                         :
                         <div>
                             <Grid container direction="row" justify="flex-end">
-                                <SwitchCheck labelName="Todo" handleSwitch={this.handleSwitchUser} />
+                                <SwitchCheck status={inProcess} labelName="Todo" handleSwitch={this.handleSwitchUser} />
                             </Grid>
                         </div>
                 }
@@ -208,9 +213,10 @@ class IssuesList extends React.Component {
                     changePageCallback={(page) => this.props.dispatch(actionChangePage(page))}
                     labelRowsPerPage={"Solicitudes por página"}
                     rowClickHandle={onTicketClick}
+                    initialPage={this.props.page}
                 />
 
-                {/* <CustomColumnsTable
+                 {/* <CustomColumnsTable
                     columnsArray={columnas}
                     itemsList={filteredList}
                     defaultColumns={["id", "statusAvatar", "problem", "engineer"]}
@@ -219,7 +225,7 @@ class IssuesList extends React.Component {
                     savePreferenceToServer={this.savePreferenceToServer}
                     preferences={{ columnsSelected: this.props.columnas }}
                     initialPage={this.props.page}
-                    numberColumnLabel={"#"} rowClickHandle={onTicketClick} /> */}
+                    numberColumnLabel={"#"} rowClickHandle={onTicketClick} />  */}
 
             </div>
         )
@@ -230,6 +236,8 @@ const mapStateToProps = state => {
         user: state.user,
         columnas: state.preferences.columnas,
         page: state.page,
+        myTickets: state.myTickets,
+        inProcess: state.inProcess,
     }
 }
 
