@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 //import { CustomColumnsTable } from 'custom-columns-table/';
 import { Tabs, Tab, Grid } from '@material-ui/core';
 import { statusCodes } from '../constants/';
-import { actionUpdatePreferences, actionChangePage,actionKeepAdminSwitch,actionKeepUserSwitch } from '../actions/user.actions';
+import { actionUpdatePreferences, actionChangePage, actionKeepAdminSwitch, actionKeepUserSwitch } from '../actions/user.actions';
 import { connect } from 'react-redux';
 import { EmailOutline, EmailOpenOutline, Check, FileCancelOutline } from 'mdi-material-ui'
 import axios from 'axios';
@@ -80,20 +80,22 @@ class IssuesList extends React.Component {
             ticketList: props.ticketList,
             columns: null,
             myTickets: this.props.myTickets ? this.props.myTickets : false,
-            inProcess: this.props.inProcess ? this.props.inProcess: false,
+            inProcess: this.props.inProcess ? this.props.inProcess : false,
         }
 
     }
 
-    handleSwitchAdmin = (bandera) => {
+    handleSwitchAdmin = (bandera, page = 0) => {
         this.setState({ myTickets: bandera });
 
+        this.props.dispatch(actionChangePage(page));
         this.props.dispatch(actionKeepAdminSwitch(bandera));
     }
 
-    handleSwitchUser = (bandera) => {
+    handleSwitchUser = (bandera, page = 0) => {
         this.setState({ inProcess: bandera });
 
+        this.props.dispatch(actionChangePage(page));
         this.props.dispatch(actionKeepUserSwitch(bandera));
     }
 
@@ -133,13 +135,13 @@ class IssuesList extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
-        const { onTicketClick } = this.props;
-        const { ticketList, status, myTickets , inProcess } = this.state;
-        
+        const { classes, onTicketClick, user, page } = this.props;
+
+        const { ticketList, status, myTickets, inProcess } = this.state;
+
         let filteredList = ticketList.filter(ticket => {
-            return (ticket.engineer.indexOf(this.props.user.username) >= 0
-                || ticket.registro.indexOf(this.props.user.username) >= 0
+            return (ticket.engineer.indexOf(user.username) >= 0
+                || ticket.registro.indexOf(user.username) >= 0
                 || !myTickets);
         });
 
@@ -154,12 +156,12 @@ class IssuesList extends React.Component {
 
         //El perfil usuario podrá filtrar nuevo y en proceso
         if (!inProcess && profile === 'U')
-            filteredList = filteredList.filter(({status}) => status.trim() === "NU" || status.trim() === "PR");
+            filteredList = filteredList.filter(({ status }) => status.trim() === "NU" || status.trim() === "PR");
 
         return (
             <div >
                 {
-                    this.props.user.isManager ?
+                    user.isManager ?
                         <div>
                             <Grid container spacing={5}>
                                 <Grid item xs={10}>
@@ -196,7 +198,7 @@ class IssuesList extends React.Component {
                                     </Tabs>
                                 </Grid>
                                 <Grid item xs={2} >
-                                    <SwitchCheck status= {myTickets} labelName="Mis solicitudes" handleSwitch={this.handleSwitchAdmin} />
+                                    <SwitchCheck status={myTickets} labelName="Mis solicitudes" handleSwitch={this.handleSwitchAdmin} />
                                 </Grid>
                             </Grid>
                         </div>
@@ -213,10 +215,10 @@ class IssuesList extends React.Component {
                     changePageCallback={(page) => this.props.dispatch(actionChangePage(page))}
                     labelRowsPerPage={"Solicitudes por página"}
                     rowClickHandle={onTicketClick}
-                    initialPage={this.props.page}
+                    initialPage={page}
                 />
 
-                 {/* <CustomColumnsTable
+                {/* <CustomColumnsTable
                     columnsArray={columnas}
                     itemsList={filteredList}
                     defaultColumns={["id", "statusAvatar", "problem", "engineer"]}

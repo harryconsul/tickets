@@ -172,11 +172,12 @@ class NewTicketFlow extends React.Component {
                 }
             });
 
+            /*No aplica la notificación desde el cliente.
             const { user, registro } = data.Solicitud;
             if (user !== registro) {
                 this.getNotificacion(response.data.SolicitudId);
             }
-
+            */
         }).catch(reason => {
             this.setState({
                 snackOpen: true,

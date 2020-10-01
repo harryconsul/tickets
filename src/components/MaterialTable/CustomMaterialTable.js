@@ -8,15 +8,11 @@ import PropTypes from 'prop-types';
 class CustomMaterialTable extends React.Component {
     state = {
         rowsPerPage: 10,
-        page: this.props.initialPage ? this.props.initialPage : 0,
         emptyRows: 0
     }
 
     handleChangePage = (event, page) => {
 
-        let newState = { ...this.state };
-        newState.page = page;
-        this.setState(newState)
         if (this.props.changePageCallback) {
             this.props.changePageCallback(page);
         }
@@ -33,11 +29,12 @@ class CustomMaterialTable extends React.Component {
     };
 
     render() {
-        const { columnas, list } = this.props;
+        const { rowsPerPage } = this.state;
+        const { columnas, list , initialPage: page} = this.props;
+
         //Del objeto columna: sacamos el value para pasarlo a MaterialRow.
         const valores = columnas.map(item => item.value);
-        const { page, rowsPerPage } = this.state;
-
+        
         const filas = list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map(row => {
                 return (

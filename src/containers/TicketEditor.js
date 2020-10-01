@@ -140,7 +140,7 @@ class TicketEditor extends React.Component {
             }, this.dispatchTicketChanges);
 
             //Buscar si hay algo que notificar.
-            this.getNotificacion(status, comments);
+            //No aplica: this.getNotificacion(status, comments);
 
             //Mostrar SnackBar Message, cuando ESTATUS sea RESUELTO
             if (status === statusCodes.SOLVED.value && _showSnackBar) {
