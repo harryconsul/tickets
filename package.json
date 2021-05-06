@@ -12,7 +12,7 @@
     "downshift": "^3.2.10",
     "flexmonster": "^2.7.9",
     "hellojs": "^1.18.1",
-    "highcharts": "^7.1.2",
+    "highcharts": "^9.0.0",
     "highcharts-react-official": "^2.2.2",
     "history": "^4.9.0",
     "lodash.deburr": "^4.1.0",
