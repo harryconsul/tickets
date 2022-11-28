@@ -12,7 +12,7 @@ const PivotLayout = (props) => {
     const style = { width: "20%",margin:"5px 0px 5px 0px" };
 
     return (
-        <Grid container spacing={16} justify={"center"} >
+        <Grid container spacing={2} justify={"center"} >
             <Grid item xs={12} >
                 <ControlledInput id={"fltRango"}
                     value={rango}

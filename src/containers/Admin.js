@@ -7,6 +7,7 @@ import NewTicketFlow from './NewTicketFlow'
 import MapOrganization from './MapOrganization'
 import { connect } from 'react-redux';
 import PivotLayout from '../components/PivotLayout';
+//import TicketList from './TicketList';
 
 class Admin extends React.Component {
     state = {
@@ -35,6 +36,7 @@ class Admin extends React.Component {
                     history={this.props.history} />
                 <div style={{ marginTop: this.state.margin }}>
                     <Route path="/mis-solicitudes/" component={IssuesManager} />
+                    {/* <Route path="/mis-solicitudes/" component={TicketList} /> */}
                     <Route path="/graficas" component={() => <Dashboard usuario={this.props.user.username} />} />
                     <Route path="/reportes" component={() => <PivotLayout usuario={this.props.user.username} timeRanges={this.props.timeRanges} />} />
                     <Route path="/nueva-solicitud" component={NewTicketFlow} />

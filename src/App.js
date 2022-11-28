@@ -166,7 +166,6 @@ class App extends React.Component {
   render() {
 
     return (
-      //<Router basename="/Tickets/R" >
       <Router history={history} >
 
         {this.props.user ?

@@ -5,7 +5,7 @@ import { Tabs, Tab, Grid } from '@material-ui/core';
 import { statusCodes } from '../constants/';
 import { actionUpdatePreferences, actionChangePage, actionKeepAdminSwitch, actionKeepUserSwitch } from '../actions/user.actions';
 import { connect } from 'react-redux';
-import { EmailOutline, EmailOpenOutline, Check, FileCancelOutline } from 'mdi-material-ui'
+import { EmailOutline, EmailOpenOutline, Check, FileCancelOutline } from 'mdi-material-ui';
 import axios from 'axios';
 import SwitchCheck from '../components/SwitchControl/SwitchCheck';
 import Badge from '@material-ui/core/Badge';

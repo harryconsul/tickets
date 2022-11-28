@@ -8,8 +8,9 @@ import axios from 'axios';
 import 'typeface-roboto';
 import { Provider } from 'react-redux';
 import store from './store/store';
-axios.defaults.baseURL = "https://ti911.dicipa.com.mx:3001/rest/";
-//axios.defaults.baseURL = "http://localhost/Tickets.NetEnvironment/rest/";
+import { SocketProvider } from './context/SocketContext';
+//axios.defaults.baseURL = "https://ti911.dicipa.com.mx:3001/rest/";
+axios.defaults.baseURL = "http://localhost/Tickets.NetEnvironment/rest/";
 //axios.defaults.baseURL = "https://ti911.dicipa.com.mx:3002/rest/";
 
 
@@ -21,9 +22,9 @@ const theme = createMuiTheme({
   palette: {
     type: 'light',
     text: {
-      primary:"#5d5858",
+      primary: "#5d5858",
       secondary: "black",
-      third:"white"
+      third: "white"
     },
     secondary: {
       light: "#8e92d3",
@@ -37,11 +38,14 @@ const theme = createMuiTheme({
     useNextVariants: true,
   },
 });
+
 ReactDOM.render(
   <Provider store={store}>
-    <MuiThemeProvider theme={theme} >
-      <App />
-    </MuiThemeProvider>
+    <SocketProvider>
+      <MuiThemeProvider theme={theme} >
+        <App />
+      </MuiThemeProvider>
+    </SocketProvider>
   </Provider>,
   document.getElementById('root'));
 

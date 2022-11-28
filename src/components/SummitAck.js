@@ -6,7 +6,7 @@ const SummitAck = props => {
     
     return (
         props.ticketNumber ?
-            <Grid container direction={"column"} alignItems={"center"} spacing={16}>
+            <Grid container direction={"column"} alignItems={"center"} spacing={2}>
                 <Grid item md={12} style={{ width: "60%", padding: "3%" }}>
                     <TicketSummary {...props} />
 

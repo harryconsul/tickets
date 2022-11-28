@@ -1,11 +1,12 @@
 import React from 'react';
-import IssuesList from './IssuesList';
+//import IssuesList from './IssuesList';
 
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import TicketEditor from './TicketEditor';
 import StatusAvatar from '../components/StatusAvatar'
 import { actionSearch, actionCompleteSearch } from '../actions/user.actions';
+import TicketList from './TicketList';
 
 
 class IssuesManager extends React.Component {
@@ -33,13 +34,13 @@ class IssuesManager extends React.Component {
         } else {
             //const _searchValue = searchValue === "" ? this.state.search : searchValue
             if (this.props.user) {
+
                 const data = {
                     UsuarioLogin: this.props.user.username,
                     Perfil: this.props.user.profile,
                     Busqueda: null
                 };
-
-                this.props.dispatch(actionSearch(data)).then(()=>{
+                this.props.dispatch(actionSearch(data)).then(() => {
                     this.props.dispatch(actionCompleteSearch())
                 });
             }
@@ -68,7 +69,7 @@ class IssuesManager extends React.Component {
 
         const basePath = "/mis-solicitudes/";
         const original_ticket = this.props.result.find(item => item.id === id);
-        
+
         const ticket = {
             ...original_ticket,
             statusAvatar: null,
@@ -84,14 +85,15 @@ class IssuesManager extends React.Component {
 
     }
     render() {
-        let { ticketList, selectedTicket } = this.state;
+        let { selectedTicket } = this.state;
         const basePath = "/mis-solicitudes/";
-        ticketList = this.props.result;
+        const ticketList = this.props.result;
         return (
 
             <React.Fragment>
-                <Route  exact path={basePath } component={(props) =>
-                    <IssuesList {...props} ticketList={ticketList} onTicketClick={this.onTicketClick} />
+                <Route exact path={basePath} component={(props) =>
+                    // <IssuesList {...props} ticketList={ticketList} onTicketClick={this.onTicketClick} />
+                    <TicketList {...props} ticketList={ticketList} onTicketClick={this.onTicketClick} postSearch={this.postSearch} />
                 } />
                 <Route exact path={basePath + "solicitud/:id"} component={() =>
                     <TicketEditor {...selectedTicket}

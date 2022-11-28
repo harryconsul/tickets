@@ -61,7 +61,7 @@ class UserBar extends React.Component {
                     }}
                 >
                     <Grid container direction={"column"} alignItems={"flex-start"}
-                        spacing={16}>
+                        spacing={2}>
                         <Grid item md={2}>
                             <Avatar src={photo} />
                         </Grid>
