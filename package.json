@@ -7,7 +7,7 @@
     "@material-ui/lab": "^4.0.0-alpha.52",
     "@microsoft/microsoft-graph-client": "^1.7.0",
     "@uifabric/icons": "^7.3.34",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "clsx": "^1.1.0",
     "custom-columns-table": "^1.0.5",
     "downshift": "^3.4.8",
